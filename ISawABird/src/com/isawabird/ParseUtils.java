@@ -25,8 +25,5 @@ public class ParseUtils {
 		 
 	}
 	
-	public static ParseObject getCurrentList(Context context) throws ParseException{
-		String listName = 
-		
-	}
+	
 }
