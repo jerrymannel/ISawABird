@@ -2,6 +2,9 @@ package com.isawabird;
 
 import java.util.List;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -22,15 +25,8 @@ public class ParseUtils {
 		 
 	}
 	
-	public static ParseObject getCurrentList() throws ParseException{
-		try{
-			if (currentList == null){
-				ParseQuery<ParseObject> query = ParseQuery.getQuery("Lists");
-				query.find()
-			}
-			
-		}catch(ParseException ex){
-			throw ex; 
-		}
+	public static ParseObject getCurrentList(Context context) throws ParseException{
+		String listName = 
+		
 	}
 }
