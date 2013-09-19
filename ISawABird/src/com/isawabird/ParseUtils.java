@@ -17,7 +17,7 @@ public class ParseUtils {
 		try{
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("Lists");
 			List<ParseObject> lists = query.find();
-			
+			/* Test change */
 			return lists; 
 		}catch(ParseException ex){
 			throw ex;
