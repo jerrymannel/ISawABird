@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -20,14 +21,16 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		/* Initialize Parse */
-		ParseLogin.login(this);
+		ParseInit.init(this);
 		
 		try{
 			List<ParseObject> lists = ParseUtils.getLists();
 			Iterator<ParseObject> i = lists.iterator();
 			while(i.hasNext()){
-				Log.d("ISawABird", i.next().getString("ListName"));
+				String listName =  i.next().getString("ListName");
+				Log.d("ISawABird",listName);
 			}
+			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}

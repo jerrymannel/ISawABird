@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
+import com.parse.ParseUser;
 
 public class ParseUtils {
 
@@ -15,9 +17,13 @@ public class ParseUtils {
 	
 	public static List<ParseObject> getLists() throws ParseException{
 		try{
+			ParseUser currentUser = ParseUser.getCurrentUser(); 
+			ParseRelation<ParseObject> relation = currentUser.getRelation("Lists");
+			List<ParseObject>lists = relation.getQuery().find();
+			
 			ParseQuery<ParseObject> query = ParseQuery.getQuery("Lists");
-			List<ParseObject> lists = query.find();
-			/* Test change */
+			
+			
 			return lists; 
 		}catch(ParseException ex){
 			throw ex;
@@ -25,5 +31,12 @@ public class ParseUtils {
 		 
 	}
 	
+	public static void login(String username, String password) throws ParseException{
+		try{
+			ParseUser.logIn(username, password);			
+		}catch(ParseException ex){
+			throw ex;
+		}
+	}
 	
 }
