@@ -2,6 +2,7 @@ package com.isawabird;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -24,12 +25,16 @@ public class MainActivity extends Activity {
 		ParseInit.init(this);
 		
 		try{
-			List<ParseObject> lists = ParseUtils.getLists();
-			Iterator<ParseObject> i = lists.iterator();
-			while(i.hasNext()){
-				String listName =  i.next().getString("ListName");
-				Log.d("ISawABird",listName);
-			}
+//			List<ParseObject> lists = ParseUtils.getLists();
+//			Iterator<ParseObject> i = lists.iterator();
+//			while(i.hasNext()){
+//				String listName =  i.next().getString("ListName");
+//				Log.d("ISawABird",listName);
+//			}
+			Utils.initializeChecklist(this, "Indonesia");
+			Vector<Species> results =  Utils.search("owrum", null);
+			Log.d("ISawABird", "********************************");
+			Utils.search("owrump", results);
 			
 		}catch(Exception ex){
 			ex.printStackTrace();

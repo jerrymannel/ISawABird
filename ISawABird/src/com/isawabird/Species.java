@@ -5,6 +5,7 @@ public class Species {
 	private String commonName ; 
 	private String scientificName;
 	private String fullName; 
+	private String unpunctuatedName; 
 	
 	public Species(String fullName){
 		this.fullName = fullName;
@@ -27,8 +28,12 @@ public class Species {
 			}
 		}else{
 			commonName = fullName;
-			scientificName = fullName;
+			scientificName = "";
 		}
+		
+		/* Get the unpuntuated name */
+		unpunctuatedName = fullName.replaceAll("[-' ]", "");
+		
 	}
 	
 	public String getCommonName(){
@@ -37,5 +42,13 @@ public class Species {
 	
 	public String getScientificName(){
 		return scientificName;
+	}
+	
+	public String getUnPunctuatedName(){
+		return unpunctuatedName;
+	}
+	
+	public String getFullName(){
+		return fullName;
 	}
 }
