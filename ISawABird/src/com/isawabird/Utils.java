@@ -30,13 +30,22 @@ public class Utils {
 				allSpecies.add(temp);
 				//Log.d("ISawABird", temp.getUnPunctuatedName());
 			}
-			Log.d("ISawABird",  allSpecies.size() + " species added to checklist");
+			Log.d(Consts.LOG_TAG,  allSpecies.size() + " species added to checklist");
 			checklistLoaded = true; 
 		}catch(IOException ioex){
 			throw ioex;
 		}
 	}
 	
+	/** Function to search through the 'current' checklist for a given search term. 
+	 * @param searchTerm : The search query. 
+	 * @param subset : The subset of the checklist to search within. If null, search 
+	 * is performed on the full checklist. This is useful to search as the user types.
+	 * For each key press, the search function can be called with the subset being the 
+	 * return value from the previous call. 
+	 * 
+	 * @returns A Vector of Species objects matching the search terms.
+	 */
 	public static Vector<Species> search(String searchTerm, Vector<Species> subset) throws ISawABirdException{
 		if (!checklistLoaded){
 			throw new ISawABirdException("Checklist not loaded. Use Utils.initializeChecklist() first.");
@@ -44,17 +53,18 @@ public class Utils {
 		Vector<Species> searchList = (subset == null) ? allSpecies : subset ;
 		Vector <Species> returnVal = new Vector<Species> (); 
 		Iterator<Species> iter = searchList.iterator(); 
-		searchTerm = searchTerm.toLowerCase(); 
 		while(iter.hasNext()){
 			Species temp = iter.next(); 
-			if (temp.getCommonName().toLowerCase(). indexOf(searchTerm) != -1 || 
-					temp.getScientificName().toLowerCase().indexOf(searchTerm) != -1 || 
-					temp.getUnPunctuatedName().toLowerCase().indexOf(searchTerm) != -1){
-				Log.d("ISawABird", "Adding " + temp.getFullName() + " to search results.");
+			if (temp.getUnpunctuatedName().indexOf(Utils.unpunctuate(searchTerm)) != -1){
+				
+				Log.d(Consts.LOG_TAG, "Adding " + temp.getFullName() + " to search results.");
 				returnVal.add(temp);
 			}
 		}
 		return returnVal;
 	}
 	
+	public static String unpunctuate(String string){
+		return string.replaceAll("[-' ]", "").toLowerCase();
+	}
 }

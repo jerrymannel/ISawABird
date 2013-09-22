@@ -31,11 +31,29 @@ public class MainActivity extends Activity {
 //				String listName =  i.next().getString("ListName");
 //				Log.d("ISawABird",listName);
 //			}
-			Utils.initializeChecklist(this, "Indonesia");
-			Vector<Species> results =  Utils.search("owrum", null);
-			Log.d("ISawABird", "********************************");
-			Utils.search("owrump", results);
+			ParseUtils.login("sriniketana", "test123");
+			List<ParseObject> lists = ParseUtils.getLists();
+			ParseUtils.addSightingToList(lists.iterator().next(), "Scaly-breasted Munia");
+			lists = ParseUtils.getLists();
 			
+			Iterator<ParseObject> iter = lists.iterator(); 
+			while(iter.hasNext()){
+				ParseObject temp = iter.next();
+				Log.d(Consts.LOG_TAG, "List : " + temp.getString("Location"));
+				List<ParseObject> sightings = ParseUtils.getSightingsForList(temp);
+				Iterator<ParseObject> iter1 = sightings.iterator();
+				while(iter1.hasNext()) { 
+					ParseObject temp1 = iter1.next();
+					Log.d(Consts.LOG_TAG, temp1.getString("Species"));
+				}
+				
+			}
+			
+//			Utils.initializeChecklist(this, "Indonesia");
+//			Vector<Species> results =  Utils.search("ow rum", null);
+//			Log.d(Consts.LOG_TAG, "********************************");
+//			Utils.search("owrump", results);
+//			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}

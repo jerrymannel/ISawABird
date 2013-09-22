@@ -32,7 +32,7 @@ public class Species {
 		}
 		
 		/* Get the unpuntuated name */
-		unpunctuatedName = fullName.replaceAll("[-' ]", "");
+		unpunctuatedName = Utils.unpunctuate(fullName);
 		
 	}
 	
@@ -44,7 +44,7 @@ public class Species {
 		return scientificName;
 	}
 	
-	public String getUnPunctuatedName(){
+	public String getUnpunctuatedName(){
 		return unpunctuatedName;
 	}
 	
