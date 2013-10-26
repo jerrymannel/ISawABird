@@ -39,7 +39,6 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		
 		try{
 			/* Initialize Parse */
-			ParseObject.registerSubclass(Sighting.class);
 			ParseInit.init(this);
 			MainActivity.updateLabel("Parse initialization complete");
 			

@@ -77,15 +77,7 @@ public class ParseUtils {
 	
 	/* Add a sighting to a given list */
 	public static void addSightingToList(final ParseObject list, String species)  { 
-		final Sighting sighting = new Sighting(species); 
-		sighting.put("Species", species);
-		sighting.put("ListName"	, list.get("ListName"));
-		sighting.put("Username", currentUser.getUsername());
-		sighting.put("DateTime", new Date());
-		if (location != null){
-			sighting.put("Location", location);
-		}
-		sighting.saveEventually();
+		/* Rewrite code to add a sighting to SQLite DB */
 	}
 
 	/* Get all sightings for a given list */
