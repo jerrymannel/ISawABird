@@ -6,12 +6,18 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
 
 public class Utils {
 
 	private static Vector<Species>  allSpecies = new Vector<Species>(); 
 	private static boolean checklistLoaded = false; 
+	
+	public static SharedPreferences prefs = null;
 	
 	public static void initializeChecklist(Context context, String checklist) throws IOException{
 		try{
@@ -66,5 +72,20 @@ public class Utils {
 	
 	public static String unpunctuate(String string){
 		return string.replaceAll("[-' ]", "").toLowerCase();
+	}
+
+	public static void setCurrentList(String listName){
+		prefs.edit().putString(Consts.CURRENT_LIST_KEY, listName);
+	}
+	
+	
+	/** Function to return the current list to which sightings are added 
+	 * @return A ParseObject for the current list
+	 * @throws ISawABirdException
+	 */
+	public static ParseObject getCurrentList() throws ISawABirdException{
+		String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, null);
+		/* Rewrite using SQLit DB */
+		return null;
 	}
 }

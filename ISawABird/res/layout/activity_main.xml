@@ -8,10 +8,56 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
+    <EditText
+        android:id="@+id/data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/getLists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/data"
+        android:layout_below="@+id/data"
+        android:text="Get Lists" />
+
     <TextView
         android:id="@+id/helloworld"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/getLists"
+        android:layout_marginTop="124dp"
         android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/getSightings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/getLists"
+        android:layout_below="@+id/getLists"
+        android:layout_marginTop="15dp"
+        android:text="Get Sightings" />
+
+    <Button
+        android:id="@+id/addList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/getSightings"
+        android:layout_marginLeft="18dp"
+        android:layout_toRightOf="@+id/getLists"
+        android:text="Add List" />
+
+    <Button
+        android:id="@+id/addSighting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/getSightings"
+        android:layout_centerHorizontal="true"
+        android:text="Add Sighting" />
 
 </RelativeLayout>
