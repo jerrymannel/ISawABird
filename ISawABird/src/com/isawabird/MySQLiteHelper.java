@@ -9,17 +9,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	private static final String DB_NAME = "BirdSightings.db";
 	private static final int DB_VER = 1;
 	
+	public static final String BIRDLIST = "BIRDLIST"; 
+	public static final String SIGHITNG = "SIGHTING";
+	
+	public static final String [] BIRDLIST_COLS = {"Date","ListName","Location","Notes","CreatedByUser", "ParseObjectID","isUploadRequired"};
+	
 	private static MySQLiteHelper myHelper = null; 
 	
 	/* SQL statements */ 
 	private static final String BIRDLIST_TABLE = "CREATE TABLE BIRDLIST (" + 
-	"Date integer, ListName text not null, Location text, Notes text,  CreatedByUser text not null, " + 
-			"ParseObjectID text, isUploadRequired integer;" ; 
+	"Date integer, ListName text unique not null, Location text, Notes text,  CreatedByUser text not null, " + 
+			"ParseObjectID text, isUploadRequired integer);" ; 
 	
 	private static final String SIGHTING_TABLE = "CREATE TABLE SIGHTING (" + 
 			"Date integer, ListName text not null, Latitude real, Longitude real,  NumberOfBirds integer not null, " + 
 			"Species text not null, Username text not null, " + 
-					"ParseObjectID text, isUploadRequired integer;" ; 
+					"ParseObjectID text, isUploadRequired integer);" ; 
 	
 	private MySQLiteHelper(Context context){
 		super(context, DB_NAME, null, DB_VER);

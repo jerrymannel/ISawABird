@@ -3,8 +3,13 @@ package com.isawabird;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
+import android.content.ContentValues;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.storage.StorageManager;
 import android.util.Log;
 
@@ -58,21 +63,40 @@ public class ParseUtils {
 	}
 	
 	/* Get the lists for the current user */
-	public static List<BirdList> getLists() throws ParseException{
+	public static Vector<BirdList> getLists() throws ParseException{
+		Log.v(Consts.LOG_TAG, ">> getLists()");
 		/* Rewrite to query from SQLite DB */
-		return null;
+		SQLiteDatabase db = MySQLiteHelper.getDB();
+		Cursor result = db.query(MySQLiteHelper.BIRDLIST, MySQLiteHelper.BIRDLIST_COLS, null,null, null, null, null);
+		Vector<BirdList> returnVal = new Vector<BirdList>();
+		while(result.moveToNext()) {
+			BirdList temp = new BirdList(result.getString(1)); 
+			temp.setDate(new Date(result.getInt(0)));
+			temp.setLocation(result.getString(2));
+			temp.setNotes(result.getString(3));
+			temp.setUsername(result.getString(4));
+			temp.setParseObjectID(result.getString(5));
+			returnVal.add(temp);
+		}		
+		Log.v(Consts.LOG_TAG, "<< getLists()");
+		return returnVal;
 	}
 	
 	/* Create a new list for this user */
-	public static ParseObject createList(String listName, String location, String notes){
-		ParseObject obj = new ParseObject("Lists");
-		obj.put("Username", currentUser.getUsername());
-		obj.put("ListName"	,listName);
-		obj.put("Location", location);
-		obj.put("Date", new Date());
-		obj.put("Notes", notes); 
-		obj.saveEventually();
-		return obj;
+	public static void  createList(BirdList birdList) throws ISawABirdException{
+		SQLiteDatabase db = MySQLiteHelper.getDB();
+		ContentValues values = birdList.getContentValues();
+		values.put("isUploadRequired", true); 
+		try{
+			long  result = db.insertOrThrow("BirdList", null, values);
+		
+			if (result == -1){
+				Log.e(Consts.LOG_TAG, "Error occurred"); 
+			}
+		}catch(SQLiteException ex){
+			Log.e(Consts.LOG_TAG, "Error occurred adding a new table " + ex.getMessage());
+			throw new ISawABirdException("Unable to create a new list. Perhaps, a list by the name already exists ?");
+		}
 	}
 	
 	/* Add a sighting to a given list */

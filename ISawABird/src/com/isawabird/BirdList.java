@@ -2,6 +2,8 @@ package com.isawabird;
 
 import java.util.Date;
 
+import android.content.ContentValues;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -12,13 +14,25 @@ public class BirdList {
 	private String location = null;
 	private String notes = null; 
 	private String username = ParseUtils.getCurrentUser().getUsername();
+	private String parseObjectID = null; 
 	
 	public BirdList(String listName){
-		
+		this.listName = listName;
 	}
 
-	public void save(){
-		/* Write to SQLite DB */
+	public ContentValues getContentValues(){
+		ContentValues values = new ContentValues();
+		values.put("ListName", listName); 
+		values.put("CreatedByUser", username);
+		values.put("Date", date.getTime()); 
+		if (location != null){
+			values.put("Location", location);
+		}
+		
+		if (notes != null){
+			values.put("Notes", notes);
+		}
+		return values;
 	}
 	
 	public Date getDate() {
@@ -59,6 +73,14 @@ public class BirdList {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getParseObjectID() {
+		return parseObjectID;
+	}
+
+	public void setParseObjectID(String parseObjectID) {
+		this.parseObjectID = parseObjectID;
 	}
 	
 

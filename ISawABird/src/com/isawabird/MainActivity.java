@@ -59,8 +59,14 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				ex.printStackTrace();
 			}
 			
-			MySQLiteHelper dbHelper = MySQLiteHelper.getSQLiteHelper(); 
-			SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+			/* Create a list */
+			BirdList list1 = new BirdList("Hebbal Oct 2013");
+			ParseUtils.createList(list1); 
+			
+			/* Next query the lists */ 
+			List<BirdList> lists = ParseUtils.getLists(); 
+			
 			
 			
 		}catch(Exception ex){
