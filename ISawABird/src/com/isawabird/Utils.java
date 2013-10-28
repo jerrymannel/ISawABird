@@ -75,8 +75,9 @@ public class Utils {
 	}
 
 	public static void setCurrentList(String listName){
-		prefs.edit().putString(Consts.CURRENT_LIST_KEY, listName);
-		prefs.edit().commit();
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString(Consts.CURRENT_LIST_KEY, listName);
+		editor.commit();
 	}
 	
 	
