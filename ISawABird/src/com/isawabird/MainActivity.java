@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			
 			/* Initialize the checklists */
 			Utils.initializeChecklist(this, "Indonesia");
-			Utils.prefs = getPreferences(Context.MODE_PRIVATE);
+			Utils.prefs = getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
 			
 			/* Login to Parse */
 			try{
@@ -62,10 +62,20 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 
 			/* Create a list */
 			BirdList list1 = new BirdList("Hebbal Oct 2013");
-			ParseUtils.createList(list1); 
+			try{
+				ParseUtils.createList(list1); 
+			}catch(ISawABirdException ex){
+				ex.printStackTrace();
+			}
 			
-			/* Next query the lists */ 
-			List<BirdList> lists = ParseUtils.getLists(); 
+			/* Next query the lists */
+			Vector<BirdList> lists ; 
+			lists = ParseUtils.getLists(); 
+			
+			/* Add a sighting */ 
+			Log.v(Consts.LOG_TAG, "Setting current list to " + lists.get(0).getListName());
+			Utils.setCurrentList(lists.get(0).getListName());
+			ParseUtils.addSightingToCurrentList("Common Crow");
 			
 			
 			

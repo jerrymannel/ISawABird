@@ -1,27 +1,39 @@
 package com.isawabird;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Date;
 
-import org.json.JSONObject;
-
-import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.SaveCallback;
+import android.content.ContentValues;
 
 public class Sighting {
 	
+	private Date date = new Date();
 	private String Species = "";
-	private String ListName = ""; // TODO Replace with getCurrentListName
+	private String ListName = Utils.getCurrentListName();
 	private float latitude ;
 	private float longitude; 
 	private int numberOfBirds = 1; 
 	private String username = ParseUtils.getCurrentUser().getUsername();
+	private String parseObjectID = null; 
+	private boolean isUploadRequired = true; 
 	
 
 	public Sighting(String species ){
-
+		this.Species = species;
+	}
+	
+	public ContentValues getContentValues(){
+		ContentValues ret = new ContentValues();
+		ret.put("Date", date.getTime());
+		ret.put("ListName", ListName);
+		ret.put("Species", Species);
+		ret.put("NumberOfBirds", numberOfBirds);
+		ret.put("Latitude", latitude);
+		ret.put("Longitude", longitude);
+		ret.put("Username", username);
+		ret.put("ParseObjectID", parseObjectID);
+		ret.put("isUploadRequired"	, isUploadRequired);
+		
+		return ret;
 	}
 	
 	public String getSpecies() {
@@ -80,6 +92,30 @@ public class Sighting {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getParseObjectID() {
+		return parseObjectID;
+	}
+
+	public void setParseObjectID(String parseObjectID) {
+		this.parseObjectID = parseObjectID;
+	}
+
+	public boolean isUpdateRequired() {
+		return isUploadRequired;
+	}
+
+	public void setUpdateRequired(boolean isUpdateRequired) {
+		this.isUploadRequired = isUpdateRequired;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 	
 }

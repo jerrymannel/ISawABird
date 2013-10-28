@@ -10,7 +10,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	private static final int DB_VER = 1;
 	
 	public static final String BIRDLIST = "BIRDLIST"; 
-	public static final String SIGHITNG = "SIGHTING";
+	public static final String SIGHTING = "SIGHTING";
 	
 	public static final String [] BIRDLIST_COLS = {"Date","ListName","Location","Notes","CreatedByUser", "ParseObjectID","isUploadRequired"};
 	

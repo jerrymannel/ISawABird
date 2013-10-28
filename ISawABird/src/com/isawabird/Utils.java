@@ -76,6 +76,7 @@ public class Utils {
 
 	public static void setCurrentList(String listName){
 		prefs.edit().putString(Consts.CURRENT_LIST_KEY, listName);
+		prefs.edit().commit();
 	}
 	
 	
@@ -83,9 +84,10 @@ public class Utils {
 	 * @return A ParseObject for the current list
 	 * @throws ISawABirdException
 	 */
-	public static ParseObject getCurrentList() throws ISawABirdException{
-		String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, null);
-		/* Rewrite using SQLit DB */
-		return null;
+	public static String getCurrentListName() {
+		// TODO: Fix this 
+		String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, "Hebbal Oct 2013");
+		Log.d(Consts.LOG_TAG, "Current list name is " + currentListName);
+		return currentListName;
 	}
 }

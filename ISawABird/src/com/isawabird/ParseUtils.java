@@ -70,7 +70,8 @@ public class ParseUtils {
 		Cursor result = db.query(MySQLiteHelper.BIRDLIST, MySQLiteHelper.BIRDLIST_COLS, null,null, null, null, null);
 		Vector<BirdList> returnVal = new Vector<BirdList>();
 		while(result.moveToNext()) {
-			BirdList temp = new BirdList(result.getString(1)); 
+			BirdList temp = new BirdList(result.getString(1));
+			Log.v(Consts.LOG_TAG, "Found list " + result.getString(1));
 			temp.setDate(new Date(result.getInt(0)));
 			temp.setLocation(result.getString(2));
 			temp.setNotes(result.getString(3));
@@ -100,28 +101,39 @@ public class ParseUtils {
 	}
 	
 	/* Add a sighting to a given list */
-	public static void addSightingToList(final ParseObject list, String species)  { 
-		/* Rewrite code to add a sighting to SQLite DB */
+	public static void addSightingToCurrentList(String species) throws ISawABirdException { 
+		Sighting s = new Sighting(species);
+		SQLiteDatabase db = MySQLiteHelper.getDB(); 
+		String existingSightingSQL = "ListName = ? AND Username = ? AND Species = ?" ; 
+		Cursor existingSightings = db.query(MySQLiteHelper.SIGHTING, new String[] {"ListName" ,  "Species",  "Username"}, existingSightingSQL,
+				new String [] {Utils.getCurrentListName(), ParseUtils.getCurrentUser().getUsername(), species } , null,null, null );
+		if (existingSightings.getCount() <= 0){
+			try{
+				long ret = db.insertOrThrow(MySQLiteHelper.SIGHTING, null, s.getContentValues()); 
+			}catch(SQLiteException ex){
+				throw new ISawABirdException(ex.getMessage());
+			}
+		}else{
+			// TODO : Increment number of birds if this entry is already there. 
+			Log.w(Consts.LOG_TAG, species + " not added to list " + Utils.getCurrentListName() ); 
+		}
 	}
 
 	/* Get all sightings for a given list */
-	public static List<ParseObject> getSightingsForList(ParseObject list) throws ParseException{
-		List<ParseObject> returnVal = null;
-		if (list == null){
-			return null; 
+	public static Vector<Sighting> getSightingsForList(String listName) {
+		SQLiteDatabase db = MySQLiteHelper.getDB(); 
+		Vector<Sighting> returnVal = new Vector<Sighting>();
+		
+		String existingSightingSQL = "ListName = ? AND Username = ?" ; 
+		Cursor result = db.query(MySQLiteHelper.SIGHTING, null, existingSightingSQL,
+				new String [] {Utils.getCurrentListName(), ParseUtils.getCurrentUser().getUsername() } , null,null, null );
+		
+		while(result.moveToNext()){
+			Sighting s = new Sighting(result.getString(5));
+			
 		}
 		
-		
-		query.setCachePolicy(ParseQuery.CachePolicy.NETWORK_ELSE_CACHE);
-		query.whereEqualTo("ListName", list.getString("ListName"));
-		query.whereEqualTo("Username", currentUser.getUsername());
-		try{
-			returnVal = query.find(); 
-		}catch(ParseException ex){
-			ex.printStackTrace();
-		}
-		return returnVal;	
-		
+		return null;
 	}
 
 }
