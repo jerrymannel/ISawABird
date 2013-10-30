@@ -34,9 +34,9 @@ public class ParseUtils {
 					@Override
 					public void done(ParseUser user, ParseException ex) {
 						if (ex == null){
-							Log.d(Consts.LOG_TAG, user.getObjectId());
+							Log.d(Consts.TAG, user.getObjectId());
 						}else{
-							Log.e(Consts.LOG_TAG, ex.getMessage());
+							Log.e(Consts.TAG, ex.getMessage());
 						}
 					}
 				});

@@ -6,6 +6,7 @@ public class Consts {
 
 	/* Shared Preferences keys */
 	public static final String CURRENT_LIST_KEY = "CurrentList";
-	public static final String LOG_TAG = "ISawABird";
+	
+	public static final String TAG = "Lyre";
 	
 }

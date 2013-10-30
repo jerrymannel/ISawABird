@@ -3,6 +3,7 @@ package com.isawabird;
 import java.util.Date;
 
 import android.content.ContentValues;
+import android.util.Log;
 
 import com.isawabird.parse.ParseUtils;
 import com.parse.ParseClassName;
@@ -10,8 +11,10 @@ import com.parse.ParseObject;
 
 public class BirdList {
 	
+	private static String currentListName;
+	private static int currentListId;
 	private Date date = new Date(); 
-	private int ListID = -1;
+	private int id = -1;
 	private String listName = null; 
 	private String location = null;
 	private String notes = null; 
@@ -20,21 +23,6 @@ public class BirdList {
 	
 	public BirdList(String listName){
 		this.listName = listName;
-	}
-
-	public ContentValues getContentValues(){
-		ContentValues values = new ContentValues();
-		values.put("ListName", listName); 
-		values.put("CreatedByUser", username);
-		values.put("Date", date.getTime()); 
-		if (location != null){
-			values.put("Location", location);
-		}
-		
-		if (notes != null){
-			values.put("Notes", notes);
-		}
-		return values;
 	}
 	
 	public Date getDate() {
@@ -85,13 +73,27 @@ public class BirdList {
 		this.parseObjectID = parseObjectID;
 	}
 
-	public int getListID() {
-		return ListID;
+	public int getId() {
+		return id;
 	}
 
-	public void setListID(int listID) {
-		ListID = listID;
+	public void setId(int id) {
+		this.id = id;
 	}
 	
+	/** Function to return the current list to which sightings are added 
+	 * @return A ParseObject for the current list
+	 * @throws ISawABirdException
+	 */
+	public static String getCurrentListName() {
+		// TODO: Fix this
+		String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, "Hebbal Oct 2013");
+		Log.d(Consts.TAG, "Current list name is " + currentListName);
+		return currentListName;
+	}
 
+	public static void setCurrentList(String name, int id) {
+		currentListName = name;
+		currentListId = id;
+	}
 }

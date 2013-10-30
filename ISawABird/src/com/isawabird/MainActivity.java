@@ -1,30 +1,21 @@
 package com.isawabird;
 
-import java.util.Currency;
-import java.util.Iterator;
-import java.util.List;
 import java.util.ListIterator;
 import java.util.Vector;
 
-import com.isawabird.db.DBUtils;
-import com.isawabird.parse.ParseInit;
-import com.isawabird.parse.ParseUtils;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.SaveCallback;
-
-import android.net.ConnectivityManager;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.isawabird.db.DBHandler;
+import com.isawabird.parse.ParseInit;
+import com.isawabird.parse.ParseUtils;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener {
 
@@ -67,30 +58,30 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 
 			/* Create a list */
 			BirdList list1 = new BirdList("Hebbal Nov 2013");
-			try{
-				DBUtils.createBirdList(list1); 
-			}catch(ISawABirdException ex){
+			DBHandler dh = DBHandler.getInstance(getApplicationContext());
+			try {
+				dh.addBirdList(list1, ParseUtils.getCurrentUser().getUsername()); 
+			} catch(ISawABirdException ex){
 				ex.printStackTrace();
 			}
 			
 			/* Next query the lists */
 			Vector<BirdList> lists ; 
-			lists = DBUtils.getBirdLists(); 
+			lists = dh.getBirdLists(ParseUtils.getCurrentUser().getUsername()); 
 			ListIterator<BirdList> iter = lists.listIterator();
 			while(iter.hasNext()){
 				BirdList temp = iter.next(); 
-				Log.v(Consts.LOG_TAG, temp.getListID() + ":" + temp.getListName());
+				Log.v(Consts.TAG, temp.getId() + ":" + temp.getListName());
 			}
 			
 			
 			/* Add a sighting */ 
-			Log.v(Consts.LOG_TAG, "Setting current list to " + lists.get(0).getListName());
-			Utils.setCurrentList(lists.get(0).getListName());
-			DBUtils.addSightingToCurrentList("Common Crow");
-			
-			
-			
-		}catch(Exception ex){
+			Log.v(Consts.TAG, "Setting current list to " + lists.get(0).getListName());
+			BirdList.setCurrentList(lists.get(0).getListName(), lists.get(0).getId());
+			Sighting sighting = new Sighting("common crow");
+			dh.addSighting(sighting, lists.get(0).getId(), ParseUtils.getCurrentUser().getUsername());
+		
+		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		

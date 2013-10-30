@@ -10,9 +10,10 @@ public class Sighting {
 	
 	private Date date = new Date();
 	private Species species = null;
-	private String ListName = Utils.getCurrentListName();
+	private String ListName = BirdList.getCurrentListName();
 	private float latitude ;
 	private float longitude; 
+	private String notes;
 	private int numberOfBirds = 1; 
 	private String username = ParseUtils.getCurrentUser().getUsername();
 	private String parseObjectID = null; 
@@ -25,21 +26,6 @@ public class Sighting {
 	
 	public Sighting(Species speciesName){
 		this.species = speciesName;
-	}
-	
-	public ContentValues getContentValues(){
-		ContentValues ret = new ContentValues();
-		ret.put("Date", date.getTime());
-		ret.put("ListName", ListName);
-		ret.put("Species", species.getFullName());
-		ret.put("NumberOfBirds", numberOfBirds);
-		ret.put("Latitude", latitude);
-		ret.put("Longitude", longitude);
-		ret.put("Username", username);
-		ret.put("ParseObjectID", parseObjectID);
-		ret.put("isUploadRequired"	, isUploadRequired);
-		
-		return ret;
 	}
 	
 	public Species getSpecies(){
@@ -122,5 +108,12 @@ public class Sighting {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-	
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}	
 }

@@ -36,7 +36,7 @@ public class Utils {
 				allSpecies.add(temp);
 				//Log.d("ISawABird", temp.getUnPunctuatedName());
 			}
-			Log.d(Consts.LOG_TAG,  allSpecies.size() + " species added to checklist");
+			Log.d(Consts.TAG,  allSpecies.size() + " species added to checklist");
 			checklistLoaded = true; 
 		}catch(IOException ioex){
 			throw ioex;
@@ -63,7 +63,7 @@ public class Utils {
 			Species temp = iter.next(); 
 			if (temp.getUnpunctuatedName().indexOf(Utils.unpunctuate(searchTerm)) != -1){
 				
-				Log.d(Consts.LOG_TAG, "Adding " + temp.getFullName() + " to search results.");
+				Log.d(Consts.TAG, "Adding " + temp.getFullName() + " to search results.");
 				returnVal.add(temp);
 			}
 		}
@@ -78,17 +78,5 @@ public class Utils {
 		SharedPreferences.Editor editor = prefs.edit();
 		editor.putString(Consts.CURRENT_LIST_KEY, listName);
 		editor.commit();
-	}
-	
-	
-	/** Function to return the current list to which sightings are added 
-	 * @return A ParseObject for the current list
-	 * @throws ISawABirdException
-	 */
-	public static String getCurrentListName() {
-		// TODO: Fix this
-		String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, "Hebbal Oct 2013");
-		Log.d(Consts.LOG_TAG, "Current list name is " + currentListName);
-		return currentListName;
 	}
 }
