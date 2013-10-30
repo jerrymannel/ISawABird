@@ -3,12 +3,17 @@ package com.isawabird;
 import java.util.Currency;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Vector;
 
+import com.isawabird.db.DBUtils;
+import com.isawabird.parse.ParseInit;
+import com.isawabird.parse.ParseUtils;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
@@ -61,21 +66,27 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			
 
 			/* Create a list */
-			BirdList list1 = new BirdList("Hebbal Oct 2013");
+			BirdList list1 = new BirdList("Hebbal Nov 2013");
 			try{
-				ParseUtils.createList(list1); 
+				DBUtils.createBirdList(list1); 
 			}catch(ISawABirdException ex){
 				ex.printStackTrace();
 			}
 			
 			/* Next query the lists */
 			Vector<BirdList> lists ; 
-			lists = ParseUtils.getLists(); 
+			lists = DBUtils.getBirdLists(); 
+			ListIterator<BirdList> iter = lists.listIterator();
+			while(iter.hasNext()){
+				BirdList temp = iter.next(); 
+				Log.v(Consts.LOG_TAG, temp.getListID() + ":" + temp.getListName());
+			}
+			
 			
 			/* Add a sighting */ 
 			Log.v(Consts.LOG_TAG, "Setting current list to " + lists.get(0).getListName());
 			Utils.setCurrentList(lists.get(0).getListName());
-			ParseUtils.addSightingToCurrentList("Common Crow");
+			DBUtils.addSightingToCurrentList("Common Crow");
 			
 			
 			
@@ -94,6 +105,10 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	
 	public static Context getContext(){
 		return act;
+	}
+	
+	public static ConnectivityManager getConnectivityManager(){
+		return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE);
 	}
 	
 	public static void updateLabel(final String s){

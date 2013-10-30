@@ -4,12 +4,14 @@ import java.util.Date;
 
 import android.content.ContentValues;
 
+import com.isawabird.parse.ParseUtils;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
 public class BirdList {
 	
 	private Date date = new Date(); 
+	private int ListID = -1;
 	private String listName = null; 
 	private String location = null;
 	private String notes = null; 
@@ -81,6 +83,14 @@ public class BirdList {
 
 	public void setParseObjectID(String parseObjectID) {
 		this.parseObjectID = parseObjectID;
+	}
+
+	public int getListID() {
+		return ListID;
+	}
+
+	public void setListID(int listID) {
+		ListID = listID;
 	}
 	
 

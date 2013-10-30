@@ -86,7 +86,7 @@ public class Utils {
 	 * @throws ISawABirdException
 	 */
 	public static String getCurrentListName() {
-		// TODO: Fix this 
+		// TODO: Fix this
 		String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, "Hebbal Oct 2013");
 		Log.d(Consts.LOG_TAG, "Current list name is " + currentListName);
 		return currentListName;

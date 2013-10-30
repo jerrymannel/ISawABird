@@ -2,30 +2,36 @@ package com.isawabird;
 
 import java.util.Date;
 
+import com.isawabird.parse.ParseUtils;
+
 import android.content.ContentValues;
 
 public class Sighting {
 	
 	private Date date = new Date();
-	private String Species = "";
+	private Species species = null;
 	private String ListName = Utils.getCurrentListName();
 	private float latitude ;
 	private float longitude; 
 	private int numberOfBirds = 1; 
 	private String username = ParseUtils.getCurrentUser().getUsername();
 	private String parseObjectID = null; 
-	private boolean isUploadRequired = true; 
+	private int isUploadRequired = 1; // Using int since SQLite doesn't support boolean directly.   
 	
 
 	public Sighting(String species ){
-		this.Species = species;
+		this.species = new Species(species);
+	}
+	
+	public Sighting(Species speciesName){
+		this.species = speciesName;
 	}
 	
 	public ContentValues getContentValues(){
 		ContentValues ret = new ContentValues();
 		ret.put("Date", date.getTime());
 		ret.put("ListName", ListName);
-		ret.put("Species", Species);
+		ret.put("Species", species.getFullName());
 		ret.put("NumberOfBirds", numberOfBirds);
 		ret.put("Latitude", latitude);
 		ret.put("Longitude", longitude);
@@ -36,14 +42,13 @@ public class Sighting {
 		return ret;
 	}
 	
-	public String getSpecies() {
-		return Species;
+	public Species getSpecies(){
+		return species;
 	}
 
-	public void setSpecies(String species) {
-		Species = species;
+	public void setSpecies(Species species){
+		this.species = species; 
 	}
-
 
 	public String getListName() {
 		return ListName;
@@ -102,11 +107,11 @@ public class Sighting {
 		this.parseObjectID = parseObjectID;
 	}
 
-	public boolean isUpdateRequired() {
+	public int isUpdateRequired() {
 		return isUploadRequired;
 	}
 
-	public void setUpdateRequired(boolean isUpdateRequired) {
+	public void setUpdateRequired(int isUpdateRequired) {
 		this.isUploadRequired = isUpdateRequired;
 	}
 

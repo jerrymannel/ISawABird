@@ -143,9 +143,9 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter, OnIt
     }
 
     protected void setSectionText(final String section, final View sectionView) {
-        final TextView textView = (TextView) sectionView
-                .findViewById(R.id.listTextView);
-        textView.setText(section);
+//        final TextView textView = (TextView) sectionView
+//                .findViewById(R.id.listTextView);
+//        textView.setText(section);
     }
 
     protected synchronized void replaceSectionViewsInMaps(final String section,
@@ -157,7 +157,8 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter, OnIt
     }
 
     protected View createNewSectionView() {
-        return inflater.inflate(R.layout.section_view, null);
+//        return inflater.inflate(R.layout.section_view, null);
+    	return null;
     }
 
     @Override
