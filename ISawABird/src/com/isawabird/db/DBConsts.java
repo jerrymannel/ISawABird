@@ -35,7 +35,7 @@ public class DBConsts {
 			"(" +
 			ID 							+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
 			SIGHTING_SPECIES 			+ " TEXT," +
-			SIGHTING_LIST_ID 		+ " INTEGER NOT NULL," +
+			SIGHTING_LIST_ID 			+ " INTEGER NOT NULL," +
 			SIGHTING_LATITUDE			+ " REAL," + 
 			SIGHTING_LONGITUDE			+ " REAL," +
 			SIGHTING_DATE				+ " INTEGER," + 
@@ -65,31 +65,52 @@ public class DBConsts {
 	
 	public static final String QUERY_SIGHTINGS_BY_LISTNAME = 
 			"SELECT s." + ID + " as " + ID + ", " + SIGHTING_SPECIES + ", " + SIGHTING_NOTES +
-			", " + SIGHTING_LATITUDE + ", " + SIGHTING_LONGITUDE + ", l.*, p.* " + 
+			", " + SIGHTING_LATITUDE + ", " + SIGHTING_LONGITUDE + ", " +  SIGHTING_DATE +
+			", " + LIST_DATE + ", " + LIST_NAME + ", " + LIST_NOTES + ", " + LIST_USER +
+			", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
+			", " + PARSE_OBJECT_ID + ", " + PARSE_TYPE + ", " + PARSE_TYPE_ID +
 			" FROM " + TABLE_SIGHTING + " as s LEFT OUTER JOIN " + TABLE_LIST + " as l" +
 			" LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
 			" ON (s." + SIGHTING_LIST_ID + "=l." + ID + " AND s." + ID + "=p." + PARSE_TYPE_ID + 
-			" AND p." + PARSE_TYPE + "=" + TABLE_SIGHTING + " ) " +
+			" AND p." + PARSE_TYPE + "='" + TABLE_SIGHTING + "' ) " +
 			" WHERE " + LIST_NAME + "= ? COLLATE NOCASE" +
 			" ORDER BY " + SIGHTING_DATE + " DESC";
 
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 
 			"SELECT EXISTS(SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +
-			" l." + ID + ", " + LIST_NAME + ", " + LIST_USER + 
-			" FROM " + TABLE_SIGHTING + "as s LEFT OUTER JOIN " + TABLE_LIST + " as l" +
+			", l." + ID + ", " + LIST_NAME + ", " + LIST_USER + 
+			" FROM " + TABLE_SIGHTING + " as s LEFT OUTER JOIN " + TABLE_LIST + " as l" +
 			" ON s." + SIGHTING_LIST_ID + "=l." + ID + 
-			" WHERE " + ID + "= ? " +
+			" WHERE l." + ID + "= ? " +
 			" AND " + SIGHTING_SPECIES + "=? COLLATE NOCASE" +
 			" AND " + LIST_NAME + "=? COLLATE NOCASE" +
 			" LIMIT 1)";
 	
 	public static final String QUERY_LIST = 
 			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
-			", " + LIST_NOTES + ", " + LIST_USER + ", p.* " + 
+			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED + 
+			", " + PARSE_IS_UPLOAD_REQUIRED + ", " + PARSE_OBJECT_ID +
+			", " + PARSE_TYPE + ", " + PARSE_TYPE_ID +
 			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
-			" LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
-			" ON (p." + PARSE_TYPE + "=" + TABLE_LIST +
+			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
 			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
 			" ORDER BY " + LIST_DATE + " DESC";
 
+	public static final String QUERY_LIST_SYNC_CREATE = 
+			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
+			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
+			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
+			" WHERE " + PARSE_OBJECT_ID + " IS NULL" +
+			" AND " + PARSE_IS_UPLOAD_REQUIRED + "=1";
+	
+	public static final String QUERY_LIST_SYNC_UPDATE = 
+			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
+			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
+			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
+			" WHERE " + PARSE_OBJECT_ID + " IS NOT NULL" +
+			" AND " + PARSE_IS_UPLOAD_REQUIRED + "=1";
 }

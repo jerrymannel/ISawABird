@@ -41,8 +41,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			String username =ParseUtils.getCurrentUser().getUsername();
 			// get bird list to create
 			Vector<BirdList> birdListToCreate = dh.getBirdListToSync(true, username);
-
-			// TODO: update the parseObjectId (initially it will be null)
+			// TODO: check if isMarkedDelete is true, if so, skip sync and delete row in db
+			// TODO: update the parseObjectId after syncing with parse (initially it will be null)
 
 			// get bird list to update
 			Vector<BirdList> birdListToUpdate = dh.getBirdListToSync(false, username);
