@@ -11,13 +11,10 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.ISawABirdException;
-import com.isawabird.BirdList;
 import com.isawabird.Sighting;
-import com.isawabird.Species;
-import com.isawabird.Utils;
-import com.isawabird.parse.ParseUtils;
 
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -50,10 +47,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		Log.i(Consts.TAG, "in onCreate db");
 		Log.i(Consts.TAG, DBConsts.CREATE_LIST);
 		Log.i(Consts.TAG, DBConsts.CREATE_SIGHTING);
+		Log.i(Consts.TAG, DBConsts.CREATE_PARSE);
 		try {
 			db.beginTransaction();
 			db.execSQL(DBConsts.CREATE_LIST);
 			db.execSQL(DBConsts.CREATE_SIGHTING);
+			db.execSQL(DBConsts.CREATE_PARSE);
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			Log.e(Consts.TAG, "exception: " + e.getMessage());
@@ -76,7 +75,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_SIGHTINGS_BY_LISTNAME, 
-				new String [] { BirdList.getCurrentListName(), username });
+				new String [] { listName});
 
 		if(result.getColumnCount() <= 0) return null;
 		
@@ -84,7 +83,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		
 		while(result.moveToNext()){
 			Sighting s = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
-			s.setUsername(username);			
+			s.setId(result.getLong(result.getColumnIndexOrThrow(DBConsts.ID)));
 			s.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))));
 			s.setListName(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			s.setLatitude(result.getFloat(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LATITUDE)));
@@ -99,7 +98,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 	/* Add a sighting to a given list */
-	public void addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
+	public long addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -107,8 +106,10 @@ public class DBHandler extends SQLiteOpenHelper {
 			throw new RuntimeException("Sighting = " + sighting + ", listId = " + listId);
 		}
 
+		long result = -1;
 		if(!isSightingExist(sighting.getSpecies().getFullName(), listId, username)) {
 			try {
+				Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().getFullName());
 
 				ContentValues values = new ContentValues();
 				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().getFullName());
@@ -118,7 +119,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
 				values.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
 
-				long result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
+				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
 
 				if(result != -1) {
 					values.clear();
@@ -126,7 +127,10 @@ public class DBHandler extends SQLiteOpenHelper {
 					values.put(DBConsts.PARSE_TYPE, DBConsts.TABLE_SIGHTING);
 					values.put(DBConsts.PARSE_TYPE_ID, result);
 
-					result = db.insertOrThrow(DBConsts.TABLE_PARSE, null, values);
+					long parseResult = db.insertOrThrow(DBConsts.TABLE_PARSE, null, values);
+					if(parseResult == -1) {
+						// TODO delete previous row and throw exception
+					}
 				}
 			} catch(SQLiteException ex) {
 				throw new ISawABirdException(ex.getMessage());
@@ -135,6 +139,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			// TODO : Increment number of birds if this entry is already there. 
 			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list " + BirdList.getCurrentListName() ); 
 		}
+		return result;
 	}
 
 	public boolean isSightingExist(String species, long listId,
@@ -144,21 +149,24 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_IS_SIGHTINGS_EXIST, 
 				new String [] { Long.toString(listId), species, username });
+		result.moveToFirst();
+		Log.i(Consts.TAG, "isSightingExist: " + result.getInt(0));
 		return (result.getInt(0) == 1);
 	}
 
 	/* Create a new list for this user */
-	public void  addBirdList(BirdList birdList, String username) throws ISawABirdException{
+	public long  addBirdList(BirdList birdList) throws ISawABirdException{
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
 		values.put(DBConsts.LIST_NAME, birdList.getListName()); 
-		values.put(DBConsts.LIST_USER, username);
+		values.put(DBConsts.LIST_USER, birdList.getUsername());
 		values.put(DBConsts.LIST_DATE, birdList.getDate().getTime());
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
-				
+		
+		long result = -1;
 		try{
-			long result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
+			result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
 
 			if (result == -1){
 				Log.e(Consts.TAG, "Error occurred"); 
@@ -167,6 +175,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
 			throw new ISawABirdException("Unable to create a new list. Perhaps, a list by the name already exists ?");
 		}
+		return result;
 	}
 
 
@@ -190,7 +199,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NOTES)));
 			temp.setUsername(username);
 			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
-			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
+			temp.setId(result.getLong(result.getColumnIndexOrThrow(DBConsts.ID)));
 			birdList.add(temp);
 		}
 		

@@ -2,26 +2,23 @@ package com.isawabird;
 
 import java.util.Date;
 
-import com.isawabird.parse.ParseUtils;
-
-import android.content.ContentValues;
-
 public class Sighting {
 	
-	private Date date = new Date();
+	private long id;
+	private Date date;
 	private Species species = null;
-	private String ListName = BirdList.getCurrentListName();
+	private String listName;
+	private long listId;
 	private float latitude ;
 	private float longitude; 
 	private String notes;
-	private int numberOfBirds = 1; 
-	private String username = ParseUtils.getCurrentUser().getUsername();
+	/*private int numberOfBirds = 1; 
+	private String username = ParseUtils.getCurrentUser().getUsername();*/
 	private String parseObjectID = null; 
-	private int isUploadRequired = 1; // Using int since SQLite doesn't support boolean directly.   
-	
 
 	public Sighting(String species ){
 		this.species = new Species(species);
+		this.date = new Date();
 	}
 	
 	public Sighting(Species speciesName){
@@ -35,16 +32,6 @@ public class Sighting {
 	public void setSpecies(Species species){
 		this.species = species; 
 	}
-
-	public String getListName() {
-		return ListName;
-	}
-
-
-	public void setListName(String listName) {
-		ListName = listName;
-	}
-
 
 	public float getLatitude() {
 		return latitude;
@@ -65,40 +52,12 @@ public class Sighting {
 		this.longitude = longitude;
 	}
 
-
-	public int getNumberOfBirds() {
-		return numberOfBirds;
-	}
-
-
-	public void setNumberOfBirds(int numberOfBirds) {
-		this.numberOfBirds = numberOfBirds;
-	}
-
-
-	public String getUsername() {
-		return username;
-	}
-
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public String getParseObjectID() {
 		return parseObjectID;
 	}
 
 	public void setParseObjectID(String parseObjectID) {
 		this.parseObjectID = parseObjectID;
-	}
-
-	public int isUpdateRequired() {
-		return isUploadRequired;
-	}
-
-	public void setUpdateRequired(int isUpdateRequired) {
-		this.isUploadRequired = isUpdateRequired;
 	}
 
 	public Date getDate() {
@@ -115,5 +74,35 @@ public class Sighting {
 
 	public void setNotes(String notes) {
 		this.notes = notes;
-	}	
+	}
+
+	public String getListName() {
+		return listName;
+	}
+
+	public void setListName(String listName) {
+		this.listName = listName;
+	}
+
+	public long getListId() {
+		return listId;
+	}
+
+	public void setListId(long listId) {
+		this.listId = listId;
+	}
+	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {		
+		return new StringBuffer().append(id).append(", ").append(species).append(", ")
+				.append(listName).append(", ").append(date).append(", ").append(parseObjectID).toString();
+	}
 }
