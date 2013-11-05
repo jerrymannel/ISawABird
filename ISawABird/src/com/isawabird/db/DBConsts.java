@@ -12,7 +12,8 @@ public class DBConsts {
 	public static final String LIST_NAME = "name";
 	public static final String LIST_DATE = "ldate";
 	public static final String LIST_USER = "user";
-	public static final String LIST_NOTES = "lnotes";
+	public static final String LIST_NOTES = "lnwe " +
+			"otes";
 
 	public static final String CREATE_LIST = "CREATE TABLE " + TABLE_LIST +
 			"(" +
