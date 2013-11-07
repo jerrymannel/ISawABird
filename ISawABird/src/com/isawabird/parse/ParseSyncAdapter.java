@@ -41,10 +41,12 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority,
 			ContentProviderClient provider, SyncResult syncResult) {
-
+		Log.w(Consts.TAG, "IN onPerformSync");
 		try {
 			if (isNetworkAvailable()) {
 
+				Log.w(Consts.TAG, "SYNCING NOW");
+				
 				String username = ParseUtils.getCurrentUser().getUsername();
 				// get bird list to sync create/update/delete
 				Vector<BirdList> birdListToSync = dh.getBirdListToSync(username);
