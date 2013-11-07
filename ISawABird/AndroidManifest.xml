@@ -33,7 +33,7 @@
         <uses-library android:name="android.test.runner" />
 
         <service
-            android:name="com.isawabird.parse.AuthenticatorService"
+            android:name="com.isawabird.parse.extra.GenericAccountService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
@@ -57,9 +57,8 @@
         </service>
 
         <provider
-            android:name="com.isawabird.parse.StubProvider"
+            android:name="com.isawabird.parse.extra.StubProvider"
             android:authorities="com.isawabird.parse"
-            android:export="false"
             android:syncable="true" />
     </application>
 

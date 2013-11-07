@@ -13,13 +13,13 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.isawabird.Consts;
 import com.isawabird.BirdList;
-import com.isawabird.MainActivity;
+import com.isawabird.Consts;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 
@@ -33,9 +33,10 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	private boolean isNetworkAvailable(){
-		NetworkInfo nwInfo = MainActivity.getConnectivityManager().getActiveNetworkInfo(); 
-		Log.v(Consts.TAG, "Network availability is " + (nwInfo != null && nwInfo.isConnected()));
-		return (nwInfo != null && nwInfo.isConnected());
+		ConnectivityManager connectivityManager 
+		= (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	@Override
@@ -46,7 +47,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (isNetworkAvailable()) {
 
 				Log.w(Consts.TAG, "SYNCING NOW");
-				
+
 				String username = ParseUtils.getCurrentUser().getUsername();
 				// get bird list to sync create/update/delete
 				Vector<BirdList> birdListToSync = dh.getBirdListToSync(username);
@@ -99,7 +100,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public JSONObject buildRequest(JSONArray requestArray) {
 		try {
 			JSONObject request = new JSONObject();
