@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUser().getUsername());
 			}
 
-
+			// load test data
 			SQLiteDatabase checkDB = null;
 			try {
 				checkDB = SQLiteDatabase.openDatabase(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath(), null,

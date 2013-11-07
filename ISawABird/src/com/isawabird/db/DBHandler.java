@@ -78,9 +78,9 @@ public class DBHandler extends SQLiteOpenHelper {
 				new String [] { listName});
 
 		if(result.getColumnCount() <= 0) return null;
-		
+
 		Vector<Sighting> sightings = new Vector<Sighting>();
-		
+
 		while(result.moveToNext()){
 			Sighting s = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
 			s.setId(result.getLong(result.getColumnIndexOrThrow(DBConsts.ID)));
@@ -163,7 +163,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.LIST_USER, birdList.getUsername());
 		values.put(DBConsts.LIST_DATE, birdList.getDate().getTime());
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
-		
+
 		long result = -1;
 		try{
 			result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
@@ -187,11 +187,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		// TODO: use username
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_LIST, null);
-		
+
 		if(result.getColumnCount() <= 0) return null;
-		
+
 		Vector<BirdList> birdList = new Vector<BirdList>();
-		
+
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			Log.v(Consts.TAG, "Found list " + result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
@@ -202,13 +202,37 @@ public class DBHandler extends SQLiteOpenHelper {
 			temp.setId(result.getLong(result.getColumnIndexOrThrow(DBConsts.ID)));
 			birdList.add(temp);
 		}
-		
+
 		return birdList;
 	}
 
-	public Vector<BirdList> getBirdListToSync(boolean toCreate, String username) {
+	public Vector<BirdList> getBirdListToSync(String username) {
+
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
+		Cursor result = db.rawQuery(DBConsts.QUERY_LIST_SYNC, null);
+
+		if(result.getColumnCount() <= 0) return null;
+
+		Vector<BirdList> birdList = new Vector<BirdList>();
+
+		while(result.moveToNext()) {
+			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
+			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.LIST_DATE))));
+			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NOTES)));
+			temp.setUsername(username);
+			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
+			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
+			temp.setMarkedForDelete(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED)) == 1);
+			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
+			birdList.add(temp);
+		}
+		return birdList;
+	}
+
+	/*public Vector<BirdList> getBirdListToSync(boolean toCreate, String username) {
+		if(!db.isOpen()) db = getWritableDatabase();
+
 		String query = null;
 		if(toCreate) {
 			query = DBConsts.QUERY_LIST_SYNC_CREATE;
@@ -217,11 +241,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 
 		Cursor result = db.rawQuery(query, null);
-		
+
 		if(result.getColumnCount() <= 0) return null;
-		
+
 		Vector<BirdList> birdList = new Vector<BirdList>();
-		
+
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.LIST_DATE))));
@@ -231,9 +255,9 @@ public class DBHandler extends SQLiteOpenHelper {
 			if(!toCreate) {
 				temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
 			}
-			
+
 			birdList.add(temp);
 		}
 		return birdList;
-	}
+	}*/
 }

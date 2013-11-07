@@ -13,7 +13,9 @@ public class BirdList {
 	private String listName = null; 
 	private String notes = null; 
 	private String username = ParseUtils.getCurrentUser().getUsername();
-	private String parseObjectID = null; 
+	private String parseObjectID = null;
+	private boolean isMarkedForDelete;
+	private boolean isMarkedForUpload;
 
 	public BirdList(String listName){
 		this.listName = listName;
@@ -87,6 +89,22 @@ public class BirdList {
 		currentListId = id;
 	}
 	
+	public boolean isMarkedForDelete() {
+		return isMarkedForDelete;
+	}
+
+	public void setMarkedForDelete(boolean isMarkedForDelete) {
+		this.isMarkedForDelete = isMarkedForDelete;
+	}
+
+	public boolean isMarkedForUpload() {
+		return isMarkedForUpload;
+	}
+
+	public void setMarkedForUpload(boolean isMarkedForUpload) {
+		this.isMarkedForUpload = isMarkedForUpload;
+	}
+
 	@Override
 	public String toString() {
 		
