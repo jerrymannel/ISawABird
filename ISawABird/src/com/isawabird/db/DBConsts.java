@@ -97,7 +97,16 @@ public class DBConsts {
 			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
 			" ORDER BY " + LIST_DATE + " DESC";
 
-	public static final String QUERY_LIST_SYNC_CREATE = 
+	public static final String QUERY_LIST_SYNC = 
+			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
+			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
+			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
+			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
+			" OR " + PARSE_IS_DELETE_MARKED + "=1";
+	
+	/*public static final String QUERY_LIST_SYNC_CREATE = 
 			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
 			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
@@ -113,5 +122,5 @@ public class DBConsts {
 			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
 			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
 			" WHERE " + PARSE_OBJECT_ID + " IS NOT NULL" +
-			" AND " + PARSE_IS_UPLOAD_REQUIRED + "=1";
+			" AND " + PARSE_IS_UPLOAD_REQUIRED + "=1";*/
 }

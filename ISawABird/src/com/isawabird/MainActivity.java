@@ -1,10 +1,11 @@
 package com.isawabird;
 
+import android.accounts.Account;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.isawabird.db.DBConsts;
 import com.isawabird.parse.ParseInit;
 import com.isawabird.parse.ParseUtils;
+import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener {
@@ -22,10 +24,24 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	static MainActivity act = null; 
 	static Button click = null; 
 
+	// Constants
+	
+	// Instance fields
+	Account mAccount;
+	
+	// Global variables
+    // A content resolver for accessing the provider
+    ContentResolver mResolver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		/* Initialize Parse */
+		ParseInit.init(this.getApplicationContext());
+		
+		SyncUtils.createSyncAccount(this);
 
 		act = this;
 		helloworld = (TextView) findViewById(R.id.helloworld);
@@ -33,8 +49,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		click.setOnClickListener(this); 
 
 		try{
-			/* Initialize Parse */
-			ParseInit.init(this);
+			
 			MainActivity.updateLabel("Parse initialization complete");
 
 			/* Initialize the checklists */
@@ -50,7 +65,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUser().getUsername());
 			}
 
-
+			// load test data
 			SQLiteDatabase checkDB = null;
 			try {
 				checkDB = SQLiteDatabase.openDatabase(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath(), null,
@@ -80,14 +95,6 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
-	}
-
-	public static Context getContext(){
-		return act;
-	}
-
-	public static ConnectivityManager getConnectivityManager(){
-		return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE);
 	}
 
 	public static void updateLabel(final String s){
