@@ -8,6 +8,7 @@ import android.util.Log;
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.Sighting;
+import com.isawabird.Utils;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
 
@@ -27,7 +28,7 @@ public class DataLoader {
 			}
 			DBHandler dh = DBHandler.getInstance(context);
 
-			BirdList blist = new BirdList("Hebbal Nov 2013");
+			BirdList blist = new BirdList("Hesaraghatta Nov 2013");
 			blist.setNotes("Bird watch at hebbal");
 			blist.setUsername(username);
 			long listId = dh.addBirdList(blist);
@@ -57,8 +58,10 @@ public class DataLoader {
 			Vector<BirdList> birdList = dh.getBirdLists(username);
 
 			for (BirdList list : birdList) {
-				Log.i(Consts.TAG, list.toString());
+				Log.i(Consts.TAG, list.getId() + ":" +  list.toString());
 			}
+			
+			Utils.setCurrentList(birdList.elementAt(0).getListName(), birdList.elementAt(0).getId());
 			
 			for (BirdList list : birdList) {
 				Vector<Sighting> sightings = dh.getSightingsByListName(list.getListName(), username);
@@ -66,6 +69,10 @@ public class DataLoader {
 					Log.i(Consts.TAG, sighting.toString());
 				}
 			}
+			
+			Log.i(Consts.TAG, " Current list ID is " + Utils.getCurrentListID());
+			Log.i(Consts.TAG, " Current list name is " + Utils.getCurrentListName());
+			Log.i(Consts.TAG, " Number of birds in current list is " + dh.getBirdCountInCurrentList());
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

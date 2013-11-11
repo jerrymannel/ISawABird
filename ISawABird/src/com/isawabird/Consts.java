@@ -4,6 +4,7 @@ public class Consts {
 
 	// Shared Preferences keys
 	public static final String CURRENT_LIST_KEY = "CurrentList";
+	public static final String CURRENT_LIST_ID_KEY = "CurrentListID";
 
 	public static final String TAG = "Lyre";
 

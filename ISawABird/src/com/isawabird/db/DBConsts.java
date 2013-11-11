@@ -1,5 +1,8 @@
 package com.isawabird.db;
 
+import com.isawabird.Utils;
+import com.isawabird.parse.ParseUtils;
+
 public class DBConsts {
 
 	public static final String DATABASE_NAME = "BirdSightings";
@@ -12,8 +15,7 @@ public class DBConsts {
 	public static final String LIST_NAME = "name";
 	public static final String LIST_DATE = "ldate";
 	public static final String LIST_USER = "user";
-	public static final String LIST_NOTES = "lnwe " +
-			"otes";
+	public static final String LIST_NOTES = "lnotes";
 
 	public static final String CREATE_LIST = "CREATE TABLE " + TABLE_LIST +
 			"(" +
@@ -105,6 +107,9 @@ public class DBConsts {
 			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
+	
+	public static final String QUERY_COUNT_CURRENT_LIST = 
+			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() ; 
 	
 	/*public static final String QUERY_LIST_SYNC_CREATE = 
 			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +

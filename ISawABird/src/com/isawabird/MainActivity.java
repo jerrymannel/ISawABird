@@ -78,13 +78,15 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			boolean isFirstTime = checkDB == null ? true : false;
 
 			DataLoader loader = new DataLoader(this.getApplicationContext());
-			if(isFirstTime) {
+			//if(isFirstTime) {
 				// Use below class to create test data.
 				// TODO: remove when not required 
 				loader.load();
-			}
+			//}
 			loader.query();
-
+			
+			
+			
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

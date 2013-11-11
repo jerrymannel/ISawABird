@@ -96,7 +96,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		return sightings;
 	}
 
-
 	/* Add a sighting to a given list */
 	public long addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
 
@@ -178,6 +177,14 @@ public class DBHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
+	public int getBirdCountInCurrentList() {
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		Cursor result = db.rawQuery(DBConsts.QUERY_COUNT_CURRENT_LIST, null); 
+		if(result.getColumnCount() <= 0) return 0;
+
+		return result.getCount();
+	}
 
 	/* Get the lists for the current user */
 	public Vector<BirdList> getBirdLists(String username){

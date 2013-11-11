@@ -102,7 +102,7 @@ public class Sighting {
 
 	@Override
 	public String toString() {		
-		return new StringBuffer().append(id).append(", ").append(species).append(", ")
+		return new StringBuffer().append(id).append(", ").append(species.toString()).append(", ")
 				.append(listName).append(", ").append(date).append(", ").append(parseObjectID).toString();
 	}
 }

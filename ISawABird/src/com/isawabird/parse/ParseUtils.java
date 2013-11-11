@@ -59,4 +59,9 @@ public class ParseUtils {
 		currentUser = ParseUser.getCurrentUser();
 		return currentUser;
 	}
+	
+	public static String getCurrentUserName(){
+		return getCurrentUser().getUsername();
+	}
+	
 }
