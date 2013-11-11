@@ -15,6 +15,9 @@ import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.ISawABirdException;
 import com.isawabird.Sighting;
+import com.isawabird.Species;
+import com.isawabird.Utils;
+import com.isawabird.parse.ParseUtils;
 
 public class DBHandler extends SQLiteOpenHelper {
 
@@ -96,6 +99,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		return sightings;
 	}
 
+	/* Get all sightings for current list */ 
+	public Vector<Sighting> getSightingsForCurrentList(){
+		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUserName());
+	}
+		
 	/* Add a sighting to a given list */
 	public long addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
 
@@ -141,6 +149,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
+	/* Add a sighting to the current active list */
+	public long addSightingToCurrentList(Species species) throws ISawABirdException{
+		Sighting sighting = new Sighting(species);
+		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUserName());
+	}
+	
 	public boolean isSightingExist(String species, long listId,
 			String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
