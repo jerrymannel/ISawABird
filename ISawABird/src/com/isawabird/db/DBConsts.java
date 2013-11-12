@@ -108,7 +108,7 @@ public class DBConsts {
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
 	
-	public static final String QUERY_COUNT_CURRENT_LIST = 
+	/*public static final String QUERY_BIRD_COUNT = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() ; 
 	
 	/*public static final String QUERY_LIST_SYNC_CREATE = 

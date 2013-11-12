@@ -38,7 +38,7 @@ public class GenericAccountService extends Service {
      * @return Handle to application's account (not guaranteed to resolve unless CreateSyncAccount()
      *         has been called)
      */
-    public static Account GetAccount() {
+    public static Account getAccount() {
         // Note: Normally the account name is set to the user's identity (username or email
         // address). However, since we aren't actually using any user accounts, it makes more sense
         // to use a generic string in this case.

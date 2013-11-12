@@ -1,8 +1,6 @@
 package com.isawabird;
 
-import android.accounts.Account;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -22,16 +20,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 
 	static TextView helloworld = null; 
 	static MainActivity act = null; 
-	static Button click = null; 
-
-	// Constants
-	
-	// Instance fields
-	Account mAccount;
-	
-	// Global variables
-    // A content resolver for accessing the provider
-    ContentResolver mResolver;
+	static Button click = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,15 +67,12 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			boolean isFirstTime = checkDB == null ? true : false;
 
 			DataLoader loader = new DataLoader(this.getApplicationContext());
-			//if(isFirstTime) {
-				// Use below class to create test data.
+			if(isFirstTime) {
+				// Use below class to create test data when app is installed for first time
 				// TODO: remove when not required 
 				loader.load();
-			//}
+			}
 			loader.query();
-			
-			
-			
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -113,5 +99,4 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	public void onClick(View v) {
 
 	}
-
 }

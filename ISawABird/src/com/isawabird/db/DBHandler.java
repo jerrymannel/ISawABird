@@ -6,6 +6,7 @@ import java.util.Vector;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -103,7 +104,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	public Vector<Sighting> getSightingsForCurrentList(){
 		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUserName());
 	}
-		
+
 	/* Add a sighting to a given list */
 	public long addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
 
@@ -154,7 +155,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		Sighting sighting = new Sighting(species);
 		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUserName());
 	}
-	
+
 	public boolean isSightingExist(String species, long listId,
 			String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
@@ -191,13 +192,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
-	public int getBirdCountInCurrentList() {
+	public long getBirdCountByListId(long listId) {
 		if(!db.isOpen()) db = getWritableDatabase();
-		
-		Cursor result = db.rawQuery(DBConsts.QUERY_COUNT_CURRENT_LIST, null); 
-		if(result.getColumnCount() <= 0) return 0;
 
-		return result.getCount();
+		return DatabaseUtils.queryNumEntries(db, DBConsts.TABLE_SIGHTING,
+				DBConsts.SIGHTING_LIST_ID + "=?", new String[] {Long.toString(listId)});
 	}
 
 	/* Get the lists for the current user */

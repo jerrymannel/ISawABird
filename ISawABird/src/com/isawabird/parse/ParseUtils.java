@@ -1,18 +1,9 @@
 package com.isawabird.parse;
 
-import java.util.List;
-
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.isawabird.Consts;
 import com.isawabird.ISawABirdException;
-import com.isawabird.parse.extra.GenericAccountService;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
@@ -23,9 +14,7 @@ import com.parse.ParseUser;
 
 public class ParseUtils {
 
-	private static ParseObject currentList = null; 
 	private static ParseUser currentUser = null;  
-	private static List<ParseObject> lists = null; 
 	static ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Sightings");
 	public static ParseGeoPoint location = null;
 
