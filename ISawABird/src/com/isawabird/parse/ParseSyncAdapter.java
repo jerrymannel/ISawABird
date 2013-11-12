@@ -39,10 +39,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
-	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) {
-		Log.w(Consts.TAG, "IN onPerformSync");
+	public void doSync(){
 		try {
 			if (isNetworkAvailable()) {
 
@@ -99,6 +96,13 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void onPerformSync(Account account, Bundle extras, String authority,
+			ContentProviderClient provider, SyncResult syncResult) {
+		Log.w(Consts.TAG, "IN onPerformSync");
+		doSync();
 	}
 
 	public JSONObject buildRequest(JSONArray requestArray) {

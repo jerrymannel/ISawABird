@@ -51,7 +51,10 @@ public class DBConsts {
 	public static final String PARSE_OBJECT_ID = "objectId";
 	public static final String PARSE_IS_UPLOAD_REQUIRED = "isUploadRequired";
 	public static final String PARSE_IS_DELETE_MARKED = "isMarkedForDelete";
-
+	public static final String PARSE_TYPE_BIRDLIST = "BIRDLIST";
+	public static final String PARSE_TYPE_SIGHTING = "SIGHTING";
+	
+	
 	public static final String CREATE_PARSE = "CREATE TABLE " + TABLE_PARSE +
 			"(" +
 			ID 							+ " INTEGER PRIMARY KEY AUTOINCREMENT," +

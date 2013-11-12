@@ -2,8 +2,10 @@ package com.isawabird;
 
 import android.accounts.Account;
 import android.app.Activity;
+import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import com.isawabird.db.DBConsts;
 import com.isawabird.parse.ParseInit;
+import com.isawabird.parse.ParseSyncAdapter;
+import com.isawabird.parse.ParseSyncService;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
@@ -85,7 +89,9 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			//}
 			loader.query();
 			
-			
+			/* Start the Parse sync service */ 
+			ParseSyncAdapter adap = new ParseSyncAdapter(this, true); 
+			adap.doSync();
 			
 		} catch(Exception ex) {
 			ex.printStackTrace();

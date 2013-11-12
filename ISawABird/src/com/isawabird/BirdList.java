@@ -14,8 +14,8 @@ public class BirdList {
 	private String notes = null; 
 	private String username = ParseUtils.getCurrentUser().getUsername();
 	private String parseObjectID = null;
-	private boolean isMarkedForDelete;
-	private boolean isMarkedForUpload;
+	private boolean isMarkedForDelete = false;
+	private boolean isMarkedForUpload = true;
 
 	public BirdList(String listName){
 		this.listName = listName;
@@ -75,19 +75,20 @@ public class BirdList {
 	 * @return A ParseObject for the current list
 	 * @throws ISawABirdException
 	 */
-	public static String getCurrentListName() {
-		// TODO: Fix this
-		/*String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, "Hebbal Oct 2013");
-		Log.d(Consts.TAG, "Current list name is " + currentListName);
-		return currentListName;*/
-
-		return "Hebbal Oct 2013";
-	}
-
-	public static void setCurrentList(String name, int id) {
-		currentListName = name;
-		currentListId = id;
-	}
+	/* Moved to Utils.java */
+//	public static String getCurrentListName() {
+//		// TODO: Fix this
+//		/*String currentListName = prefs.getString(Consts.CURRENT_LIST_KEY, "Hebbal Oct 2013");
+//		Log.d(Consts.TAG, "Current list name is " + currentListName);
+//		return currentListName;*/
+//
+//		return "Hebbal Oct 2013";
+//	}
+//
+//	public static void setCurrentList(String name, int id) {
+//		currentListName = name;
+//		currentListId = id;
+//	}
 	
 	public boolean isMarkedForDelete() {
 		return isMarkedForDelete;
@@ -109,6 +110,7 @@ public class BirdList {
 	public String toString() {
 		
 		return new StringBuffer().append(id).append(", ").append(listName).append(", ")
-				.append(date).append(", ").append(username).append(", ").append(parseObjectID).toString();
+				.append(date).append(", ").append(username).append(", ").append(parseObjectID)
+				.append(isMarkedForUpload).append(isMarkedForDelete).toString();
 	}
 }

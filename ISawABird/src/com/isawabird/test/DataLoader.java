@@ -28,18 +28,18 @@ public class DataLoader {
 			}
 			DBHandler dh = DBHandler.getInstance(context);
 
-			BirdList blist = new BirdList("Hesaraghatta Nov 2013");
+			BirdList blist = new BirdList("Hebbal Nov 2013");
 			blist.setNotes("Bird watch at hebbal");
 			blist.setUsername(username);
 			long listId = dh.addBirdList(blist);
 
-			Sighting sighting = new Sighting("Common Crow");
+			Sighting sighting = new Sighting("Brown Shrike");
 			dh.addSighting(sighting, listId, username);
 
-			sighting = new Sighting("Black-breasted Sunbird");
+			sighting = new Sighting("Purple-rumped Sunbird");
 			dh.addSighting(sighting, listId, username);
 
-			sighting = new Sighting("Eurasian Eagle-owl");
+			sighting = new Sighting("Common Coot");
 			dh.addSighting(sighting, listId, username);
 
 		} catch (Exception e) {

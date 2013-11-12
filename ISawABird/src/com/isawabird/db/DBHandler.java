@@ -144,7 +144,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			}
 		} else{
 			// TODO : Increment number of birds if this entry is already there. 
-			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list " + BirdList.getCurrentListName() ); 
+			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list " + Utils.getCurrentListName()); 
 		}
 		return result;
 	}
@@ -182,7 +182,21 @@ public class DBHandler extends SQLiteOpenHelper {
 			result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
 
 			if (result == -1){
-				Log.e(Consts.TAG, "Error occurred"); 
+				Log.e(Consts.TAG, "Error occurred");
+				return result; 
+			}
+			
+			ContentValues parseValues = new ContentValues();
+			parseValues.put(DBConsts.PARSE_TYPE, DBConsts.PARSE_TYPE_BIRDLIST);
+			// TODO : Check whether the row ID returned by insertOrThrow 
+			// is always equal to the ID we use in the table
+			parseValues.put(DBConsts.PARSE_TYPE_ID, result);
+			parseValues.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, true);
+			parseValues.put(DBConsts.PARSE_IS_DELETE_MARKED, false); 
+			
+			result = db.insertOrThrow(DBConsts.TABLE_PARSE, null, parseValues);			
+			if (result == -1){
+				Log.e(Consts.TAG, "Error occurred writing sync data");
 			}
 		}catch(SQLiteException ex){
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
@@ -248,6 +262,8 @@ public class DBHandler extends SQLiteOpenHelper {
 			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
 			birdList.add(temp);
 		}
+		
+		Log.i(Consts.TAG, "We have " + birdList.size() + " lists to sync");
 		return birdList;
 	}
 
