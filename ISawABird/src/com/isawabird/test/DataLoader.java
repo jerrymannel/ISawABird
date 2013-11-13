@@ -32,7 +32,7 @@ public class DataLoader {
 			BirdList blist = new BirdList("Hebbal Nov 2013");
 			blist.setNotes("Bird watch at hebbal");
 			blist.setUsername(username);
-			long listId = dh.addBirdList(blist);
+			long listId = dh.addBirdList(blist, true);
 
 			Species sighting = new Species("Brown Shrike");
 			dh.addSightingToCurrentList(sighting);

@@ -23,9 +23,7 @@ import com.parse.ParseUser;
 
 public class ParseUtils {
 
-	private static ParseObject currentList = null; 
 	private static ParseUser currentUser = null;  
-	private static List<ParseObject> lists = null; 
 	static ParseQuery<ParseObject> query = new ParseQuery<ParseObject>("Sightings");
 	public static ParseGeoPoint location = null;
 

@@ -151,14 +151,15 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_IS_SIGHTINGS_EXIST, 
-				new String [] { Long.toString(listId), species, username });
-		result.moveToFirst();
-		Log.i(Consts.TAG, "isSightingExist: " + result.getInt(0));
-		return (result.getInt(0) == 1);
+				new String [] { Long.toString(listId), species });
+		//result.moveToNext();
+		Log.i(Consts.TAG, "isSightingExist: " + result.getCount());
+		return (result.getCount() != 0);
 	}
 
 	/* Create a new list for this user */
-	public long  addBirdList(BirdList birdList) throws ISawABirdException{
+	public long  addBirdList(BirdList birdList, boolean setCurrentList) throws ISawABirdException{
+		Log.i(Consts.TAG, " >> addBirdList"); 
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -166,8 +167,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.LIST_USER, birdList.getUsername());
 		values.put(DBConsts.LIST_DATE, birdList.getDate().getTime());
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
-		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, true);
-		values.put(DBConsts.PARSE_IS_DELETE_MARKED, false); 
+		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
+		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 0); 
 		
 		long result = -1;
 		try{
@@ -178,6 +179,9 @@ public class DBHandler extends SQLiteOpenHelper {
 				return result; 
 			}
 			
+			if (setCurrentList){
+				Utils.setCurrentList(birdList.getListName(), result);
+			}
 		}catch(SQLiteException ex){
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
 			throw new ISawABirdException("Unable to create a new list. Perhaps, a list by the name already exists ?");
@@ -259,6 +263,10 @@ public class DBHandler extends SQLiteOpenHelper {
 			
 			/* Next delete the list from the LIST table */ 
 			db.delete(DBConsts.TABLE_LIST, DBConsts.ID + "=" + listId, null); 
+			
+			if (listId == Utils.getCurrentListID()){
+				Utils.setCurrentList("", -1);
+			}
 		}catch(ISawABirdException ex){
 			// TODO Handle properly
 			ex.printStackTrace(); 

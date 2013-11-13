@@ -94,19 +94,19 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				// loader.load();
 			//}
 			
-			dh.dumpTable(DBConsts.TABLE_SIGHTING);
-			dh.dumpTable(DBConsts.TABLE_LIST);
-			
+//			dh.clearTable(DBConsts.TABLE_LIST);
+//			dh.clearTable(DBConsts.TABLE_SIGHTING);
+//		
 			BirdList birdList = new BirdList("Hebbal Nov 2013");
-			long id = dh.addBirdList(birdList);
+//			long id = dh.addBirdList(birdList,true );
 			
-			Utils.setCurrentList(birdList.getListName(), birdList.getId()); 
+			//dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
 			
-			dh.addSightingToCurrentList(new Species("Baya weaver"));
+//			dh.clearTable(DBConsts.TABLE_LIST);
+//			dh.clearTable(DBConsts.TABLE_SIGHTING);
 			
-			dh.clearTable(DBConsts.TABLE_LIST);
-			dh.clearTable(DBConsts.TABLE_SIGHTING);
-			
+			dh.deleteList("Hebbal Nov 2013");
+//			
 			dh.dumpTable(DBConsts.TABLE_LIST);
 			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			

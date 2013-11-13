@@ -80,34 +80,29 @@ public class DBConsts {
 	 */
 	
 	public static final String QUERY_SIGHTINGS_BY_LISTNAME = 
-			"SELECT s." + ID + " as " + ID + ", " + SIGHTING_SPECIES + ", " + SIGHTING_NOTES +
+			"SELECT " +  ID + ", " + SIGHTING_SPECIES + ", " + SIGHTING_NOTES +
 			", " + SIGHTING_LATITUDE + ", " + SIGHTING_LONGITUDE + ", " +  SIGHTING_DATE +
-			", " + LIST_DATE + ", " + LIST_NAME + ", " + LIST_NOTES + ", " + LIST_USER +
-			", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
 			", " + PARSE_OBJECT_ID +
+			", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
 			" FROM " + TABLE_SIGHTING + 
-			" WHERE " + LIST_NAME + "= ? COLLATE NOCASE" +
+			" WHERE " + SIGHTING_LIST_ID  + "= ? COLLATE NOCASE" +
 			" ORDER BY " + SIGHTING_DATE + " DESC";
 
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 
-			"SELECT EXISTS(SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +
-			", l." + ID + ", " + LIST_NAME + ", " + LIST_USER + 
-			" FROM " + TABLE_SIGHTING + " as s LEFT OUTER JOIN " + TABLE_LIST + " as l" +
-			" ON s." + SIGHTING_LIST_ID + "=l." + ID + 
-			" WHERE l." + ID + "= ? " +
-			" AND " + SIGHTING_SPECIES + "=? COLLATE NOCASE" +
-			" AND " + LIST_NAME + "=? COLLATE NOCASE" +
-			" LIMIT 1)";
+			"SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +
+			" FROM " + TABLE_SIGHTING  +  
+			" WHERE " + SIGHTING_LIST_ID + "= ? " +
+			" AND " + SIGHTING_SPECIES + " = ? COLLATE NOCASE" ;
 	
 	public static final String QUERY_LIST = 
-			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			"SELECT " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED + 
 			", " + PARSE_IS_UPLOAD_REQUIRED + ", " + PARSE_OBJECT_ID +
 			" FROM " + TABLE_LIST + 
 			" ORDER BY " + LIST_DATE + " DESC";
 
 	public static final String QUERY_LIST_SYNC = 
-			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			"SELECT " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
 			" FROM " + TABLE_LIST + 
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
