@@ -111,6 +111,11 @@ public class DBConsts {
 	public static final String QUERY_COUNT_CURRENT_LIST = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() ; 
 	
+	/* We use SQLiteDatabase.delete() which doesn't require the SELECT statement until WHERE */
+	public static final String QUERY_DELETE_SIGHTING = 
+			DBConsts.SIGHTING_SPECIES + "= ? AND " + 
+			DBConsts.SIGHTING_LIST_ID + "=?"; 
+	
 	/*public static final String QUERY_LIST_SYNC_CREATE = 
 			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +

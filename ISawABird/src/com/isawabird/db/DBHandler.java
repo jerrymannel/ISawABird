@@ -274,6 +274,30 @@ public class DBHandler extends SQLiteOpenHelper {
 		
 	}
 	
+	public void deleteSightingFromCurrentList(String species){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
+	}
+	
+	public void deleteSightingFromList(String species, String listName ){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		try{
+			long listId = getListIDByName(listName);
+			
+			db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+					new String[] {species, String.valueOf(listId) });
+			
+		}catch(ISawABirdException ex){
+			// TODO : Handle properly. No list by the name is found 
+			ex.printStackTrace(); 
+		}
+		db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
+	}
+	
 	public long getListIDByName(String listName) throws ISawABirdException{
 		if(!db.isOpen()) db = getWritableDatabase();
 		

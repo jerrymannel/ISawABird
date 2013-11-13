@@ -93,25 +93,41 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				// TODO: remove when not required 
 				// loader.load();
 			//}
+			Log.e(Consts.TAG, "Querying ...");
+			loader.query();
 			
-//			dh.clearTable(DBConsts.TABLE_LIST);
-//			dh.clearTable(DBConsts.TABLE_SIGHTING);
+			dh.clearTable(DBConsts.TABLE_LIST);
+			dh.clearTable(DBConsts.TABLE_SIGHTING);
 //		
-			BirdList birdList = new BirdList("Hebbal Nov 2013");
-//			long id = dh.addBirdList(birdList,true );
-			
-			//dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
-			
-//			dh.clearTable(DBConsts.TABLE_LIST);
-//			dh.clearTable(DBConsts.TABLE_SIGHTING);
-			
-			dh.deleteList("Hebbal Nov 2013");
-//			
 			dh.dumpTable(DBConsts.TABLE_LIST);
 			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
-			Log.e(Consts.TAG, "Querying ...");
-			loader.query();
+			BirdList birdList = new BirdList("Hebbal Nov 2013");
+			long id = dh.addBirdList(birdList,true );
+			birdList = new BirdList("Hebbal Nov 2013");
+			try{
+				dh.addBirdList(birdList, true);
+			}catch (Exception ex){
+				ex.printStackTrace();
+			}
+			
+			birdList = new BirdList("Hesaraghatta Nov 2013");
+			dh.addBirdList(birdList, false);
+			
+			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
+			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
+			dh.addSightingToCurrentList(new Species("Blue-capped Rock Thrush"));
+			dh.addSightingToCurrentList(new Species("Indian Pitta"));
+			
+			dh.deleteList("Hesaraghatta Nov 2013");
+			dh.deleteSightingFromCurrentList("Indian Pitta");
+			
+//			dh.clearTable(DBConsts.TABLE_LIST);
+//			dh.clearTable(DBConsts.TABLE_SIGHTING);
+			
+			//dh.deleteList("Hebbal Nov 2013");
+			dh.dumpTable(DBConsts.TABLE_LIST);
+			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
 			/* Start the Parse sync service */ 
 			ParseSyncAdapter adap = new ParseSyncAdapter(this, true); 
