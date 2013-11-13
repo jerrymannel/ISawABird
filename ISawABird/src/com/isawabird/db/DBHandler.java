@@ -258,11 +258,13 @@ public class DBHandler extends SQLiteOpenHelper {
 			
 			if(!db.isOpen()) db = getWritableDatabase();
 			
-			/* First delete all the sightings in the list */ 
-			db.delete(DBConsts.TABLE_SIGHTING, DBConsts.SIGHTING_LIST_ID + "=" + listId , null);
+			/* Do not actually delete. Just mark isMarkedDelete = 1(true) */
+			ContentValues values = new ContentValues();
+			values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1); 
+			db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.SIGHTING_LIST_ID + "=" + listId , null); 
 			
 			/* Next delete the list from the LIST table */ 
-			db.delete(DBConsts.TABLE_LIST, DBConsts.ID + "=" + listId, null); 
+			db.update(DBConsts.TABLE_LIST, values, DBConsts.ID + "=" + listId, null);
 			
 			if (listId == Utils.getCurrentListID()){
 				Utils.setCurrentList("", -1);
@@ -276,8 +278,9 @@ public class DBHandler extends SQLiteOpenHelper {
 	
 	public void deleteSightingFromCurrentList(String species){
 		if(!db.isOpen()) db = getWritableDatabase();
-		
-		db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+		ContentValues values = new ContentValues();
+		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1);
+		db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.QUERY_DELETE_SIGHTING, 
 				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
 	}
 	
@@ -287,15 +290,15 @@ public class DBHandler extends SQLiteOpenHelper {
 		try{
 			long listId = getListIDByName(listName);
 			
-			db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+			ContentValues values = new ContentValues();
+			values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1);
+			db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.QUERY_DELETE_SIGHTING, 
 					new String[] {species, String.valueOf(listId) });
 			
 		}catch(ISawABirdException ex){
 			// TODO : Handle properly. No list by the name is found 
 			ex.printStackTrace(); 
 		}
-		db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
-				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
 	}
 	
 	public long getListIDByName(String listName) throws ISawABirdException{
@@ -351,6 +354,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		for (int i = 0 ; i < res.getColumnCount(); i++){
 			dumpString += res.getColumnName(i) + " | " ;  
 		}
+		Log.i(Consts.TAG, "Dumping contents of table " + tableName);
 		Log.i(Consts.TAG, dumpString); 
 
 		while (res.moveToNext()){

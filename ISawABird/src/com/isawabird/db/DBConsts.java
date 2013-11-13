@@ -85,31 +85,38 @@ public class DBConsts {
 			", " + PARSE_OBJECT_ID +
 			", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
 			" FROM " + TABLE_SIGHTING + 
-			" WHERE " + SIGHTING_LIST_ID  + "= ? COLLATE NOCASE" +
+			" WHERE " + SIGHTING_LIST_ID  + "= ? AND " + 
+			PARSE_IS_DELETE_MARKED + "!=1" + " COLLATE NOCASE" +
 			" ORDER BY " + SIGHTING_DATE + " DESC";
 
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 
 			"SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +
 			" FROM " + TABLE_SIGHTING  +  
 			" WHERE " + SIGHTING_LIST_ID + "= ? " +
-			" AND " + SIGHTING_SPECIES + " = ? COLLATE NOCASE" ;
+			" AND " + SIGHTING_SPECIES + " = ? AND " + 
+			PARSE_IS_DELETE_MARKED + "!= 1  COLLATE NOCASE" ;
 	
 	public static final String QUERY_LIST = 
 			"SELECT " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED + 
 			", " + PARSE_IS_UPLOAD_REQUIRED + ", " + PARSE_OBJECT_ID +
 			" FROM " + TABLE_LIST + 
+			" WHERE " + PARSE_IS_DELETE_MARKED + "!= 1" + 
 			" ORDER BY " + LIST_DATE + " DESC";
 
 	public static final String QUERY_LIST_SYNC = 
 			"SELECT " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			", " + PARSE_OBJECT_ID + 
+			", " + PARSE_IS_UPLOAD_REQUIRED + 
 			" FROM " + TABLE_LIST + 
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
 	
 	public static final String QUERY_COUNT_CURRENT_LIST = 
-			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() ; 
+			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 
+			SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() + "AND " + 
+			PARSE_IS_DELETE_MARKED + "!=1"; 
 	
 	/* We use SQLiteDatabase.delete() which doesn't require the SELECT statement until WHERE */
 	public static final String QUERY_DELETE_SIGHTING = 

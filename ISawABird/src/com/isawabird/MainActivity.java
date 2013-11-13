@@ -98,7 +98,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			
 			dh.clearTable(DBConsts.TABLE_LIST);
 			dh.clearTable(DBConsts.TABLE_SIGHTING);
-//		
+
 			dh.dumpTable(DBConsts.TABLE_LIST);
 			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
@@ -115,12 +115,12 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			dh.addBirdList(birdList, false);
 			
 			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
-			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
+			dh.addSightingToCurrentList(new Species("Blue Rock Thrush")); // this should fail
 			dh.addSightingToCurrentList(new Species("Blue-capped Rock Thrush"));
 			dh.addSightingToCurrentList(new Species("Indian Pitta"));
 			
 			dh.deleteList("Hesaraghatta Nov 2013");
-			dh.deleteSightingFromCurrentList("Indian Pitta");
+			dh.deleteSightingFromList("Indian Pitta", "Hebbal Nov 2013");
 			
 //			dh.clearTable(DBConsts.TABLE_LIST);
 //			dh.clearTable(DBConsts.TABLE_SIGHTING);
@@ -130,8 +130,8 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
 			/* Start the Parse sync service */ 
-			ParseSyncAdapter adap = new ParseSyncAdapter(this, true); 
-			adap.doSync();
+			ParseSyncAdapter adap = new ParseSyncAdapter(this, true);
+			//adap.doSync();
 			
 		} catch(Exception ex) {
 			ex.printStackTrace();

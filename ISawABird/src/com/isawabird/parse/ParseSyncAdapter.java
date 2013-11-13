@@ -1,9 +1,16 @@
 package com.isawabird.parse;
 
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +31,8 @@ import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 
 public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
+	
+	private static final String PARSE_BATCH_URL = "https://api.parse.com/1/batch";
 
 	private DBHandler dh;
 
@@ -84,9 +93,32 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				if(requestArray.length() > 0) {
 					JSONObject batchRequest = buildRequest(requestArray);
 					if(batchRequest != null) {
+						try{
+							HttpClient client = new DefaultHttpClient();
+							HttpPost postReq = new HttpPost(PARSE_BATCH_URL);
+							postReq.addHeader("X-Parse-Application-Id", "bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK");
+							postReq.addHeader("X-Parse-REST-API-Key", "ZTOXQtWbX3sCD9umliYbdymvNDPSvwLGa40LKWZR");
+							postReq.addHeader("Content-Type", "application/json");
+							StringEntity entity = new StringEntity(batchRequest.toString());
+							postReq.setEntity(entity);
+							
+							HttpResponse resp = client.execute(postReq);
+							HttpEntity respEntity = resp.getEntity();
+							InputStream dis = respEntity.getContent();
+							byte[] buffer = new byte[4096];
+							dis.read(buffer);
+							System.out.println("Response is " + buffer);
+						}catch(Exception ex){
+							ex.printStackTrace();
+						}
+						
 						// TODO post batchRequest to https://api.parse.com/1/batch
 						// TODO after response update parseObjectId for POST requests
 						// TODO after response delete invalid rows for DELETE requests
+					}
+					
+					for (int i = 0 ; i < requestArray.length() ; i++){
+						requestArray.getJSONObject(i); 
 					}
 				}
 
