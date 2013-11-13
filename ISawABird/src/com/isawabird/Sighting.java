@@ -17,12 +17,12 @@ public class Sighting {
 	private String parseObjectID = null; 
 
 	public Sighting(String species ){
-		this.species = new Species(species);
-		this.date = new Date();
+		this(new Species(species));
 	}
 	
 	public Sighting(Species speciesName){
 		this.species = speciesName;
+		this.date = new Date();
 	}
 	
 	public Species getSpecies(){
@@ -103,6 +103,7 @@ public class Sighting {
 	@Override
 	public String toString() {		
 		return new StringBuffer().append(id).append(", ").append(species.toString()).append(", ")
-				.append(listName).append(", ").append(date).append(", ").append(parseObjectID).toString();
+				.append(listName).append(", ").append(date).append(", ").append(parseObjectID)
+				.append(", ").append(String.valueOf(listId)).toString();
 	}
 }

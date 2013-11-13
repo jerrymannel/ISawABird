@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.isawabird.db.DBConsts;
+import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseInit;
 import com.isawabird.parse.ParseSyncAdapter;
 import com.isawabird.parse.ParseSyncService;
@@ -82,11 +84,33 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			boolean isFirstTime = checkDB == null ? true : false;
 
 			DataLoader loader = new DataLoader(this.getApplicationContext());
+			DBHandler dh = DBHandler.getInstance(this) ; 
+			//dh.deleteList("Hebbal Nov 2013"); 
+			//dh.deleteList("Hesaraghatta Nov 2013");
+			
 			//if(isFirstTime) {
 				// Use below class to create test data.
 				// TODO: remove when not required 
-				loader.load();
+				// loader.load();
 			//}
+			
+			dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			dh.dumpTable(DBConsts.TABLE_LIST);
+			
+			BirdList birdList = new BirdList("Hebbal Nov 2013");
+			long id = dh.addBirdList(birdList);
+			
+			Utils.setCurrentList(birdList.getListName(), birdList.getId()); 
+			
+			dh.addSightingToCurrentList(new Species("Baya weaver"));
+			
+			dh.clearTable(DBConsts.TABLE_LIST);
+			dh.clearTable(DBConsts.TABLE_SIGHTING);
+			
+			dh.dumpTable(DBConsts.TABLE_LIST);
+			dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			
+			Log.e(Consts.TAG, "Querying ...");
 			loader.query();
 			
 			/* Start the Parse sync service */ 

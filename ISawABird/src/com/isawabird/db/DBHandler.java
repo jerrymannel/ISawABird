@@ -3,6 +3,7 @@ package com.isawabird.db;
 import java.util.Date;
 import java.util.Vector;
 
+import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -50,12 +51,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		Log.i(Consts.TAG, "in onCreate db");
 		Log.i(Consts.TAG, DBConsts.CREATE_LIST);
 		Log.i(Consts.TAG, DBConsts.CREATE_SIGHTING);
-		Log.i(Consts.TAG, DBConsts.CREATE_PARSE);
 		try {
 			db.beginTransaction();
 			db.execSQL(DBConsts.CREATE_LIST);
 			db.execSQL(DBConsts.CREATE_SIGHTING);
-			db.execSQL(DBConsts.CREATE_PARSE);
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			Log.e(Consts.TAG, "exception: " + e.getMessage());
@@ -125,20 +124,11 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
 				values.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
+				values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
+				values.put(DBConsts.PARSE_IS_DELETE_MARKED, 0);
 
 				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
 
-				if(result != -1) {
-					values.clear();
-					values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, "1");
-					values.put(DBConsts.PARSE_TYPE, DBConsts.TABLE_SIGHTING);
-					values.put(DBConsts.PARSE_TYPE_ID, result);
-
-					long parseResult = db.insertOrThrow(DBConsts.TABLE_PARSE, null, values);
-					if(parseResult == -1) {
-						// TODO delete previous row and throw exception
-					}
-				}
 			} catch(SQLiteException ex) {
 				throw new ISawABirdException(ex.getMessage());
 			}
@@ -176,7 +166,9 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.LIST_USER, birdList.getUsername());
 		values.put(DBConsts.LIST_DATE, birdList.getDate().getTime());
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
-
+		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, true);
+		values.put(DBConsts.PARSE_IS_DELETE_MARKED, false); 
+		
 		long result = -1;
 		try{
 			result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
@@ -186,18 +178,6 @@ public class DBHandler extends SQLiteOpenHelper {
 				return result; 
 			}
 			
-			ContentValues parseValues = new ContentValues();
-			parseValues.put(DBConsts.PARSE_TYPE, DBConsts.PARSE_TYPE_BIRDLIST);
-			// TODO : Check whether the row ID returned by insertOrThrow 
-			// is always equal to the ID we use in the table
-			parseValues.put(DBConsts.PARSE_TYPE_ID, result);
-			parseValues.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, true);
-			parseValues.put(DBConsts.PARSE_IS_DELETE_MARKED, false); 
-			
-			result = db.insertOrThrow(DBConsts.TABLE_PARSE, null, parseValues);			
-			if (result == -1){
-				Log.e(Consts.TAG, "Error occurred writing sync data");
-			}
 		}catch(SQLiteException ex){
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
 			throw new ISawABirdException("Unable to create a new list. Perhaps, a list by the name already exists ?");
@@ -267,6 +247,39 @@ public class DBHandler extends SQLiteOpenHelper {
 		return birdList;
 	}
 
+	public void deleteList(String listName){
+		
+		try{
+			long listId = getListIDByName(listName);
+			
+			if(!db.isOpen()) db = getWritableDatabase();
+			
+			/* First delete all the sightings in the list */ 
+			db.delete(DBConsts.TABLE_SIGHTING, DBConsts.SIGHTING_LIST_ID + "=" + listId , null);
+			
+			/* Next delete the list from the LIST table */ 
+			db.delete(DBConsts.TABLE_LIST, DBConsts.ID + "=" + listId, null); 
+		}catch(ISawABirdException ex){
+			// TODO Handle properly
+			ex.printStackTrace(); 
+		}
+		
+	}
+	
+	public long getListIDByName(String listName) throws ISawABirdException{
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		String query = DBConsts.LIST_NAME + "=\"" + listName + "\""; 
+		Cursor result = db.query(DBConsts.TABLE_LIST, new String[] { DBConsts.ID} , query , null,null, null, null); 
+		/* List name is unique */ 
+		if (result.moveToNext()){
+			Log.i(Consts.TAG, "ID of list " + listName + " is " + result.getLong(0)); 
+			return result.getLong(0); // hard code because we query for only one column
+		}else{
+			throw new ISawABirdException("No list found in the database"); 
+		}
+	}
+	
 	/*public Vector<BirdList> getBirdListToSync(boolean toCreate, String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -297,4 +310,42 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return birdList;
 	}*/
+	
+	public void dumpTable(String tableName){
+		if(!db.isOpen()) db = getWritableDatabase();
+		Cursor res = db.query(tableName, null, null, null, null, null, null);
+		
+		String dumpString = ""; 
+		for (int i = 0 ; i < res.getColumnCount(); i++){
+			dumpString += res.getColumnName(i) + " | " ;  
+		}
+		Log.i(Consts.TAG, dumpString); 
+
+		while (res.moveToNext()){
+			dumpString = "" ;
+			for (int i = 0 ; i < res.getColumnCount(); i++){
+				int type = res.getType(i); 
+				switch (type){
+				case Cursor.FIELD_TYPE_STRING:
+					dumpString += res.getString(i) + " | ";
+					break;
+				case Cursor.FIELD_TYPE_INTEGER:
+					dumpString += res.getInt(i)+ " | ";
+					break; 
+				case Cursor.FIELD_TYPE_FLOAT:
+					dumpString += res.getFloat(i) + " | ";
+					break;
+				default:
+					break;
+				}
+			}
+			Log.i(Consts.TAG, dumpString); 
+		}
+	}
+	
+	public void clearTable(String  tableName){
+		if(!db.isOpen()) db = getWritableDatabase();
+
+		db.delete(tableName, null, null);
+	}
 }

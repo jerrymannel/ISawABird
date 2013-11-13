@@ -8,6 +8,7 @@ import android.util.Log;
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.Sighting;
+import com.isawabird.Species;
 import com.isawabird.Utils;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
@@ -33,19 +34,20 @@ public class DataLoader {
 			blist.setUsername(username);
 			long listId = dh.addBirdList(blist);
 
-			Sighting sighting = new Sighting("Brown Shrike");
-			dh.addSighting(sighting, listId, username);
+			Species sighting = new Species("Brown Shrike");
+			dh.addSightingToCurrentList(sighting);
 
-			sighting = new Sighting("Purple-rumped Sunbird");
-			dh.addSighting(sighting, listId, username);
+			sighting = new Species("Purple-rumped Sunbird");
+			dh.addSightingToCurrentList(sighting);
 
-			sighting = new Sighting("Common Coot");
-			dh.addSighting(sighting, listId, username);
+			sighting = new Species("Common Coot");
+			dh.addSightingToCurrentList(sighting);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	public void query() {
 
 		try {
@@ -61,7 +63,9 @@ public class DataLoader {
 				Log.i(Consts.TAG, list.getId() + ":" +  list.toString());
 			}
 			
-			Utils.setCurrentList(birdList.elementAt(0).getListName(), birdList.elementAt(0).getId());
+			if (birdList.size() > 0){
+				Utils.setCurrentList(birdList.elementAt(0).getListName(), birdList.elementAt(0).getId());
+			}
 			
 			for (BirdList list : birdList) {
 				Vector<Sighting> sightings = dh.getSightingsByListName(list.getListName(), username);
