@@ -115,7 +115,7 @@ public class DBConsts {
 	
 	public static final String QUERY_COUNT_CURRENT_LIST = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 
-			SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() + "AND " + 
+			SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() + " AND " + 
 			PARSE_IS_DELETE_MARKED + "!=1"; 
 	
 	/* We use SQLiteDatabase.delete() which doesn't require the SELECT statement until WHERE */

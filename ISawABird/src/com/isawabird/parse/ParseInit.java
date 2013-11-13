@@ -19,25 +19,8 @@ public class ParseInit {
 				 "bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK", "KRw1j22gGpmfSoRC2UE7YnevufQCV4oz1mny5Eum");
 		}
 		ParseUtils.getCurrentUser();
-		Criteria criteria = new Criteria();
-		criteria.setPowerRequirement(Criteria.POWER_LOW);
-		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-		criteria.setAltitudeRequired(false);
-		criteria.setBearingRequired(false);
-		criteria.setCostAllowed(true);
-		ParseGeoPoint.getCurrentLocationInBackground(50000, new LocationCallback() {
-			
-			@Override
-			public void done(ParseGeoPoint point, ParseException ex) {
-				if (ex == null){
-					ParseUtils.location = point ;
-					MainActivity.updateLabel("Location acquired " + point.getLatitude());
-				}else{
-					ex.printStackTrace();
-				}
-				
-			}
-		});
+		ParseUtils.updateCurrentLocation();
 		isInitialized = true; 
+		
 	}
 }
