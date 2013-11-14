@@ -51,12 +51,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		Log.i(Consts.TAG, "in onCreate db");
 		Log.i(Consts.TAG, DBConsts.CREATE_LIST);
 		Log.i(Consts.TAG, DBConsts.CREATE_SIGHTING);
-		Log.i(Consts.TAG, DBConsts.CREATE_PARSE);
 		try {
 			db.beginTransaction();
 			db.execSQL(DBConsts.CREATE_LIST);
 			db.execSQL(DBConsts.CREATE_SIGHTING);
-			db.execSQL(DBConsts.CREATE_PARSE);
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			Log.e(Consts.TAG, "exception: " + e.getMessage());
@@ -100,9 +98,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		return sightings;
 	}
 
-	/* Get all sightings for current list */ 
+	/* Get all sightings for current list */
+	//TODO: do we really need this method?
 	public Vector<Sighting> getSightingsForCurrentList(){
-		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUserName());
+		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUsername());
 	}
 
 	/* Add a sighting to a given list */
@@ -126,34 +125,26 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
 				values.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
+				values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, DBConsts.TRUE);
+				values.put(DBConsts.PARSE_IS_DELETE_MARKED, DBConsts.FALSE);
 
 				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
 
-				if(result != -1) {
-					values.clear();
-					values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, "1");
-					values.put(DBConsts.PARSE_TYPE, DBConsts.TABLE_SIGHTING);
-					values.put(DBConsts.PARSE_TYPE_ID, result);
-
-					long parseResult = db.insertOrThrow(DBConsts.TABLE_PARSE, null, values);
-					if(parseResult == -1) {
-						// TODO delete previous row and throw exception
-					}
-				}
 			} catch(SQLiteException ex) {
 				throw new ISawABirdException(ex.getMessage());
 			}
 		} else{
 			// TODO : Increment number of birds if this entry is already there. 
-			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list " + BirdList.getCurrentListName() ); 
+			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list with listID: " + listId + ", usrename: " + Utils.getCurrentListName()); 
 		}
 		return result;
 	}
 
 	/* Add a sighting to the current active list */
+	//TODO: do we really need this method?
 	public long addSightingToCurrentList(Species species) throws ISawABirdException{
 		Sighting sighting = new Sighting(species);
-		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUserName());
+		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUsername());
 	}
 
 	public boolean isSightingExist(String species, long listId,
@@ -162,14 +153,14 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_IS_SIGHTINGS_EXIST, 
-				new String [] { Long.toString(listId), species, username });
-		result.moveToFirst();
-		Log.i(Consts.TAG, "isSightingExist: " + result.getInt(0));
-		return (result.getInt(0) == 1);
+				new String [] { Long.toString(listId), species });
+		Log.i(Consts.TAG, "isSightingExist: " + result.getCount());
+		return (result.getCount() != 0);
 	}
 
 	/* Create a new list for this user */
-	public long  addBirdList(BirdList birdList) throws ISawABirdException{
+	public long  addBirdList(BirdList birdList, boolean setCurrentList) throws ISawABirdException{
+		Log.i(Consts.TAG, " >> addBirdList"); 
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		ContentValues values = new ContentValues();
@@ -177,16 +168,23 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.LIST_USER, birdList.getUsername());
 		values.put(DBConsts.LIST_DATE, birdList.getDate().getTime());
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
-
+		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
+		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 0); 
+		
 		long result = -1;
 		try{
 			result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
 
 			if (result == -1){
-				Log.e(Consts.TAG, "Error occurred"); 
+				Log.e(Consts.TAG, "Error occurred");
+				return result; 
+			}
+			
+			if (setCurrentList){
+				Utils.setCurrentList(birdList.getListName(), result);
 			}
 		}catch(SQLiteException ex){
-			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
+			Log.e(Consts.TAG, "Error occurred adding a new row to table 'list': " + ex.getMessage());
 			throw new ISawABirdException("Unable to create a new list. Perhaps, a list by the name already exists ?");
 		}
 		return result;
@@ -247,9 +245,72 @@ public class DBHandler extends SQLiteOpenHelper {
 			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
 			birdList.add(temp);
 		}
+		
+		Log.i(Consts.TAG, "We have " + birdList.size() + " lists to sync");
 		return birdList;
 	}
 
+	public void deleteList(String listName){
+		
+		try{
+			long listId = getListIDByName(listName);
+			
+			if(!db.isOpen()) db = getWritableDatabase();
+			
+			/* First delete all the sightings in the list */ 
+			db.delete(DBConsts.TABLE_SIGHTING, DBConsts.SIGHTING_LIST_ID + "=" + listId , null);
+			
+			/* Next delete the list from the LIST table */ 
+			db.delete(DBConsts.TABLE_LIST, DBConsts.ID + "=" + listId, null); 
+			
+			if (listId == Utils.getCurrentListID()){
+				Utils.setCurrentList("", -1);
+			}
+		}catch(ISawABirdException ex){
+			// TODO Handle properly
+			ex.printStackTrace(); 
+		}
+		
+	}
+	
+	public void deleteSightingFromCurrentList(String species){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
+	}
+	
+	public void deleteSightingFromList(String species, String listName ){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		try{
+			long listId = getListIDByName(listName);
+			
+			db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+					new String[] {species, String.valueOf(listId) });
+			
+		}catch(ISawABirdException ex){
+			// TODO : Handle properly. No list by the name is found 
+			ex.printStackTrace(); 
+		}
+		db.delete(DBConsts.TABLE_SIGHTING, DBConsts.QUERY_DELETE_SIGHTING, 
+				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
+	}
+	
+	public long getListIDByName(String listName) throws ISawABirdException{
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		String query = DBConsts.LIST_NAME + "=\"" + listName + "\""; 
+		Cursor result = db.query(DBConsts.TABLE_LIST, new String[] { DBConsts.ID} , query , null,null, null, null); 
+		/* List name is unique */ 
+		if (result.moveToNext()){
+			Log.i(Consts.TAG, "ID of list " + listName + " is " + result.getLong(0)); 
+			return result.getLong(0); // hard code because we query for only one column
+		}else{
+			throw new ISawABirdException("No list found in the database"); 
+		}
+	}
+	
 	/*public Vector<BirdList> getBirdListToSync(boolean toCreate, String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -280,4 +341,42 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		return birdList;
 	}*/
+	
+	public void dumpTable(String tableName){
+		if(!db.isOpen()) db = getWritableDatabase();
+		Cursor res = db.query(tableName, null, null, null, null, null, null);
+		
+		String dumpString = ""; 
+		for (int i = 0 ; i < res.getColumnCount(); i++){
+			dumpString += res.getColumnName(i) + " | " ;  
+		}
+		Log.i(Consts.TAG, dumpString); 
+
+		while (res.moveToNext()){
+			dumpString = "" ;
+			for (int i = 0 ; i < res.getColumnCount(); i++){
+				int type = res.getType(i); 
+				switch (type){
+				case Cursor.FIELD_TYPE_STRING:
+					dumpString += res.getString(i) + " | ";
+					break;
+				case Cursor.FIELD_TYPE_INTEGER:
+					dumpString += res.getInt(i)+ " | ";
+					break; 
+				case Cursor.FIELD_TYPE_FLOAT:
+					dumpString += res.getFloat(i) + " | ";
+					break;
+				default:
+					break;
+				}
+			}
+			Log.i(Consts.TAG, dumpString); 
+		}
+	}
+	
+	public void clearTable(String  tableName){
+		if(!db.isOpen()) db = getWritableDatabase();
+
+		db.delete(tableName, null, null);
+	}
 }

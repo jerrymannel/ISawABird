@@ -1,9 +1,12 @@
 package com.isawabird.parse;
 
+import java.util.UUID;
+
 import android.util.Log;
 
 import com.isawabird.Consts;
 import com.isawabird.ISawABirdException;
+import com.isawabird.Utils;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
@@ -43,14 +46,19 @@ public class ParseUtils {
 		}
 	}
 
-
-	public static ParseUser getCurrentUser(){
+	public static String getCurrentUsername(){
 		currentUser = ParseUser.getCurrentUser();
-		return currentUser;
+		if(currentUser != null) {
+			return currentUser.getUsername();
+		}
+		String username = Utils.getCurrentUsername();
+		if(username == null) {
+			username = Utils.setCurrentUsername(generateUsername());
+		}
+		return username;
 	}
 	
-	public static String getCurrentUserName(){
-		return getCurrentUser().getUsername();
+	private static String generateUsername() {
+		return "b_i_r_d" + UUID.randomUUID().toString();
 	}
-	
 }
