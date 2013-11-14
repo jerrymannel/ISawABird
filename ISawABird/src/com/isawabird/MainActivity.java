@@ -140,24 +140,25 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
 			BirdList birdList = new BirdList("Hebbal Nov 2013");
+			birdList.setNotes("It was very cold. ");
 			long id = dh.addBirdList(birdList,true );
-			birdList = new BirdList("Hebbal Nov 2013");
-			try{
-				dh.addBirdList(birdList, true);
-			}catch (Exception ex){
-				ex.printStackTrace();
-			}
+//			birdList = new BirdList("Hebbal Nov 2013");
+//			try{
+//				dh.addBirdList(birdList, true);
+//			}catch (Exception ex){
+//				ex.printStackTrace();
+//			}
+//			
+//			birdList = new BirdList("Hesaraghatta Nov 2013");
+//			dh.addBirdList(birdList, false);
+//			
+//			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
+//			dh.addSightingToCurrentList(new Species("Blue Rock Thrush")); // this should fail
+//			dh.addSightingToCurrentList(new Species("Blue-capped Rock Thrush"));
+//			dh.addSightingToCurrentList(new Species("Indian Pitta"));
 			
-			birdList = new BirdList("Hesaraghatta Nov 2013");
-			dh.addBirdList(birdList, false);
-			
-			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
-			dh.addSightingToCurrentList(new Species("Blue Rock Thrush")); // this should fail
-			dh.addSightingToCurrentList(new Species("Blue-capped Rock Thrush"));
-			dh.addSightingToCurrentList(new Species("Indian Pitta"));
-			
-			dh.deleteList("Hesaraghatta Nov 2013");
-			dh.deleteSightingFromList("Indian Pitta", "Hebbal Nov 2013");
+//			dh.deleteList("Hesaraghatta Nov 2013");
+//			dh.deleteSightingFromList("Indian Pitta", "Hebbal Nov 2013");
 			
 //			dh.clearTable(DBConsts.TABLE_LIST);
 //			dh.clearTable(DBConsts.TABLE_SIGHTING);

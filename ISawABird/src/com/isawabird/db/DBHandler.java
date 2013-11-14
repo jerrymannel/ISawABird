@@ -315,7 +315,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 	}
 	
-	public boolean updateParseObjectID(long listId, String parseObjectId){
+	public boolean updateParseObjectID(String tableName, long id, String parseObjectId){
 		if(!db.isOpen()) db = getWritableDatabase();
 		
 		try{
@@ -323,7 +323,37 @@ public class DBHandler extends SQLiteOpenHelper {
 			values.put(DBConsts.PARSE_OBJECT_ID, parseObjectId); 
 			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 0);
 			
-			db.update(DBConsts.TABLE_LIST, values, DBConsts.ID + "=" + listId, null);
+			db.update(tableName, values, DBConsts.ID + "=" + id, null);
+			return true; 
+		}catch(Exception ex){
+			//TODO : Handle exception
+			ex.printStackTrace();
+		}
+		return false;
+	}
+
+	
+	public boolean resetUploadRequiredFlag(String tableName, long id){ 
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		try{
+			ContentValues values = new ContentValues(); 
+			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 0);
+			
+			db.update(tableName, values, DBConsts.ID + "=" + id, null);
+			return true; 
+		}catch(Exception ex){
+			//TODO : Handle exception
+			ex.printStackTrace();
+		}
+		return false;
+	}
+	
+	public boolean deleteLocally(String tableName, long id){ 
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		try{
+			db.delete(tableName, DBConsts.ID + "=" + id, null);
 			return true; 
 		}catch(Exception ex){
 			//TODO : Handle exception

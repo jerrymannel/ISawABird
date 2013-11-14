@@ -80,7 +80,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 							// include DELETE
 							addDeleteRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, requestArray);
 						}
-
 					} else {
 						// if not delete, then it is marked for upload
 						body = new JSONObject();
@@ -88,7 +87,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						body.put(DBConsts.LIST_USER, birdList.getUsername());
 						body.put(DBConsts.LIST_NOTES, birdList.getNotes());
 						body.put(DBConsts.LIST_DATE, birdList.getDate());
-
+						
 						if(birdList.getParseObjectID() == null) {
 							// CREATE
 							addCreateRequest(DBConsts.TABLE_LIST, body);
@@ -122,15 +121,24 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 							ex.printStackTrace();
 						}
 						
-						
 						/* Parse the response */ 
 						JSONArray respArray = new JSONArray(response);
 						for(int i = 0 ; i < respArray.length() ; i++){
-							JSONObject object = respArray.getJSONObject(i); 
+							JSONObject object = respArray.getJSONObject(i);
 							if (object.has(SUCCESS)){
-								String objID = object.getJSONObject(SUCCESS).getString(OBJECTID);
-								 dh.updateParseObjectID(birdListToSync.elementAt(i).getId(), objID);
-								 dh.dumpTable(DBConsts.TABLE_LIST);
+								String method = requestArray.getJSONObject(i).getString("method");
+								if (method == "POST") { // We added a new entry to Parse  
+									String objID = object.getJSONObject(SUCCESS).getString(OBJECTID);
+									dh.updateParseObjectID(DBConsts.TABLE_LIST, birdListToSync.elementAt(i).getId(), objID);
+									dh.dumpTable(DBConsts.TABLE_LIST);
+								}else if (method == "PUT"){
+									// We Updated Parse. So, just reset the upload required flag.
+									dh.resetUploadRequiredFlag(DBConsts.TABLE_LIST, birdListToSync.elementAt(i).getId()); 
+									dh.dumpTable(DBConsts.TABLE_LIST); 
+								}else if (method == "DELETE"){
+									dh.deleteLocally(DBConsts.TABLE_LIST, birdListToSync.elementAt(i).getId());
+									dh.dumpTable(DBConsts.TABLE_LIST); 
+								}
 								
 							}else{
 								// TODO : Handle failure
