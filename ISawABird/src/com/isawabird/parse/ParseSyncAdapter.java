@@ -1,7 +1,6 @@
 package com.isawabird.parse;
 
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -11,9 +10,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,16 +32,11 @@ import com.isawabird.db.DBHandler;
 import com.parse.Parse;
 
 public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
-	
-	private static final String PARSE_BATCH_URL = "https://api.parse.com/1/batch";
-	private static final String SUCCESS = "success";
-	private static final String OBJECTID = "objectId";
-	
+
+
 	private DBHandler dh;
 	private JSONArray requestArray = new JSONArray();
-	
-	
-	
+
 	public ParseSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 		dh = DBHandler.getInstance(context);
@@ -58,7 +49,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
-	public void doSync(){
+	@Override
+	public void onPerformSync(Account account, Bundle extras, String authority,
+			ContentProviderClient provider, SyncResult syncResult) {
+		Log.w(Consts.TAG, "IN onPerformSync");
+
 		try {
 			if (isNetworkAvailable()) {
 
@@ -68,6 +63,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				Vector<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
 
 				ArrayList<Long> staleEntries = new ArrayList<Long>();
+				ArrayList<Long> postEntries = new  ArrayList<Long>();
 				JSONObject body = null;
 				for (BirdList birdList : birdListToSync) {
 
@@ -76,9 +72,9 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						if(birdList.getParseObjectID() == null) {
 							// exclude DELETE since object is not created at server yet
 							staleEntries.add(birdList.getId());
-							// TODO : Delete in the local DB 
 						} else {
 							// include DELETE
+							postEntries.add(birdList.getId());
 							addDeleteRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, requestArray);
 						}
 					} else {
@@ -88,107 +84,84 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						body.put(DBConsts.LIST_USER, birdList.getUsername());
 						body.put(DBConsts.LIST_NOTES, birdList.getNotes());
 						body.put(DBConsts.LIST_DATE, birdList.getDate());
-						
+
 						if(birdList.getParseObjectID() == null) {
 							// CREATE
+							postEntries.add(birdList.getId());
 							addCreateRequest(DBConsts.TABLE_LIST, body);
 						} else {
 							// UPDATE
+							postEntries.add(birdList.getId());
 							addUpdateRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, body, requestArray);
 						}
 					}
 				}
-				
-				String response = ""; 
+
 				if(requestArray.length() > 0) {
 					JSONObject batchRequest = buildRequest(requestArray);
-					if(batchRequest != null) {
-						try{
-							HttpClient client = new DefaultHttpClient();
-							HttpPost postReq = new HttpPost(PARSE_BATCH_URL);
-							postReq.addHeader("X-Parse-Application-Id", "bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK");
-							postReq.addHeader("X-Parse-REST-API-Key", "ZTOXQtWbX3sCD9umliYbdymvNDPSvwLGa40LKWZR");
-							postReq.addHeader("Content-Type", "application/json");
-							Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
-							StringEntity entity = new StringEntity(batchRequest.toString());
-							postReq.setEntity(entity);
-							
-							HttpResponse resp = client.execute(postReq);
-							HttpEntity respEntity = resp.getEntity();
-							response = EntityUtils.toString(respEntity);
-							
-							System.out.println("Response is " + response);
-						}catch(Exception ex){
-							ex.printStackTrace();
-						}
-						
-						/* Parse the response */ 
-						JSONArray respArray = new JSONArray(response);
+					JSONArray respArray = postRequest(batchRequest);
+					/* Parse the response */ 
+					if(respArray != null) {
 						for(int i = 0 ; i < respArray.length() ; i++){
 							JSONObject object = respArray.getJSONObject(i);
-							if (object.has(SUCCESS)){
+							if (object.has(ParseConsts.SUCCESS)){
 								String method = requestArray.getJSONObject(i).getString("method");
-								if (method == "POST") { // We added a new entry to Parse  
-									String objID = object.getJSONObject(SUCCESS).getString(OBJECTID);
-									dh.updateParseObjectID(DBConsts.TABLE_LIST, birdListToSync.elementAt(i).getId(), objID);
+								// update parseObjectId for POST requests
+								if (method == "POST") {
+									// We added a new entry to Parse  
+									String objID = object.getJSONObject(ParseConsts.SUCCESS).getString(ParseConsts.OBJECTID);
+									dh.updateParseObjectID(DBConsts.TABLE_LIST, postEntries.get(i), objID);
 									dh.dumpTable(DBConsts.TABLE_LIST);
-								}else if (method == "PUT"){
+								}else if (method == "PUT") {
 									// We Updated Parse. So, just reset the upload required flag.
-									dh.resetUploadRequiredFlag(DBConsts.TABLE_LIST, birdListToSync.elementAt(i).getId()); 
+									dh.resetUploadRequiredFlag(DBConsts.TABLE_LIST, postEntries.get(i)); 
 									dh.dumpTable(DBConsts.TABLE_LIST); 
-								}else if (method == "DELETE"){
-									dh.deleteLocally(DBConsts.TABLE_LIST, birdListToSync.elementAt(i).getId());
+								}else if (method == "DELETE") {
+									// delete invalid rows for DELETE requests
+									dh.deleteLocally(DBConsts.TABLE_LIST, postEntries.get(i));
 									dh.dumpTable(DBConsts.TABLE_LIST); 
 								}
-								
+
 							}else{
 								// TODO : Handle failure
 							}
 						}
-						// TODO after response update parseObjectId for POST requests
-						// TODO after response delete invalid rows for DELETE requests
 					}
 				}
-				
-				
-				// TODO: delete staleEntries from db
 
+				// delete staleEntries from db
+				for (Long id : staleEntries) {
+					dh.deleteLocally(DBConsts.TABLE_LIST, id);
+				}
 			}
 		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void postRequest(JSONObject batchRequest) {
-		
-		HttpClient client = new DefaultHttpClient();
-		HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
-		HttpResponse response;
-
-		try {
-			HttpPost post = new HttpPost(ParseConsts.BATCH_URL);
-			
-			StringEntity se = new StringEntity(batchRequest.toString());  
-			se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-			post.setEntity(se);
-			response = client.execute(post);
-
-			/*Checking response */
-			if(response!=null){
-				InputStream in = response.getEntity().getContent(); //Get the data in the entity
-				Log.i(Consts.TAG, "Sync result: " + response.getStatusLine().getStatusCode());
-			}
-
-		} catch(Exception e) {
+			Log.e(Consts.TAG, e.getMessage());
 			e.printStackTrace();
 		}
 	}
 	
-	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) {
-		Log.w(Consts.TAG, "IN onPerformSync");
-		doSync();
+	public JSONArray postRequest(JSONObject batchRequest) {
+
+		try {
+			if(batchRequest == null) return null;
+			HttpClient client = new DefaultHttpClient();
+			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
+			postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
+			postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.CLIENT_KEY);
+			postReq.addHeader("Content-Type", "application/json");
+			Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
+			StringEntity entity = new StringEntity(batchRequest.toString());
+			postReq.setEntity(entity);
+
+			HttpResponse resp = client.execute(postReq);
+			HttpEntity respEntity = resp.getEntity();
+			String response = EntityUtils.toString(respEntity);
+			return new JSONArray(response);
+		} catch (Exception e) {
+			Log.e(Consts.TAG, e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public JSONObject buildRequest(JSONArray requestArray) {

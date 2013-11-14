@@ -3,7 +3,6 @@ package com.isawabird.db;
 import java.util.Date;
 import java.util.Vector;
 
-import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

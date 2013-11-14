@@ -17,7 +17,6 @@ import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
-import com.isawabird.test.DummyAsyncTask;
 import com.parse.Parse;
 import com.parse.ParseUser;
 
@@ -151,8 +150,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			
 			/* Start the Parse sync service */ 
 			Log.i(Consts.TAG, "Syncing now...");
-			DummyAsyncTask dat = new DummyAsyncTask(this); 
-			dat.execute("hello world");
+			SyncUtils.triggerRefresh();
 
 		}catch(Exception ex){
 			ex.printStackTrace();
