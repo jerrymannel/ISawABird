@@ -36,9 +36,12 @@ import com.isawabird.db.DBHandler;
 public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	
 	private static final String PARSE_BATCH_URL = "https://api.parse.com/1/batch";
-
+	private static final String SUCCESS = "success";
+	private static final String OBJECTID = "objectId";
+	
 	private DBHandler dh;
 	private JSONArray requestArray = new JSONArray();
+	
 	
 	
 	public ParseSyncAdapter(Context context, boolean autoInitialize) {
@@ -95,6 +98,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						}
 					}
 				}
+				
+				String response = ""; 
 				if(requestArray.length() > 0) {
 					JSONObject batchRequest = buildRequest(requestArray);
 					if(batchRequest != null) {
@@ -110,18 +115,33 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 							
 							HttpResponse resp = client.execute(postReq);
 							HttpEntity respEntity = resp.getEntity();
-							String response = EntityUtils.toString(respEntity);
+							response = EntityUtils.toString(respEntity);
 							
 							System.out.println("Response is " + response);
 						}catch(Exception ex){
 							ex.printStackTrace();
 						}
 						
+						
+						/* Parse the response */ 
+						JSONArray respArray = new JSONArray(response);
+						for(int i = 0 ; i < respArray.length() ; i++){
+							JSONObject object = respArray.getJSONObject(i); 
+							if (object.has(SUCCESS)){
+								String objID = object.getJSONObject(SUCCESS).getString(OBJECTID);
+								 dh.updateParseObjectID(birdListToSync.elementAt(i).getId(), objID);
+								 dh.dumpTable(DBConsts.TABLE_LIST);
+								
+							}else{
+								// TODO : Handle failure
+							}
+						}
 						// TODO after response update parseObjectId for POST requests
 						// TODO after response delete invalid rows for DELETE requests
 					}
 				}
-
+				
+				
 				// TODO: delete staleEntries from db
 
 			}

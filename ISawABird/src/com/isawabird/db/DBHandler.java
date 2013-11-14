@@ -315,6 +315,23 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 	}
 	
+	public boolean updateParseObjectID(long listId, String parseObjectId){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		try{
+			ContentValues values = new ContentValues(); 
+			values.put(DBConsts.PARSE_OBJECT_ID, parseObjectId); 
+			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 0);
+			
+			db.update(DBConsts.TABLE_LIST, values, DBConsts.ID + "=" + listId, null);
+			return true; 
+		}catch(Exception ex){
+			//TODO : Handle exception
+			ex.printStackTrace();
+		}
+		return false;
+	}
+	
 	/*public Vector<BirdList> getBirdListToSync(boolean toCreate, String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
