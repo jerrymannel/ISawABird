@@ -7,11 +7,7 @@ import java.util.Vector;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.util.Log;
-
-import com.parse.ParseException;
-import com.parse.ParseObject;
 
 public class Utils {
 
@@ -76,21 +72,24 @@ public class Utils {
 	}
 
 	public static void setCurrentList(String listName, long listID){
-		SharedPreferences.Editor editor = prefs.edit();
-		editor.putString(Consts.CURRENT_LIST_KEY, listName);
-		editor.putLong(Consts.CURRENT_LIST_ID_KEY, listID);
-		editor.commit();
+		prefs.edit().putString(Consts.CURRENT_LIST_KEY, listName)
+			.putLong(Consts.CURRENT_LIST_ID_KEY, listID).apply();
+	}
+	
+	public static String setCurrentUsername(String username) {
+		prefs.edit().putString(Consts.CURRENT_USER_ANONYMOUS, username).apply();
+		return username;
 	}
 
 	public static String getCurrentListName(){
-		String retVal = prefs.getString(Consts.CURRENT_LIST_KEY, null);
-		return retVal; 
+		return prefs.getString(Consts.CURRENT_LIST_KEY, null);
 	}
-	
+
 	public static long getCurrentListID(){
-		long retVal = prefs.getLong(Consts.CURRENT_LIST_ID_KEY, -1);
-		return retVal; 
+		return prefs.getLong(Consts.CURRENT_LIST_ID_KEY, -1);
+	}
+
+	public static String getCurrentUsername() {
+		return prefs.getString(Consts.CURRENT_USER_ANONYMOUS, null);
 	}
 }
-
-

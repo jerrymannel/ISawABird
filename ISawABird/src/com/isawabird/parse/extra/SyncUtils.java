@@ -18,7 +18,7 @@ public class SyncUtils {
 	public static void createSyncAccount(Context context) {
 
 		// Create account, if it's missing. (Either first run, or user has deleted account.)
-		Account account = GenericAccountService.GetAccount();
+		Account account = GenericAccountService.getAccount();
 		AccountManager accountManager = (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 		if (accountManager.addAccountExplicitly(account, null, null)) {
 			// Inform the system that this account is eligible for auto sync when the network is up
@@ -43,7 +43,7 @@ public class SyncUtils {
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         ContentResolver.requestSync(
-                GenericAccountService.GetAccount(),      // Sync account
+                GenericAccountService.getAccount(),      // Sync account
                 Consts.AUTHORITY, 						 // Content authority
                 b);                                      // Extras
     }

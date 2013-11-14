@@ -7,6 +7,7 @@ import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -98,11 +99,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		return sightings;
 	}
 
-	/* Get all sightings for current list */ 
+	/* Get all sightings for current list */
+	//TODO: do we really need this method?
 	public Vector<Sighting> getSightingsForCurrentList(){
-		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUserName());
+		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUsername());
 	}
-		
+
 	/* Add a sighting to a given list */
 	public long addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
 
@@ -124,8 +126,8 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
 				values.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
-				values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
-				values.put(DBConsts.PARSE_IS_DELETE_MARKED, 0);
+				values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, DBConsts.TRUE);
+				values.put(DBConsts.PARSE_IS_DELETE_MARKED, DBConsts.FALSE);
 
 				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
 
@@ -134,17 +136,18 @@ public class DBHandler extends SQLiteOpenHelper {
 			}
 		} else{
 			// TODO : Increment number of birds if this entry is already there. 
-			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list " + Utils.getCurrentListName()); 
+			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list with listID: " + listId + ", usrename: " + Utils.getCurrentListName()); 
 		}
 		return result;
 	}
 
 	/* Add a sighting to the current active list */
+	//TODO: do we really need this method?
 	public long addSightingToCurrentList(Species species) throws ISawABirdException{
 		Sighting sighting = new Sighting(species);
-		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUserName());
+		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUsername());
 	}
-	
+
 	public boolean isSightingExist(String species, long listId,
 			String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
@@ -152,7 +155,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_IS_SIGHTINGS_EXIST, 
 				new String [] { Long.toString(listId), species });
-		//result.moveToNext();
 		Log.i(Consts.TAG, "isSightingExist: " + result.getCount());
 		return (result.getCount() != 0);
 	}
@@ -189,13 +191,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
-	public int getBirdCountInCurrentList() {
+	public long getBirdCountByListId(long listId) {
 		if(!db.isOpen()) db = getWritableDatabase();
-		
-		Cursor result = db.rawQuery(DBConsts.QUERY_COUNT_CURRENT_LIST, null); 
-		if(result.getColumnCount() <= 0) return 0;
 
-		return result.getCount();
+		return DatabaseUtils.queryNumEntries(db, DBConsts.TABLE_SIGHTING,
+				DBConsts.SIGHTING_LIST_ID + "=?", new String[] {Long.toString(listId)});
 	}
 
 	/* Get the lists for the current user */

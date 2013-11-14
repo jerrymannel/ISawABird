@@ -7,12 +7,10 @@ import com.isawabird.parse.ParseUtils;
 public class BirdList {
 
 	private long id = -1;
-	private static String currentListName;
-	private static int currentListId;
 	private Date date; 
 	private String listName = null; 
 	private String notes = null; 
-	private String username = ParseUtils.getCurrentUser().getUsername();
+	private String username = ParseUtils.getCurrentUsername();
 	private String parseObjectID = null;
 	private boolean isMarkedForDelete = false;
 	private boolean isMarkedForUpload = true;
@@ -20,7 +18,7 @@ public class BirdList {
 	public BirdList(String listName){
 		this.listName = listName;
 		this.date = new Date();
-		this.username = ParseUtils.getCurrentUser().getUsername();
+		this.username = ParseUtils.getCurrentUsername();
 	}
 
 	public Date getDate() {

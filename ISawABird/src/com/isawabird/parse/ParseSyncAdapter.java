@@ -1,9 +1,7 @@
 package com.isawabird.parse;
 
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -13,6 +11,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +33,7 @@ import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
+import com.parse.Parse;
 
 public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	
@@ -61,10 +63,9 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			if (isNetworkAvailable()) {
 
 				Log.w(Consts.TAG, "SYNCING NOW");
-
-				String username = ParseUtils.getCurrentUser().getUsername();
+				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
 				// get bird list to sync create/update/delete
-				Vector<BirdList> birdListToSync = dh.getBirdListToSync(username);
+				Vector<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
 
 				ArrayList<Long> staleEntries = new ArrayList<Long>();
 				JSONObject body = null;
@@ -154,6 +155,31 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 
 			}
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void postRequest(JSONObject batchRequest) {
+		
+		HttpClient client = new DefaultHttpClient();
+		HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000); //Timeout Limit
+		HttpResponse response;
+
+		try {
+			HttpPost post = new HttpPost(ParseConsts.BATCH_URL);
+			
+			StringEntity se = new StringEntity(batchRequest.toString());  
+			se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+			post.setEntity(se);
+			response = client.execute(post);
+
+			/*Checking response */
+			if(response!=null){
+				InputStream in = response.getEntity().getContent(); //Get the data in the entity
+				Log.i(Consts.TAG, "Sync result: " + response.getStatusLine().getStatusCode());
+			}
+
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

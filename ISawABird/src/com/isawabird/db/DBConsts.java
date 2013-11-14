@@ -1,13 +1,15 @@
 package com.isawabird.db;
 
 import com.isawabird.Utils;
-import com.isawabird.parse.ParseUtils;
 
 public class DBConsts {
 
 	public static final String DATABASE_NAME = "BirdSightings";
 
 	public static final int DATABASE_VERSION = 1;
+	
+	public static final int TRUE = 1;
+	public static final int FALSE = 0;
 
 	public static final String ID = "_id";
 
@@ -17,7 +19,7 @@ public class DBConsts {
 	public static final String LIST_USER = "user";
 	public static final String LIST_NOTES = "lnotes";
 
-	/* Fields used for sync to Parse */ 
+	/* Fields used to sync with Parse */ 
 	public static final String PARSE_OBJECT_ID = "objectId";
 	public static final String PARSE_IS_UPLOAD_REQUIRED = "isUploadRequired";
 	public static final String PARSE_IS_DELETE_MARKED = "isMarkedForDelete";
@@ -78,12 +80,11 @@ public class DBConsts {
 	/**
 	 * DB QUERIES
 	 */
-	
+
 	public static final String QUERY_SIGHTINGS_BY_LISTNAME = 
 			"SELECT " +  ID + ", " + SIGHTING_SPECIES + ", " + SIGHTING_NOTES +
 			", " + SIGHTING_LATITUDE + ", " + SIGHTING_LONGITUDE + ", " +  SIGHTING_DATE +
-			", " + PARSE_OBJECT_ID +
-			", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
+			", " + PARSE_OBJECT_ID + ", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
 			" FROM " + TABLE_SIGHTING + 
 			" WHERE " + SIGHTING_LIST_ID  + "= ? AND " + 
 			PARSE_IS_DELETE_MARKED + "!=1" + " COLLATE NOCASE" +
@@ -113,6 +114,7 @@ public class DBConsts {
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
 	
+	// i think it is not a good idea to call static method in consts
 	public static final String QUERY_COUNT_CURRENT_LIST = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 
 			SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() + " AND " + 

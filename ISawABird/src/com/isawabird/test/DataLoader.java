@@ -23,7 +23,7 @@ public class DataLoader {
 
 		try {
 
-			String username = ParseUtils.getCurrentUser().getUsername();
+			String username = ParseUtils.getCurrentUsername();
 			if(username == null) {
 				throw new Exception("Parse username cannot be null");
 			}
@@ -51,7 +51,7 @@ public class DataLoader {
 	public void query() {
 
 		try {
-			String username = ParseUtils.getCurrentUser().getUsername();
+			String username = ParseUtils.getCurrentUsername();
 			if(username == null) {
 				throw new Exception("Parse username cannot be null");
 			}
@@ -76,7 +76,7 @@ public class DataLoader {
 			
 			Log.i(Consts.TAG, " Current list ID is " + Utils.getCurrentListID());
 			Log.i(Consts.TAG, " Current list name is " + Utils.getCurrentListName());
-			Log.i(Consts.TAG, " Number of birds in current list is " + dh.getBirdCountInCurrentList());
+			Log.i(Consts.TAG, " Number of birds in current list is " + dh.getBirdCountByListId(Utils.getCurrentListID()));
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}

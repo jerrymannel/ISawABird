@@ -1,11 +1,7 @@
 package com.isawabird;
 
-import android.accounts.Account;
 import android.app.Activity;
-import android.app.Notification;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
@@ -17,13 +13,13 @@ import android.widget.TextView;
 
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
-import com.isawabird.parse.ParseInit;
-import com.isawabird.parse.ParseSyncAdapter;
-import com.isawabird.parse.ParseSyncService;
+import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
 import com.isawabird.test.DummyAsyncTask;
+import com.parse.Parse;
+import com.parse.ParseUser;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener {
 
@@ -31,24 +27,14 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	static MainActivity act = null; 
 	static Button click = null; 
 	static Button isawabird = null; 
-
-	// Constants
-	
-	// Instance fields
-	Account mAccount;
-	
-	// Global variables
-    // A content resolver for accessing the provider
-    ContentResolver mResolver;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
 		/* Initialize Parse */
-		ParseInit.init(this.getApplicationContext());
-		
+		Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
+		Utils.prefs = getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
 		SyncUtils.createSyncAccount(this);
 
 		act = this;
@@ -64,20 +50,19 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		});	
 
 		try{
-			
 			MainActivity.updateLabel("Parse initialization complete");
 
 			/* Initialize the checklists */
 			Utils.initializeChecklist(this, "Indonesia");
-			Utils.prefs = getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
 
 			/* Login to Parse */
-			if (ParseUtils.getCurrentUser() == null){
+			if (ParseUser.getCurrentUser() == null){
 				MainActivity.updateLabel("Logging in...");
+				// TODO: handle signup
 				ParseUtils.login("sriniketana", "test123");
 				MainActivity.updateLabel("Logged in");
 			} else {
-				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUser().getUsername());
+				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUsername());
 			}
 
 			// load test data
@@ -93,14 +78,11 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			boolean isFirstTime = checkDB == null ? true : false;
 
 			DataLoader loader = new DataLoader(this.getApplicationContext());
-			//dh.deleteList("Hebbal Nov 2013"); 
-			//dh.deleteList("Hesaraghatta Nov 2013");
-			
-			//if(isFirstTime) {
-				// Use below class to create test data.
+			if(isFirstTime) {
+				// Use below class to create test data for the first time
 				// TODO: remove when not required 
-				// loader.load();
-			//}
+				loader.load();
+			}
 			Log.e(Consts.TAG, "Querying ...");
 			loader.query();
 			
