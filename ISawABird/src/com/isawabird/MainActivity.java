@@ -23,12 +23,14 @@ import com.isawabird.parse.ParseSyncService;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
+import com.isawabird.test.DummyAsyncTask;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener {
 
 	static TextView helloworld = null; 
 	static MainActivity act = null; 
 	static Button click = null; 
+	static Button isawabird = null; 
 
 	// Constants
 	
@@ -53,6 +55,13 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		helloworld = (TextView) findViewById(R.id.helloworld);
 		click = (Button)findViewById(R.id.getLists);
 		click.setOnClickListener(this); 
+		isawabird = (Button)findViewById(R.id.addSighting); 
+		isawabird.setOnClickListener(new android.view.View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			}
+		});	
 
 		try{
 			
@@ -84,7 +93,6 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			boolean isFirstTime = checkDB == null ? true : false;
 
 			DataLoader loader = new DataLoader(this.getApplicationContext());
-			DBHandler dh = DBHandler.getInstance(this) ; 
 			//dh.deleteList("Hebbal Nov 2013"); 
 			//dh.deleteList("Hesaraghatta Nov 2013");
 			
@@ -95,6 +103,35 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			//}
 			Log.e(Consts.TAG, "Querying ...");
 			loader.query();
+			
+			
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	public static void updateLabel(final String s){
+		act.runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				helloworld.setText(helloworld.getText() + "\n" + s);			
+			}
+		});
+	}
+
+	@Override
+	public void onClick(View v) {
+		try{
+			Log.i(Consts.TAG, "Clicked");
+			DBHandler dh = DBHandler.getInstance(this) ; 
 			
 			dh.clearTable(DBConsts.TABLE_LIST);
 			dh.clearTable(DBConsts.TABLE_SIGHTING);
@@ -130,34 +167,13 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
 			/* Start the Parse sync service */ 
-			ParseSyncAdapter adap = new ParseSyncAdapter(this, true);
-			//adap.doSync();
-			
-		} catch(Exception ex) {
+			Log.i(Consts.TAG, "Syncing now...");
+			DummyAsyncTask dat = new DummyAsyncTask(this); 
+			dat.execute("hello world");
+
+		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	public static void updateLabel(final String s){
-		act.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				helloworld.setText(helloworld.getText() + "\n" + s);			
-			}
-		});
-	}
-
-	@Override
-	public void onClick(View v) {
-
 	}
 
 }

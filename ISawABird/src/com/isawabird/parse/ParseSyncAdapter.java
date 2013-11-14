@@ -1,7 +1,9 @@
 package com.isawabird.parse;
 
 
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -11,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +38,9 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final String PARSE_BATCH_URL = "https://api.parse.com/1/batch";
 
 	private DBHandler dh;
-
+	private JSONArray requestArray = new JSONArray();
+	
+	
 	public ParseSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 		dh = DBHandler.getInstance(context);
@@ -59,7 +64,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				Vector<BirdList> birdListToSync = dh.getBirdListToSync(username);
 
 				ArrayList<Long> staleEntries = new ArrayList<Long>();
-				JSONArray requestArray = new JSONArray();
 				JSONObject body = null;
 				for (BirdList birdList : birdListToSync) {
 
@@ -68,6 +72,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						if(birdList.getParseObjectID() == null) {
 							// exclude DELETE since object is not created at server yet
 							staleEntries.add(birdList.getId());
+							// TODO : Delete in the local DB 
 						} else {
 							// include DELETE
 							addDeleteRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, requestArray);
@@ -83,7 +88,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 
 						if(birdList.getParseObjectID() == null) {
 							// CREATE
-							addCreateRequest(DBConsts.TABLE_LIST, body, requestArray);
+							addCreateRequest(DBConsts.TABLE_LIST, body);
 						} else {
 							// UPDATE
 							addUpdateRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, body, requestArray);
@@ -99,26 +104,21 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 							postReq.addHeader("X-Parse-Application-Id", "bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK");
 							postReq.addHeader("X-Parse-REST-API-Key", "ZTOXQtWbX3sCD9umliYbdymvNDPSvwLGa40LKWZR");
 							postReq.addHeader("Content-Type", "application/json");
+							Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
 							StringEntity entity = new StringEntity(batchRequest.toString());
 							postReq.setEntity(entity);
 							
 							HttpResponse resp = client.execute(postReq);
 							HttpEntity respEntity = resp.getEntity();
-							InputStream dis = respEntity.getContent();
-							byte[] buffer = new byte[4096];
-							dis.read(buffer);
-							System.out.println("Response is " + buffer);
+							String response = EntityUtils.toString(respEntity);
+							
+							System.out.println("Response is " + response);
 						}catch(Exception ex){
 							ex.printStackTrace();
 						}
 						
-						// TODO post batchRequest to https://api.parse.com/1/batch
 						// TODO after response update parseObjectId for POST requests
 						// TODO after response delete invalid rows for DELETE requests
-					}
-					
-					for (int i = 0 ; i < requestArray.length() ; i++){
-						requestArray.getJSONObject(i); 
 					}
 				}
 
@@ -148,7 +148,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		return null;
 	}
 
-	public void addCreateRequest(String objectName, JSONObject body, JSONArray requestArray) {
+	public void addCreateRequest(String objectName, JSONObject body) {
+		Log.i(Consts.TAG, " >> addCreateRequest  for " + body.toString());
 		JSONObject createRequest = new JSONObject();
 		try {
 			createRequest.put("method", "POST");
