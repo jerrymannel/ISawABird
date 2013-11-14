@@ -1,5 +1,6 @@
 package com.isawabird.db;
 
+import com.isawabird.Utils;
 
 public class DBConsts {
 
@@ -113,6 +114,7 @@ public class DBConsts {
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
 	
+	// i think it is not a good idea to call static method in consts
 	public static final String QUERY_COUNT_CURRENT_LIST = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 
 			SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() + " AND " + 

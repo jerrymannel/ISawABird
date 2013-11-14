@@ -14,10 +14,10 @@ import android.widget.TextView;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
-import com.isawabird.parse.ParseSyncAdapter;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
+import com.isawabird.test.DummyAsyncTask;
 import com.parse.Parse;
 import com.parse.ParseUser;
 
@@ -62,7 +62,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				ParseUtils.login("sriniketana", "test123");
 				MainActivity.updateLabel("Logged in");
 			} else {
-				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUser().getUsername());
+				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUsername());
 			}
 
 			// load test data

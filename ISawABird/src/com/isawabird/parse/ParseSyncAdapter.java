@@ -1,9 +1,7 @@
 package com.isawabird.parse;
 
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -16,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +34,6 @@ import com.isawabird.Consts;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.parse.Parse;
-import com.parse.ParseUser;
 
 public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	
