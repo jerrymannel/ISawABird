@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity>
+<!--         <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
 
         <uses-library android:name="android.test.runner" />
 

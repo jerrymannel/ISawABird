@@ -4,6 +4,11 @@
     <string name="app_name">I Saw A Bird</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="searchActivity">Search View</string>
+    <color name="color_app_bg">#444</color>
+    <color name="color_main_title">#EEE</color>
+    <string name="tag">Record Details</string>
+    <string name="mode_online">Online</string>
+    <string name="mode_offline">Offline</string>
+    <string name="loc_undef">Unable to get location...</string>
 
 </resources>
