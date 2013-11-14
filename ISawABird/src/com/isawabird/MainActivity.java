@@ -25,8 +25,8 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 
 	static TextView helloworld = null; 
 	static MainActivity act = null; 
-	static Button click = null;
-
+	static Button click = null; 
+	static Button isawabird = null; 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,6 +41,13 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		helloworld = (TextView) findViewById(R.id.helloworld);
 		click = (Button)findViewById(R.id.getLists);
 		click.setOnClickListener(this); 
+		isawabird = (Button)findViewById(R.id.addSighting); 
+		isawabird.setOnClickListener(new android.view.View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+			}
+		});	
 
 		try{
 			MainActivity.updateLabel("Parse initialization complete");
@@ -55,7 +62,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 				ParseUtils.login("sriniketana", "test123");
 				MainActivity.updateLabel("Logged in");
 			} else {
-				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUsername());
+				MainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUser().getUsername());
 			}
 
 			// load test data
@@ -79,41 +86,7 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			Log.e(Consts.TAG, "Querying ...");
 			loader.query();
 			
-			DBHandler dh = DBHandler.getInstance(this);
-			dh.clearTable(DBConsts.TABLE_LIST);
-			dh.clearTable(DBConsts.TABLE_SIGHTING);
-//		
-			dh.dumpTable(DBConsts.TABLE_LIST);
-			dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			
-			BirdList birdList = new BirdList("Hebbal Nov 2013");
-			long id = dh.addBirdList(birdList,true );
-			birdList = new BirdList("Hebbal Nov 2013");
-			try{
-				dh.addBirdList(birdList, true);
-			}catch (Exception ex){
-				ex.printStackTrace();
-			}
-			
-			birdList = new BirdList("Hesaraghatta Nov 2013");
-			dh.addBirdList(birdList, false);
-			
-			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
-			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
-			dh.addSightingToCurrentList(new Species("Blue-capped Rock Thrush"));
-			dh.addSightingToCurrentList(new Species("Indian Pitta"));
-			
-			dh.deleteList("Hesaraghatta Nov 2013");
-			dh.deleteSightingFromCurrentList("Indian Pitta");
-			
-//			dh.clearTable(DBConsts.TABLE_LIST);
-//			dh.clearTable(DBConsts.TABLE_SIGHTING);
-			
-			//dh.deleteList("Hebbal Nov 2013");
-			dh.dumpTable(DBConsts.TABLE_LIST);
-			dh.dumpTable(DBConsts.TABLE_SIGHTING);
-			
-			SyncUtils.triggerRefresh();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
@@ -138,6 +111,51 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 
 	@Override
 	public void onClick(View v) {
+		try{
+			Log.i(Consts.TAG, "Clicked");
+			DBHandler dh = DBHandler.getInstance(this) ; 
+			
+			dh.clearTable(DBConsts.TABLE_LIST);
+			dh.clearTable(DBConsts.TABLE_SIGHTING);
 
+			dh.dumpTable(DBConsts.TABLE_LIST);
+			dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			
+			BirdList birdList = new BirdList("Hebbal Nov 2013");
+			long id = dh.addBirdList(birdList,true );
+			birdList = new BirdList("Hebbal Nov 2013");
+			try{
+				dh.addBirdList(birdList, true);
+			}catch (Exception ex){
+				ex.printStackTrace();
+			}
+			
+			birdList = new BirdList("Hesaraghatta Nov 2013");
+			dh.addBirdList(birdList, false);
+			
+			dh.addSightingToCurrentList(new Species("Blue Rock Thrush"));
+			dh.addSightingToCurrentList(new Species("Blue Rock Thrush")); // this should fail
+			dh.addSightingToCurrentList(new Species("Blue-capped Rock Thrush"));
+			dh.addSightingToCurrentList(new Species("Indian Pitta"));
+			
+			dh.deleteList("Hesaraghatta Nov 2013");
+			dh.deleteSightingFromList("Indian Pitta", "Hebbal Nov 2013");
+			
+//			dh.clearTable(DBConsts.TABLE_LIST);
+//			dh.clearTable(DBConsts.TABLE_SIGHTING);
+			
+			//dh.deleteList("Hebbal Nov 2013");
+			dh.dumpTable(DBConsts.TABLE_LIST);
+			dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			
+			/* Start the Parse sync service */ 
+			Log.i(Consts.TAG, "Syncing now...");
+			DummyAsyncTask dat = new DummyAsyncTask(this); 
+			dat.execute("hello world");
+
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 	}
+
 }

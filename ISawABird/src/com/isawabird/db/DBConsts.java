@@ -22,7 +22,7 @@ public class DBConsts {
 	public static final String PARSE_OBJECT_ID = "objectId";
 	public static final String PARSE_IS_UPLOAD_REQUIRED = "isUploadRequired";
 	public static final String PARSE_IS_DELETE_MARKED = "isMarkedForDelete";
-
+	
 
 	public static final String CREATE_LIST = "CREATE TABLE " + TABLE_LIST +
 			"(" +
@@ -58,6 +58,24 @@ public class DBConsts {
 			PARSE_IS_DELETE_MARKED		+ " INTEGER DEFAULT 0 NOT NULL" +
 			")";
 
+	/* Separate Parse table not required. */
+//	public static final String TABLE_PARSE = "parse";
+//	public static final String PARSE_TYPE = "type";
+//	public static final String PARSE_TYPE_ID = "typeId";
+//	public static final String PARSE_TYPE_BIRDLIST = "BIRDLIST";
+//	public static final String PARSE_TYPE_SIGHTING = "SIGHTING";
+//	
+//	
+//	public static final String CREATE_PARSE = "CREATE TABLE " + TABLE_PARSE +
+//			"(" +
+//			ID 							+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
+//			PARSE_TYPE 					+ " TEXT NOT NULL," +
+//			PARSE_TYPE_ID 				+ " INTEGER NOT NULL," +
+//			PARSE_OBJECT_ID				+ " TEXT," + 
+//			PARSE_IS_UPLOAD_REQUIRED	+ " INTEGER DEFAULT 0 NOT NULL," +
+//			PARSE_IS_DELETE_MARKED		+ " INTEGER DEFAULT 0 NOT NULL" + 
+//			")";
+
 	/**
 	 * DB QUERIES
 	 */
@@ -67,31 +85,59 @@ public class DBConsts {
 			", " + SIGHTING_LATITUDE + ", " + SIGHTING_LONGITUDE + ", " +  SIGHTING_DATE +
 			", " + PARSE_OBJECT_ID + ", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
 			" FROM " + TABLE_SIGHTING + 
-			" WHERE " + SIGHTING_LIST_ID  + "= ? COLLATE NOCASE" +
+			" WHERE " + SIGHTING_LIST_ID  + "= ? AND " + 
+			PARSE_IS_DELETE_MARKED + "!=1" + " COLLATE NOCASE" +
 			" ORDER BY " + SIGHTING_DATE + " DESC";
 
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 
 			"SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +
 			" FROM " + TABLE_SIGHTING  +  
 			" WHERE " + SIGHTING_LIST_ID + "= ? " +
-			" AND " + SIGHTING_SPECIES + " = ? COLLATE NOCASE" ;
-
+			" AND " + SIGHTING_SPECIES + " = ? AND " + 
+			PARSE_IS_DELETE_MARKED + "!= 1  COLLATE NOCASE" ;
+	
 	public static final String QUERY_LIST = 
 			"SELECT " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED + 
 			", " + PARSE_IS_UPLOAD_REQUIRED + ", " + PARSE_OBJECT_ID +
 			" FROM " + TABLE_LIST + 
+			" WHERE " + PARSE_IS_DELETE_MARKED + "!= 1" + 
 			" ORDER BY " + LIST_DATE + " DESC";
 
 	public static final String QUERY_LIST_SYNC = 
 			"SELECT " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			", " + PARSE_OBJECT_ID + 
+			", " + PARSE_IS_UPLOAD_REQUIRED + 
 			" FROM " + TABLE_LIST + 
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
-
+	
+	public static final String QUERY_COUNT_CURRENT_LIST = 
+			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 
+			SIGHTING_LIST_ID + " = " + Utils.getCurrentListID() + " AND " + 
+			PARSE_IS_DELETE_MARKED + "!=1"; 
+	
 	/* We use SQLiteDatabase.delete() which doesn't require the SELECT statement until WHERE */
 	public static final String QUERY_DELETE_SIGHTING = 
 			DBConsts.SIGHTING_SPECIES + "= ? AND " + 
-					DBConsts.SIGHTING_LIST_ID + "=?";
+			DBConsts.SIGHTING_LIST_ID + "=?"; 
+	
+	/*public static final String QUERY_LIST_SYNC_CREATE = 
+			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
+			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
+			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
+			" WHERE " + PARSE_OBJECT_ID + " IS NULL" +
+			" AND " + PARSE_IS_UPLOAD_REQUIRED + "=1";
+	
+	public static final String QUERY_LIST_SYNC_UPDATE = 
+			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
+			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +
+			" FROM " + TABLE_LIST + " as l LEFT OUTER JOIN " + TABLE_PARSE + " as p" +
+			" ON (p." + PARSE_TYPE + "='" + TABLE_LIST + "'" +
+			" AND p." + PARSE_TYPE_ID + "=l." + ID + ")" +
+			" WHERE " + PARSE_OBJECT_ID + " IS NOT NULL" +
+			" AND " + PARSE_IS_UPLOAD_REQUIRED + "=1";*/
 }

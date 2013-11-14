@@ -2,6 +2,9 @@ package com.isawabird;
 
 import java.util.Date;
 
+import com.isawabird.parse.ParseUtils;
+import com.parse.ParseGeoPoint;
+
 public class Sighting {
 	
 	private long id;
@@ -9,8 +12,8 @@ public class Sighting {
 	private Species species = null;
 	private String listName;
 	private long listId;
-	private float latitude ;
-	private float longitude; 
+	private double latitude ;
+	private double longitude; 
 	private String notes;
 	/*private int numberOfBirds = 1; 
 	private String username = ParseUtils.getCurrentUser().getUsername();*/
@@ -23,6 +26,9 @@ public class Sighting {
 	public Sighting(Species speciesName){
 		this.species = speciesName;
 		this.date = new Date();
+		ParseGeoPoint myDot = ParseUtils.getLastKnownLocation(); 
+		this.latitude = myDot.getLatitude() ; 
+		this.longitude = myDot.getLongitude();
 	}
 	
 	public Species getSpecies(){
@@ -33,22 +39,22 @@ public class Sighting {
 		this.species = species; 
 	}
 
-	public float getLatitude() {
+	public double getLatitude() {
 		return latitude;
 	}
 
 
-	public void setLatitude(float latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
 
-	public float getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 
 
-	public void setLongitude(float longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
