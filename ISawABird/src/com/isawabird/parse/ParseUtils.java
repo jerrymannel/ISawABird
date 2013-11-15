@@ -85,4 +85,8 @@ public class ParseUtils {
 			}
 		});
 	}
+
+	public static boolean isLoggedIn() {
+		return ParseUser.getCurrentUser() != null;
+	}
 }

@@ -31,9 +31,7 @@ public class BackupOfMainActivity extends Activity implements android.view.View.
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		/* Initialize Parse */
-		Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
-		Utils.prefs = getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
+		
 		SyncUtils.createSyncAccount(this);
 
 		act = this;
@@ -64,7 +62,7 @@ public class BackupOfMainActivity extends Activity implements android.view.View.
 				BackupOfMainActivity.updateLabel("Already logged in as " + ParseUtils.getCurrentUsername());
 			}
 
-			// load test data
+			/*// load test data
 			SQLiteDatabase checkDB = null;
 			try {
 				checkDB = SQLiteDatabase.openDatabase(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath(), null,
@@ -83,7 +81,7 @@ public class BackupOfMainActivity extends Activity implements android.view.View.
 				loader.load();
 			}
 			Log.e(Consts.TAG, "Querying ...");
-			loader.query();
+			loader.query();*/
 			
 			
 		} catch(Exception ex) {

@@ -128,7 +128,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						}
 					}
 				}
-
 				// delete staleEntries from db
 				for (Long id : staleEntries) {
 					dh.deleteLocally(DBConsts.TABLE_LIST, id);

@@ -81,6 +81,11 @@ public class Utils {
 		return username;
 	}
 
+	public static boolean setFirstTime(boolean value) {
+		prefs.edit().putBoolean(Consts.IS_FIRST_TIME, value).apply();
+		return value;
+	}
+
 	public static String getCurrentListName(){
 		return prefs.getString(Consts.CURRENT_LIST_KEY, null);
 	}
@@ -91,5 +96,9 @@ public class Utils {
 
 	public static String getCurrentUsername() {
 		return prefs.getString(Consts.CURRENT_USER_ANONYMOUS, null);
+	}
+
+	public static boolean isFirstTime() {
+		return prefs.getBoolean(Consts.IS_FIRST_TIME, true);
 	}
 }
