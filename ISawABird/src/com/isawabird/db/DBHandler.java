@@ -197,6 +197,9 @@ public class DBHandler extends SQLiteOpenHelper {
 				DBConsts.SIGHTING_LIST_ID + "=?", new String[] {Long.toString(listId)});
 	}
 
+	public long getBirdCountForCurrentList() {
+		return getBirdCountByListId(Utils.getCurrentListID());
+	}
 	/* Get the lists for the current user */
 	public Vector<BirdList> getBirdLists(String username){
 
@@ -248,6 +251,35 @@ public class DBHandler extends SQLiteOpenHelper {
 		
 		Log.i(Consts.TAG, "We have " + birdList.size() + " lists to sync");
 		return birdList;
+	}
+
+	public Vector<Sighting> getSightingsToSync(String username) {
+
+		if(!db.isOpen()) db = getWritableDatabase();
+
+		Cursor result = db.rawQuery(DBConsts.QUERY_SIGHTINGS_SYNC, null);
+
+		if(result.getColumnCount() <= 0) return null;
+
+		Vector<Sighting> sightings = new Vector<Sighting>();
+
+		while(result.moveToNext()) {
+			Sighting temp = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
+			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))));
+			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_NOTES)));
+			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
+			// TODO : Add list name instead of list ID 
+			temp.setListName(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LIST_ID))); 
+			temp.setLatitude(result.getDouble(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LATITUDE)));
+			temp.setLongitude(result.getDouble(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LONGITUDE)));
+			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
+			temp.setMarkedForDelete(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED)) == 1);
+			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
+			sightings.add(temp);
+		}
+		
+		Log.i(Consts.TAG, "We have " + sightings.size() + " sightings to sync");
+		return sightings;
 	}
 
 	public void deleteList(String listName){

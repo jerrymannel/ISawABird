@@ -18,6 +18,8 @@ public class Sighting {
 	/*private int numberOfBirds = 1; 
 	private String username = ParseUtils.getCurrentUser().getUsername();*/
 	private String parseObjectID = null; 
+	private boolean isMarkedForDelete = false;
+	private boolean isMarkedForUpload = true;
 
 	public Sighting(String species ){
 		this(new Species(species));
@@ -111,5 +113,20 @@ public class Sighting {
 		return new StringBuffer().append(id).append(", ").append(species.toString()).append(", ")
 				.append(listName).append(", ").append(date).append(", ").append(parseObjectID)
 				.append(", ").append(String.valueOf(listId)).toString();
+	}
+	public boolean isMarkedForUpload() {
+		return isMarkedForUpload;
+	}
+
+	public void setMarkedForUpload(boolean isMarkedForUpload) {
+		this.isMarkedForUpload = isMarkedForUpload;
+	}
+
+	public boolean isMarkedForDelete() {
+		return isMarkedForDelete;
+	}
+
+	public void setMarkedForDelete(boolean isMarkedForDelete) {
+		this.isMarkedForDelete = isMarkedForDelete;
 	}
 }
