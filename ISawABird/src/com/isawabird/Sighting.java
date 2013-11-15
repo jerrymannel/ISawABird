@@ -8,7 +8,7 @@ import com.parse.ParseGeoPoint;
 public class Sighting {
 	
 	private long id;
-	private Date date;
+	private Date date = new Date();
 	private Species species = null;
 	private String listName;
 	private long listId;

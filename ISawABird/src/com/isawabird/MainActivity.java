@@ -83,7 +83,8 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			
 			// TODO: remove below line after dev
 			// put all the dump tables and testing in data loader
-			new DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
+			//new DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
+			new DataLoader(getApplicationContext()).srihariTestFunction(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
 		}
 	}
 
