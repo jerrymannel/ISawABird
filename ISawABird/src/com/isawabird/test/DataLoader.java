@@ -85,9 +85,9 @@ public class DataLoader {
 				Log.i(Consts.TAG, list.getId() + ":" +  list.toString());
 			}
 
-			if (birdList.size() > 0){
+			/*if (birdList.size() > 0){
 				Utils.setCurrentList(birdList.get(0).getListName(), birdList.get(0).getId());
-			}
+			}*/
 
 			for (BirdList list : birdList) {
 				ArrayList<Sighting> sightings = dh.getSightingsByListName(list.getListName(), username);

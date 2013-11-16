@@ -66,9 +66,8 @@ public class MainActivity extends Activity {
 					}
 				});
 
-				// TODO: fix inconsistency in listID and listName
 				Log.i(Consts.TAG, "current List ID: " + Utils.getCurrentListID());
-				Log.i(Consts.TAG, "current List Name: " + Utils.getChecklistName());
+				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
 				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
 			}
 		} catch(Exception ex) {
