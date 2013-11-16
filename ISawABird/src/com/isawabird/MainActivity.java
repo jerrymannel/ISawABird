@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.isawabird.db.DBConsts;
 import com.isawabird.parse.ParseConsts;
@@ -14,8 +16,10 @@ import com.isawabird.parse.ParseUtils;
 import com.isawabird.test.DataLoader;
 import com.parse.Parse;
 
-public class MainActivity extends Activity implements android.view.View.OnClickListener {
+public class MainActivity extends Activity {
 
+	private Button mSawBirdButton ;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,6 +33,15 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 		} else {
 
 			setContentView(R.layout.activity_main);
+			
+			mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
+			mSawBirdButton.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent loginIntent = new Intent(getApplicationContext(), SearchActivity.class);
+					startActivity(loginIntent);					
+				}
+			});
 			/* Initialize Parse and preferences */
 			Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
 
@@ -80,9 +93,4 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 	/*public static ConnectivityManager getConnectivityManager(){
 		return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE);
 	}*/
-
-	@Override
-	public void onClick(View v) {
-
-	}
 }

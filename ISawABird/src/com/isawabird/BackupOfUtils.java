@@ -9,13 +9,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-public class Utils {
+public class BackupOfUtils {
 
-	private static ArrayList<String>  allSpecies = new ArrayList<String>(); 
+	private static ArrayList<Species>  allSpecies = new ArrayList<Species>(); 
 	private static boolean checklistLoaded = false; 
-
+	
 	public static SharedPreferences prefs = null;
-
+	
 	public static void initializeChecklist(Context context, String checklist) throws IOException{
 		try{
 			InputStream fis = (InputStream) context.getAssets().open("checklists/" + checklist);
@@ -29,7 +29,7 @@ public class Utils {
 			for (int i = 0 ; i < speciesList.length ; i++){
 				//Log.d("ISawABird", speciesList[i]);
 				Species temp = new Species(speciesList[i]);
-				allSpecies.add(temp.getCommonName());
+				allSpecies.add(temp);
 				//Log.d("ISawABird", temp.getUnPunctuatedName());
 			}
 			Log.d(Consts.TAG,  allSpecies.size() + " species added to checklist");
@@ -38,11 +38,11 @@ public class Utils {
 			throw ioex;
 		}
 	}
-
-	public static ArrayList<String> getAllSpecies() {
+	
+	public static ArrayList<Species> getAllSpecies() {
 		return allSpecies;
 	}
-
+	
 	/** Function to search through the 'current' checklist for a given search term. 
 	 * @param searchTerm : The search query. 
 	 * @param subset : The subset of the checklist to search within. If null, search 
@@ -52,33 +52,34 @@ public class Utils {
 	 * 
 	 * @returns A ArrayList of Species objects matching the search terms.
 	 */
-	public static ArrayList<String> search(String searchTerm, ArrayList<String> subset) {
-		ArrayList<String> returnVal = new ArrayList<String> ();
+	public static ArrayList<Species> search(String searchTerm, ArrayList<Species> subset) {
+		ArrayList<Species> returnVal = new ArrayList<Species> ();
 		if (!checklistLoaded){
 			return returnVal;
 		}
-		ArrayList<String> searchList = (subset == null || subset.size() == 0) ? allSpecies : subset ;
-
-		Iterator<String> iter = searchList.iterator();
+		ArrayList<Species> searchList = (subset == null || subset.size() == 0) ? allSpecies : subset ;
+		
+		Iterator<Species> iter = searchList.iterator(); 
 		while(iter.hasNext()){
-			String temp = iter.next(); 
-			if (unpunctuate(temp).indexOf(unpunctuate(searchTerm)) != -1) {
-				Log.d(Consts.TAG, "Adding " + temp + " to search results.");
+			Species temp = iter.next(); 
+			if (temp.getUnpunctuatedName().indexOf(BackupOfUtils.unpunctuate(searchTerm)) != -1){
+				
+				Log.d(Consts.TAG, "Adding " + temp.getFullName() + " to search results.");
 				returnVal.add(temp);
 			}
 		}
 		return returnVal;
 	}
-
+	
 	public static String unpunctuate(String string){
 		return string.replaceAll("[-' ]", "").toLowerCase();
 	}
 
 	public static void setCurrentList(String listName, long listID){
 		prefs.edit().putString(Consts.CURRENT_LIST_KEY, listName)
-		.putLong(Consts.CURRENT_LIST_ID_KEY, listID).apply();
+			.putLong(Consts.CURRENT_LIST_ID_KEY, listID).apply();
 	}
-
+	
 	public static String setCurrentUsername(String username) {
 		prefs.edit().putString(Consts.CURRENT_USER_ANONYMOUS, username).apply();
 		return username;

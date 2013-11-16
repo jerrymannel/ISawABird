@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 /**
  * Adapter for sections.
@@ -157,8 +156,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter, OnIt
     }
 
     protected View createNewSectionView() {
-//        return inflater.inflate(R.layout.section_view, null);
-    	return null;
+        return inflater.inflate(R.layout.search_section_view, null);
     }
 
     @Override
