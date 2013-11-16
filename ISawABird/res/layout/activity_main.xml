@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="@string/mode_offline"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/color_main_title"
         android:textStyle="italic" />
@@ -37,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:text="@string/loc_undef"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/color_main_title"
         android:textStyle="bold" />
