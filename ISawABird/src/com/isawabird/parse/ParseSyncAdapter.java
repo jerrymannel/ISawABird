@@ -39,6 +39,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	private DBHandler dh;
 	private JSONArray requestArray = new JSONArray();
+	private ArrayList<Long> postEntries = new  ArrayList<Long>();
 	private static final int MAX_REQUESTS_PER_MONTH = 1000000;
 	private static final int NUM_ACTIVE_USERS = 5000 ; 
 	private static final float QUOTA_PER_MONTH = MAX_REQUESTS_PER_MONTH/NUM_ACTIVE_USERS; // 200
@@ -92,10 +93,9 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
 	
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
-			ArrayList<Long> postEntries = new  ArrayList<Long>();
 			JSONObject body = null;
 			for (BirdList birdList : birdListToSync) {
-	
+				Log.i(Consts.TAG, "Adding to postEntries " + birdList.getId());
 				if(birdList.isMarkedForDelete()) {
 					// DELETE
 					if(birdList.getParseObjectID() == null) {
@@ -126,39 +126,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				}
 			}
 	
-			if(requestArray.length() > 0) {
-				JSONObject batchRequest = buildRequest(requestArray);
-				JSONArray respArray = postRequest(batchRequest);
-				/* Parse the response */ 
-				if(respArray != null) {
-					for(int i = 0 ; i < respArray.length() ; i++){
-						JSONObject object = respArray.getJSONObject(i);
-						if (object.has(ParseConsts.SUCCESS)){
-							String method = requestArray.getJSONObject(i).getString("method");
-							// update parseObjectId for POST requests
-							if (method == "POST") {
-								// We added a new entry to Parse  
-								String objID = object.getJSONObject(ParseConsts.SUCCESS).getString(ParseConsts.OBJECTID);
-								String table = requestArray.getJSONObject(i).getString("className");
-								dh.updateParseObjectID(table, postEntries.get(i), objID);
-								dh.dumpTable(DBConsts.TABLE_LIST);
-							}else if (method == "PUT") {
-								// We Updated Parse. So, just reset the upload required flag.
-								dh.resetUploadRequiredFlag(DBConsts.TABLE_LIST, postEntries.get(i)); 
-								dh.dumpTable(DBConsts.TABLE_LIST); 
-							}else if (method == "DELETE") {
-								// delete invalid rows for DELETE requests
-								dh.deleteLocally(DBConsts.TABLE_LIST, postEntries.get(i));
-								dh.dumpTable(DBConsts.TABLE_LIST); 
-							}
-	
-						}else{
-							// TODO : Handle failure
-						}
-					}
-				}
-			}
-			requestArray = new JSONArray();
 			// delete staleEntries from db
 			for (Long id : staleEntries) {
 				dh.deleteLocally(DBConsts.TABLE_LIST, id);
@@ -176,7 +143,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync(ParseUtils.getCurrentUsername());
 	
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
-			ArrayList<Long> postEntries = new  ArrayList<Long>();
 			JSONObject body = null;
 			for (Sighting  sighting : sightingsToSync) {
 				if(sighting.isMarkedForDelete()) {
@@ -211,41 +177,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					}
 				}
 			}
-			
-			// TODO : Make a single batch call to sync both lists and sightings  
-			if(requestArray.length() > 0) {
-				JSONObject batchRequest = buildRequest(requestArray);
-				JSONArray respArray = postRequest(batchRequest);
-				/* Parse the response */ 
-				if(respArray != null) {
-					for(int i = 0 ; i < respArray.length() ; i++){
-						JSONObject object = respArray.getJSONObject(i);
-						if (object.has(ParseConsts.SUCCESS)){
-							String method = requestArray.getJSONObject(i).getString("method");
-							// update parseObjectId for POST requests
-							if (method == "POST") {
-								// We added a new entry to Parse  
-								String objID = object.getJSONObject(ParseConsts.SUCCESS).getString(ParseConsts.OBJECTID);
-								String table = requestArray.getJSONObject(i).getString("className");
-								dh.updateParseObjectID(table, postEntries.get(i), objID);
-								dh.dumpTable(DBConsts.TABLE_SIGHTING);
-							}else if (method == "PUT") {
-								// We Updated Parse. So, just reset the upload required flag.
-								dh.resetUploadRequiredFlag(DBConsts.TABLE_SIGHTING, postEntries.get(i)); 
-								dh.dumpTable(DBConsts.TABLE_SIGHTING); 
-							}else if (method == "DELETE") {
-								// delete invalid rows for DELETE requests
-								dh.deleteLocally(DBConsts.TABLE_SIGHTING, postEntries.get(i));
-								dh.dumpTable(DBConsts.TABLE_SIGHTING); 
-							}
-	
-						}else{
-							// TODO : Handle failure
-						}
-					}
-				}
-			}
-			requestArray = new JSONArray();
 	
 			// delete staleEntries from db
 			for (Long id : staleEntries) {
@@ -268,6 +199,38 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
 				syncBirdLists(); 
 				syncSightings(); 
+				if(requestArray.length() > 0) {
+					JSONObject batchRequest = buildRequest(requestArray);
+					JSONArray respArray = postRequest(batchRequest);
+					/* Parse the response */ 
+					if(respArray != null) {
+						for(int i = 0 ; i < respArray.length() ; i++){
+							JSONObject reponseObject = respArray.getJSONObject(i);
+							if (reponseObject.has(ParseConsts.SUCCESS)){
+								JSONObject requestObj =requestArray.getJSONObject(i); 
+								String method = requestObj.getString("method");
+								String table = requestObj.getString("className");
+								// update parseObjectId for POST requests
+								if (method == "POST") {
+									// We added a new entry to Parse  
+									String objID = reponseObject.getJSONObject(ParseConsts.SUCCESS).getString(ParseConsts.OBJECTID);
+									dh.updateParseObjectID(table, postEntries.get(i), objID);
+								}else if (method == "PUT") {
+									// We Updated Parse. So, just reset the upload required flag.
+									dh.resetUploadRequiredFlag(table, postEntries.get(i)); 
+								}else if (method == "DELETE") {
+									// delete invalid rows for DELETE requests
+									dh.deleteLocally(table,  postEntries.get(i));
+								}
+								dh.dumpTable(table);	
+							}else{
+								// TODO : Handle failure
+							}
+						}
+					}
+				}
+				requestArray = new JSONArray();
+				postEntries = new ArrayList<Long>(); 
 			}
 		} catch (Exception e) {
 			Log.e(Consts.TAG, e.getMessage());
@@ -291,6 +254,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			HttpResponse resp = client.execute(postReq);
 			HttpEntity respEntity = resp.getEntity();
 			String response = EntityUtils.toString(respEntity);
+			Log.i(Consts.TAG, "Response is " + response);
 			Preferences prefs = Preferences.userRoot() ; 
 			prefs.putInt(KEY_REQUESTS_THIS_MONTH, prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0) + 1);
 			prefs.putLong(KEY_LAST_SYNC_DATE, new Date().getTime());

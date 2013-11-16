@@ -353,7 +353,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues(); 
 			values.put(DBConsts.PARSE_OBJECT_ID, parseObjectId); 
 			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 0);
-			
+			Log.i(Consts.TAG, " Updating Parse object id for " + tableName + " id = " + id);
 			db.update(tableName, values, DBConsts.ID + "=" + id, null);
 			return true; 
 		}catch(Exception ex){
