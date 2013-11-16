@@ -4,7 +4,6 @@ package com.isawabird.parse;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Vector;
 import java.util.prefs.Preferences;
 
 import org.apache.http.HttpEntity;
@@ -22,7 +21,6 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -31,9 +29,7 @@ import android.util.Log;
 
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
-import com.isawabird.MainActivity;
 import com.isawabird.Sighting;
-import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.parse.Parse;
@@ -80,7 +76,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			return true; 
 		}
 		
-		int date= Calendar.getInstance().get(Calendar.DATE); 
+		int date = Calendar.getInstance().get(Calendar.DATE); 
 		int requestsSpentThisMonth = prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0);
 		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE); 
 		
@@ -93,7 +89,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncBirdLists(){
 		try{
 			// get bird list to sync create/update/delete
-			Vector<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
+			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
 	
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			ArrayList<Long> postEntries = new  ArrayList<Long>();
@@ -177,7 +173,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncSightings(){
 		try{
 			// get bird list to sync create/update/delete
-			Vector<Sighting> sightingsToSync = dh.getSightingsToSync(ParseUtils.getCurrentUsername());
+			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync(ParseUtils.getCurrentUsername());
 	
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			ArrayList<Long> postEntries = new  ArrayList<Long>();
@@ -285,10 +281,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			if(batchRequest == null) return null;
 			HttpClient client = new DefaultHttpClient();
 			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
-			//postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
-			postReq.addHeader("X-Parse-Application-Id", "bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK"); // Srihari
-			//postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.CLIENT_KEY);
-			postReq.addHeader("X-Parse-REST-API-Key", "ZTOXQtWbX3sCD9umliYbdymvNDPSvwLGa40LKWZR"); //Srihari
+			postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
+			postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.CLIENT_KEY);
 			postReq.addHeader("Content-Type", "application/json");
 			Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
 			StringEntity entity = new StringEntity(batchRequest.toString());

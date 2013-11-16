@@ -21,7 +21,7 @@ public class Utils {
 		try{
 			DataInputStream fis = new DataInputStream((InputStream) context.getAssets().open("checklists/" + checklist));
 			String fileText = "";
-			Vector<String> speciesList = new Vector<String>(1000); 
+			ArrayList<String> speciesList = new ArrayList<String>(1000); 
 			while ( (fileText = fis.readLine()) != null){
 				speciesList.add(fileText);
 			}

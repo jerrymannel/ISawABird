@@ -1,7 +1,7 @@
 package com.isawabird.db;
 
 import java.util.Date;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -71,7 +71,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	}
 
 	/* Get all sightings for a given list */
-	public Vector<Sighting> getSightingsByListName(String listName, String username) {
+	public ArrayList<Sighting> getSightingsByListName(String listName, String username) {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -81,7 +81,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		if(result.getColumnCount() <= 0) return null;
 
-		Vector<Sighting> sightings = new Vector<Sighting>();
+		ArrayList<Sighting> sightings = new ArrayList<Sighting>();
 
 		while(result.moveToNext()){
 			Sighting s = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
@@ -100,7 +100,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	/* Get all sightings for current list */
 	//TODO: do we really need this method?
-	public Vector<Sighting> getSightingsForCurrentList(){
+	public ArrayList<Sighting> getSightingsForCurrentList(){
 		return getSightingsByListName(Utils.getCurrentListName(), ParseUtils.getCurrentUsername());
 	}
 
@@ -201,7 +201,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return getBirdCountByListId(Utils.getCurrentListID());
 	}
 	/* Get the lists for the current user */
-	public Vector<BirdList> getBirdLists(String username){
+	public ArrayList<BirdList> getBirdLists(String username){
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -211,7 +211,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		if(result.getColumnCount() <= 0) return null;
 
-		Vector<BirdList> birdList = new Vector<BirdList>();
+		ArrayList<BirdList> birdList = new ArrayList<BirdList>();
 
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
@@ -227,7 +227,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return birdList;
 	}
 
-	public Vector<BirdList> getBirdListToSync(String username) {
+	public ArrayList<BirdList> getBirdListToSync(String username) {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -235,7 +235,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		if(result.getColumnCount() <= 0) return null;
 
-		Vector<BirdList> birdList = new Vector<BirdList>();
+		ArrayList<BirdList> birdList = new ArrayList<BirdList>();
 
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
@@ -253,7 +253,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return birdList;
 	}
 
-	public Vector<Sighting> getSightingsToSync(String username) {
+	public ArrayList<Sighting> getSightingsToSync(String username) {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -261,7 +261,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		if(result.getColumnCount() <= 0) return null;
 
-		Vector<Sighting> sightings = new Vector<Sighting>();
+		ArrayList<Sighting> sightings = new ArrayList<Sighting>();
 
 		while(result.moveToNext()) {
 			Sighting temp = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
@@ -393,7 +393,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return false;
 	}
 	
-	/*public Vector<BirdList> getBirdListToSync(boolean toCreate, String username) {
+	/*public ArrayList<BirdList> getBirdListToSync(boolean toCreate, String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		String query = null;
@@ -407,7 +407,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		if(result.getColumnCount() <= 0) return null;
 
-		Vector<BirdList> birdList = new Vector<BirdList>();
+		ArrayList<BirdList> birdList = new ArrayList<BirdList>();
 
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));

@@ -2,98 +2,91 @@ package com.isawabird;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
+import com.isawabird.test.DataLoader;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 
-import com.isawabird.db.DBConsts;
-import com.isawabird.parse.ParseConsts;
-import com.isawabird.parse.ParseUtils;
-import com.isawabird.test.DataLoader;
-import com.parse.Parse;
-
-public class MainActivity extends Activity implements android.view.View.OnClickListener {
+public class MainActivity extends Activity {
 
 	static MainActivity act = null; 
 	TextView numberSpecies ; 
 	TextView currentListName ; 
-	
+	Button mSawBirdButton;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
 
-		//TODO: hide action bar before switching to login screen
-		Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
-		Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
-		ParseUtils.updateCurrentLocation(); 
-		/* Set up the sync service */
-		SyncUtils.createSyncAccount(this);
-		SyncUtils.triggerRefresh();
-		ParseInstallation.getCurrentInstallation().saveInBackground();
-		
 		try{
-			/* Initialize the checklists */
-			Log.i(Consts.TAG, "Starting checklist init...");
-			Utils.initializeChecklist(this, Utils.getChecklistName());
-//			Utils.initializeChecklist(this, "World");
-			Log.i(Consts.TAG, "Checklist init complete");
-			
-			/* Login to Parse */
-			if (ParseUser.getCurrentUser() == null){
-				// TODO : Create a new Login Activity and show it 
-				Log.i(Consts.TAG, "Logging in...");
-				// TODO: handle signup
-				ParseUtils.login("sriniketana", "test123");
-				Log.i(Consts.TAG, "Logged in");
+			//TODO: hide action bar before switching to login screen		
+			Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
+			if(Utils.isFirstTime()) {
+				login();
+				// exit this activity
+				finish();
 			} else {
-				Log.i(Consts.TAG, "Already logged in as " + ParseUtils.getCurrentUsername());
+
+				setContentView(R.layout.activity_main);
+				
+				Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
+				
+				// TODO: move heavy work to asynctask
+				ParseUtils.updateCurrentLocation(); 
+				
+				/* Set up the sync service */
+				SyncUtils.createSyncAccount(this);
+				SyncUtils.triggerRefresh();
+				ParseInstallation.getCurrentInstallation().saveInBackground();
+
+				/* Initialize the checklists */
+				Log.i(Consts.TAG, "Starting checklist init...");
+				Utils.initializeChecklist(this, Utils.getChecklistName());
+				Log.i(Consts.TAG, "Checklist init complete");
+
+				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
+				mSawBirdButton.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent loginIntent = new Intent(getApplicationContext(), SearchActivity.class);
+						startActivity(loginIntent);					
+					}
+				});
+				// TODO: fix inconsistency in listID and listName
+				Log.i(Consts.TAG, "current List ID: " + Utils.getCurrentListID());
+				Log.i(Consts.TAG, "current List Name: " + Utils.getChecklistName());
+				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
+				
+				numberSpecies = (TextView)findViewById(R.id.text_mode);
+				currentListName = (TextView)findViewById(R.id.text_location);
+
+				currentListName.setText(Utils.getCurrentListName());
+				DBHandler dh = DBHandler.getInstance(this);
+				// TODO: not happy with static access to Utils class in DBHandler
+				numberSpecies.setText(String.valueOf(dh.getBirdCountForCurrentList()));
+
+				// TODO: remove below line after dev
+				// put all the dump tables and testing in data loader
+				//new DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
+				new DataLoader(getApplicationContext()).srihariTestFunction(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
 			}
 		} catch(Exception ex) {
 			ex.printStackTrace();
-		}
-		/* End of initialization */ 
-
-		if(Utils.isFirstTime()) {
-			login();
-			// exit this activity
-			finish();
-		} else {
-
-			setContentView(R.layout.activity_main);
-			
-	mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
-			mSawBirdButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					Intent loginIntent = new Intent(getApplicationContext(), SearchActivity.class);
-					startActivity(loginIntent);					
-				}
-			});
-			numberSpecies = (TextView)findViewById(R.id.textView_main_mode);
-			currentListName = (TextView)findViewById(R.id.textView_main_location);
-				
-			currentListName.setText(Utils.getCurrentListName());
-			DBHandler dh = DBHandler.getInstance(this);
-			numberSpecies.setText(String.valueOf(dh.getBirdCountForCurrentList()));
-			
-			// TODO: remove below line after dev
-			// put all the dump tables and testing in data loader
-			//new DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
-			new DataLoader(getApplicationContext()).srihariTestFunction(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
 		}
 	}
 
@@ -126,12 +119,12 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
 	private void login() {
 		Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
 		startActivity(loginIntent);
 	}
-	
+
 	private void logout() {
 		// TODO implement
 	}

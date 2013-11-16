@@ -3,11 +3,14 @@ package com.isawabird;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.isawabird.parse.ParseUtils;
 
 public class LoginActivity extends Activity {
 
@@ -22,22 +25,33 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		getActionBar().hide();
-		
+
 		mLoginButton = (Button) findViewById(R.id.btn_login);
 		mSignupButton = (Button) findViewById(R.id.btn_signup);
 		mSkipButton = (Button) findViewById(R.id.btn_skip);
 		mEmailText = (EditText) findViewById(R.id.text_email);
 		mPassText = (EditText) findViewById(R.id.text_pass);
 		mPassConfirmText = (EditText) findViewById(R.id.text_confirm);
-	
+
 		mLoginButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO: implement
-				Toast.makeText(getApplicationContext(), "Not implemented yet", Toast.LENGTH_SHORT).show();
+
+				Log.i(Consts.TAG, "Logging in...");
+				try {
+					String user = mLoginButton.getText().toString();
+					String pass = mPassText.getText().toString();
+					ParseUtils.login(user, pass);
+				} catch (Exception e) {
+					// TODO handle login exception
+					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+					e.printStackTrace();					
+				}
+				Log.i(Consts.TAG, "Logged in");
+				showHome();
 			}
 		});
-		
+
 		mSignupButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -47,18 +61,27 @@ public class LoginActivity extends Activity {
 				Toast.makeText(getApplicationContext(), "Not implemented yet", Toast.LENGTH_SHORT).show();
 			}
 		});
-		
+
 		mSkipButton.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				Utils.setFirstTime(false);
-				Intent loginIntent = new Intent(getApplicationContext(), MainActivity.class);
-				// FLAG_ACTIVITY_CLEAR_TOP is required if we are coming from settings by clicking on 'Login'
-				loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
-				startActivity(loginIntent);
-				finish();
+				showHome();
 			}
 		});
+
+		// TODO: remove below lines
+		mEmailText.setText("sriniketana");
+		mPassText.setText("test123");
+	}
+	
+	private void showHome() {
+		Log.i(Consts.TAG, "TO HOME");
+		Utils.setFirstTime(false);
+		Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
+		// FLAG_ACTIVITY_CLEAR_TOP is required if we are coming from settings by clicking on 'Login'
+		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+		startActivity(homeIntent);
+		finish();
 	}
 }

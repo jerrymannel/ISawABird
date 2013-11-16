@@ -1,6 +1,6 @@
 package com.isawabird.test;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -79,18 +79,18 @@ public class DataLoader {
 			}
 
 			DBHandler dh = DBHandler.getInstance(context);
-			Vector<BirdList> birdList = dh.getBirdLists(username);
+			ArrayList<BirdList> birdList = dh.getBirdLists(username);
 
 			for (BirdList list : birdList) {
 				Log.i(Consts.TAG, list.getId() + ":" +  list.toString());
 			}
 
 			if (birdList.size() > 0){
-				Utils.setCurrentList(birdList.elementAt(0).getListName(), birdList.elementAt(0).getId());
+				Utils.setCurrentList(birdList.get(0).getListName(), birdList.get(0).getId());
 			}
 
 			for (BirdList list : birdList) {
-				Vector<Sighting> sightings = dh.getSightingsByListName(list.getListName(), username);
+				ArrayList<Sighting> sightings = dh.getSightingsByListName(list.getListName(), username);
 				for (Sighting sighting : sightings) {
 					Log.i(Consts.TAG, sighting.toString());
 				}
