@@ -15,6 +15,7 @@ import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
+import com.isawabird.parse.extra.SyncUtils;
 
 public class DataLoader {
 
@@ -102,4 +103,50 @@ public class DataLoader {
 			ex.printStackTrace();
 		}
 	}
+
+	public void srihariTestFunction(String dbPath){
+		try {
+			Log.e(Consts.TAG, "Querying inside Srihari test function..");
+			
+			// load test data
+			SQLiteDatabase checkDB = null;
+			try {
+				checkDB = SQLiteDatabase.openDatabase(dbPath, null,
+						SQLiteDatabase.OPEN_READONLY);
+			} catch (SQLiteException e) {
+				// database doesn't exist yet.
+			} finally {
+				if(checkDB != null) checkDB.close();
+			}
+			boolean isFirstTime = checkDB == null ? true : false;
+
+			if(isFirstTime) {
+				// Use below class to create test data for the first time
+				String username = ParseUtils.getCurrentUsername();
+				if(username == null) {
+					throw new Exception("Parse username cannot be null");
+				}
+			}
+			DBHandler dh = DBHandler.getInstance(context);
+
+			dh.clearTable(DBConsts.TABLE_LIST);
+			dh.clearTable(DBConsts.TABLE_SIGHTING);
+			
+			// Test sync of sightings 
+			BirdList list = new BirdList("Bangalore BirdRace 2014"); 
+			dh.addBirdList(list, true); 
+			Log.i(Consts.TAG, "Adding a sighting");
+			dh.addSightingToCurrentList(new Species("Spotted Owlet"));
+			dh.dumpTable(DBConsts.TABLE_LIST) ; 
+			dh.dumpTable(DBConsts.TABLE_SIGHTING) ;
+			
+			SyncUtils.triggerRefresh(); 
+			
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

@@ -1,5 +1,6 @@
 package com.isawabird;
 
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,17 +19,16 @@ public class Utils {
 
 	public static void initializeChecklist(Context context, String checklist) throws IOException{
 		try{
-			InputStream fis = (InputStream) context.getAssets().open("checklists/" + checklist);
-			byte[] buffer = new byte[4096];
+			DataInputStream fis = new DataInputStream((InputStream) context.getAssets().open("checklists/" + checklist));
 			String fileText = "";
-			int count ; 
-			while( (count = fis.read(buffer)) != -1 ){
-				fileText += new String(buffer, 0 , count);
+			Vector<String> speciesList = new Vector<String>(1000); 
+			while ( (fileText = fis.readLine()) != null){
+				speciesList.add(fileText);
 			}
-			String [] speciesList = fileText.split("\n"); 
-			for (int i = 0 ; i < speciesList.length ; i++){
+			
+			for (String speciesName : speciesList){
 				//Log.d("ISawABird", speciesList[i]);
-				Species temp = new Species(speciesList[i]);
+				Species temp = new Species(speciesName);
 				allSpecies.add(temp.getCommonName());
 				//Log.d("ISawABird", temp.getUnPunctuatedName());
 			}
@@ -90,7 +90,7 @@ public class Utils {
 	}
 
 	public static String getCurrentListName(){
-		return prefs.getString(Consts.CURRENT_LIST_KEY, null);
+		return prefs.getString(Consts.CURRENT_LIST_KEY, "");
 	}
 
 	public static long getCurrentListID(){
@@ -103,5 +103,12 @@ public class Utils {
 
 	public static boolean isFirstTime() {
 		return prefs.getBoolean(Consts.IS_FIRST_TIME, true);
+	}
+	public static String getChecklistName(){
+		return prefs.getString(Consts.CHECKLIST, "India");
+	}
+	
+	public static void setChecklistName(String checklistName){ 
+		prefs.edit().putString(Consts.CHECKLIST, checklistName).apply();
 	}
 }

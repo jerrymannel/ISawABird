@@ -32,6 +32,8 @@ public class BackupOfMainActivity extends Activity implements android.view.View.
 		setContentView(R.layout.activity_main);
 
 		
+		Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
+		Utils.prefs = getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
 		SyncUtils.createSyncAccount(this);
 
 		act = this;

@@ -114,6 +114,16 @@ public class DBConsts {
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
 	
+	public static final String QUERY_SIGHTINGS_SYNC = 
+			"SELECT " + ID + ", " + SIGHTING_DATE + ", " + SIGHTING_SPECIES +
+			", " + SIGHTING_LIST_ID + ", " + SIGHTING_LATITUDE +  
+			", " + SIGHTING_LONGITUDE + ", " + SIGHTING_NOTES + 
+			", " + PARSE_IS_DELETE_MARKED +
+			", " + PARSE_OBJECT_ID + 
+			", " + PARSE_IS_UPLOAD_REQUIRED + 
+			" FROM " + TABLE_SIGHTING + 
+			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
+			" OR " + PARSE_IS_DELETE_MARKED + "=1";
 	// i think it is not a good idea to call static method in consts
 	public static final String QUERY_COUNT_CURRENT_LIST = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 
