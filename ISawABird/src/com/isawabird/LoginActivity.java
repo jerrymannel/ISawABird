@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.isawabird.parse.ParseUtils;
@@ -15,20 +16,21 @@ import com.isawabird.parse.ParseUtils;
 public class LoginActivity extends Activity {
 
 	private Button mLoginButton;
-	private Button mSignupButton;
-	private Button mSkipButton;
+	private TextView mSignupButton;
+	private TextView mSkipButton;
 	private EditText mEmailText;
 	private EditText mPassText;
 	private EditText mPassConfirmText;
-	@Override
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		
 		getActionBar().hide();
 
 		mLoginButton = (Button) findViewById(R.id.btn_login);
-		mSignupButton = (Button) findViewById(R.id.btn_signup);
-		mSkipButton = (Button) findViewById(R.id.btn_skip);
+		mSignupButton = (TextView) findViewById(R.id.btn_signup);
+		mSkipButton = (TextView) findViewById(R.id.btn_skip);
 		mEmailText = (EditText) findViewById(R.id.text_email);
 		mPassText = (EditText) findViewById(R.id.text_pass);
 		mPassConfirmText = (EditText) findViewById(R.id.text_confirm);
@@ -41,7 +43,8 @@ public class LoginActivity extends Activity {
 				try {
 					String user = mLoginButton.getText().toString();
 					String pass = mPassText.getText().toString();
-					ParseUtils.login(user, pass);
+					// TODO : (jerry) app crashing here. Fix it!
+//					ParseUtils.login(user, pass);
 				} catch (Exception e) {
 					// TODO handle login exception
 					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -69,10 +72,6 @@ public class LoginActivity extends Activity {
 				showHome();
 			}
 		});
-
-		// TODO: remove below lines
-		mEmailText.setText("sriniketana");
-		mPassText.setText("test123");
 	}
 	
 	private void showHome() {

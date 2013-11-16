@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@color/color_app_bg">
 
     <RelativeLayout
         android:layout_width="fill_parent"
@@ -14,9 +15,12 @@
             android:id="@+id/search_query"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@android:drawable/ic_search_category_default"
-            android:hint="search"
+            android:drawableLeft="@android:drawable/ic_menu_search"
+            android:hint="@string/search"
+            android:paddingBottom="5dp"
+            android:background="@drawable/textarea_normal"
+            android:textColor="@color/color_white"
+            android:textCursorDrawable="@null"
             android:maxLines="1"
             android:singleLine="true" />
     </RelativeLayout>

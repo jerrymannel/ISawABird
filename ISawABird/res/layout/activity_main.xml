@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:drawableLeft="@android:drawable/ic_menu_myplaces"
         android:background="@drawable/button_add_selector"
         android:minWidth="61dip"
         android:text="@string/app_name" />
@@ -28,16 +29,81 @@
         android:layout_alignParentTop="true"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/color_main_title"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        android:text="@string/mode_offline" />
 
     <TextView
         android:id="@+id/text_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/btn_isawabird"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:text="@string/loc_undef"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/color_main_title"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView_currentList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView_current_list_title"
+        android:layout_alignParentRight="true"
+        android:text="@string/defaultText"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/color_main_title"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView_current_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/text_mode"
+        android:layout_alignBottom="@+id/text_mode"
+        android:layout_toLeftOf="@+id/textView_currentList"
+        android:text="@string/current_list"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/color_grey"
+        android:textStyle="italic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_myLists"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="1dp"
+            android:drawableLeft="@android:drawable/ic_menu_more"
+            android:background="@drawable/button_bottom_selector"
+            android:text="@string/my_list"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_white"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_settings"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_margin="1dp"
+            android:drawableLeft="@android:drawable/ic_menu_preferences"
+            android:background="@drawable/button_bottom_selector"
+            android:text="@string/settings"
+            android:textColor="@color/color_white"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
 
 </RelativeLayout>

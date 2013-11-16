@@ -24,18 +24,21 @@ import com.parse.ParseInstallation;
 
 public class MainActivity extends Activity {
 
-	TextView numberSpecies ; 
-	TextView currentListName ; 
+	TextView numberSpecies;
+	TextView currentListName;
+	TextView currentLocation;
 	Button mSawBirdButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		try{
-			//TODO: hide action bar before switching to login screen		
-			Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
-			if(Utils.isFirstTime()) {
+		try {
+			// TODO: hide action bar before switching to login screen
+			Utils.prefs = getSharedPreferences(Consts.PREF,
+					Context.MODE_PRIVATE);
+
+			if (Utils.isFirstTime()) {
 				login();
 				// exit this activity
 				finish();
@@ -43,34 +46,44 @@ public class MainActivity extends Activity {
 
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
-				numberSpecies = (TextView)findViewById(R.id.text_mode);
-				currentListName = (TextView)findViewById(R.id.text_location);
+				numberSpecies = (TextView) findViewById(R.id.text_mode);
+				currentLocation = (TextView) findViewById(R.id.text_location);
+				currentListName = (TextView) findViewById(R.id.textView_currentList);
 
-				Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
+				// TODO : (jerry) commenting this. App is crashing. Fix.
+				// Parse.initialize(this, ParseConsts.APP_ID,
+				// ParseConsts.CLIENT_KEY);
 
+				// TODO : (jerry) commenting this. App is crashing. Fix.
 				// move heavy work to asynctask
-				new InitAsyncTask().execute();
+				// new InitAsyncTask().execute();
 
-				ParseUtils.updateCurrentLocation();
+				// TODO : (jerry) commenting this. App is crashing. Fix.
+				// ParseUtils.updateCurrentLocation();
 
+				// TODO : (jerry) commenting this. App is crashing. Fix.
 				/* Set up the sync service */
-				SyncUtils.createSyncAccount(this);
-				SyncUtils.triggerRefresh();
-				ParseInstallation.getCurrentInstallation().saveInBackground();
+				// SyncUtils.createSyncAccount(this);
+				// SyncUtils.triggerRefresh();
+				// ParseInstallation.getCurrentInstallation().saveInBackground();
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent loginIntent = new Intent(getApplicationContext(), SearchActivity.class);
-						startActivity(loginIntent);					
+						Intent loginIntent = new Intent(
+								getApplicationContext(), SearchActivity.class);
+						startActivity(loginIntent);
 					}
 				});
 
-				Log.i(Consts.TAG, "current List ID: " + Utils.getCurrentListID());
-				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
-				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
+				Log.i(Consts.TAG,
+						"current List ID: " + Utils.getCurrentListID());
+				Log.i(Consts.TAG,
+						"current List Name: " + Utils.getCurrentListName());
+				Log.i(Consts.TAG,
+						"current Username: " + ParseUtils.getCurrentUsername());
 			}
-		} catch(Exception ex) {
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -79,11 +92,12 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		if(ParseUtils.isLoggedIn()) {
-			menu.removeItem(R.id.action_login);
-		} else {
-			menu.removeItem(R.id.action_logout);
-		}
+		// TODO : (jerry) commenting this. App is crashing. Fix.
+		// if(ParseUtils.isLoggedIn()) {
+		// menu.removeItem(R.id.action_login);
+		// } else {
+		// menu.removeItem(R.id.action_logout);
+		// }
 		return true;
 	}
 
@@ -91,7 +105,7 @@ public class MainActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_settings:
-			//TODO implement
+			// TODO implement
 			return true;
 		case R.id.action_login:
 			login();
@@ -106,7 +120,8 @@ public class MainActivity extends Activity {
 	}
 
 	private void login() {
-		Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
+		Intent loginIntent = new Intent(getApplicationContext(),
+				LoginActivity.class);
 		startActivity(loginIntent);
 	}
 
@@ -114,10 +129,10 @@ public class MainActivity extends Activity {
 		// TODO implement
 	}
 
-	/*public static ConnectivityManager getConnectivityManager(){
-		return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE);
-	}*/
-
+	/*
+	 * public static ConnectivityManager getConnectivityManager(){ return
+	 * (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
+	 */
 
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
 
@@ -126,16 +141,21 @@ public class MainActivity extends Activity {
 			/* Initialize the checklists */
 			Log.i(Consts.TAG, "Starting checklist init...");
 			try {
-				Utils.initializeChecklist(getApplicationContext(), Utils.getChecklistName());
+				Utils.initializeChecklist(getApplicationContext(),
+						Utils.getChecklistName());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			Log.i(Consts.TAG, "Checklist init complete");
-			
+
 			// TODO: remove below line after dev
 			// put all the dump tables and testing in data loader
-			//new DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
-			new DataLoader(getApplicationContext()).srihariTestFunction(getApplicationContext().getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
+			// new
+			// DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
+			new DataLoader(getApplicationContext())
+					.srihariTestFunction(getApplicationContext()
+							.getDatabasePath(DBConsts.DATABASE_NAME)
+							.getAbsolutePath());
 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			// TODO: not happy with static access to Utils class in DBHandler
