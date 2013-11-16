@@ -85,13 +85,6 @@ public class SearchActivity extends Activity {
 		}
 	};
 
-	public void onWindowFocusChanged(boolean hasFocus) {
-		// get height when component is populated in window
-		sideIndexHeight = sideIndex.getHeight();
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		super.onWindowFocusChanged(hasFocus);
-	}  
-
 
 	private class StandardArrayAdapter extends BaseAdapter implements Filterable {
 
