@@ -50,18 +50,16 @@ public class MainActivity extends Activity {
 				currentLocation = (TextView) findViewById(R.id.text_location);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 
-				// TODO : (jerry) commenting this. App is crashing. Fix.
-				// Parse.initialize(this, ParseConsts.APP_ID,
-				// ParseConsts.CLIENT_KEY);
+				Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.CLIENT_KEY);
 
-				// TODO : (jerry) commenting this. App is crashing. Fix.
+				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// move heavy work to asynctask
 				// new InitAsyncTask().execute();
 
-				// TODO : (jerry) commenting this. App is crashing. Fix.
+				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// ParseUtils.updateCurrentLocation();
 
-				// TODO : (jerry) commenting this. App is crashing. Fix.
+				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				/* Set up the sync service */
 				// SyncUtils.createSyncAccount(this);
 				// SyncUtils.triggerRefresh();
@@ -70,9 +68,9 @@ public class MainActivity extends Activity {
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent loginIntent = new Intent(
+						Intent searchIntent = new Intent(
 								getApplicationContext(), SearchActivity.class);
-						startActivity(loginIntent);
+						startActivity(searchIntent);
 					}
 				});
 
@@ -92,7 +90,8 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		// TODO : (jerry) commenting this. App is crashing. Fix.
+		// FIXME : (jerry) commenting this. App is crashing. Issue with
+		// ParseUtils.
 		// if(ParseUtils.isLoggedIn()) {
 		// menu.removeItem(R.id.action_login);
 		// } else {
@@ -114,6 +113,10 @@ public class MainActivity extends Activity {
 		case R.id.action_logout:
 			logout();
 			return true;
+			// TODO :: (jerry) remove this
+		case R.id.action_developerSettings:
+			startActivity(new Intent(getApplicationContext(),
+					DeveloperSettings.class));
 		default:
 			return super.onOptionsItemSelected(item);
 		}
