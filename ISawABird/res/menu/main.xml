@@ -10,11 +10,19 @@
         android:id="@+id/action_login"
         android:orderInCategory="20"
         android:showAsAction="never"
-        android:title="Login"/>
+        android:title="@string/login"/>
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="20"
         android:showAsAction="never"
-        android:title="Logout"/>
-
+        android:title="@string/logout"/>
+    
+    <!-- TODO : REMOVE items below this before releasing.-->
+    
+    <item
+        android:id="@+id/action_developerSettings"
+        android:orderInCategory="20"
+        android:showAsAction="never"
+        android:title="Dev Settings"/>
+    
 </menu>

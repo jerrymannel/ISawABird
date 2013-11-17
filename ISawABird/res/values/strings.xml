@@ -9,7 +9,7 @@
     <string name="tag">Record Details</string>
     <string name="mode_online">Online</string>
     <string name="mode_offline">Offline</string>
-    <string name="loc_undef">Unable to get location...</string>
+    <string name="loc_undef">Unable to get location &#8230;</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="description_short">I saw a bird</string>
@@ -25,6 +25,7 @@
     <color name="color_50_transparent_white">#80FFFFFF</color>
     <color name="color_50_transparent_black">#80000000</color>
     <string name="search">Search</string>
+    <string name="logout">Logout</string>
     
 
 </resources>
