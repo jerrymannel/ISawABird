@@ -34,22 +34,23 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_gravity="left" >
+            android:layout_gravity="left"
+            android:layout_marginRight="25dp" >
 
             <com.isawabird.SectionListView
                 android:id="@+id/section_list_view"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:dividerHeight="1dp" >
+                android:dividerHeight="1dp"
+                android:scrollbars="none" >
             </com.isawabird.SectionListView>
         </FrameLayout>
 
         <LinearLayout
             android:id="@+id/list_index"
-            android:layout_width="24dp"
+            android:layout_width="25dp"
             android:layout_height="fill_parent"
             android:layout_gravity="right"
-            android:background="@color/color_50_transparent_white"
             android:orientation="vertical"/>
 
     </FrameLayout>

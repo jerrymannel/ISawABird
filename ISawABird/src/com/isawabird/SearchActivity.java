@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -40,11 +38,11 @@ public class SearchActivity extends Activity {
 	//sideIndex
 	LinearLayout sideIndex;	
 	// height of side index
-	private int sideIndexHeight,sideIndexSize;
+	private int sideIndexHeight;
+	private int sideIndexSize = 26;
 	// list with items for side index
 	private ArrayList<Object[]> sideIndexList = new ArrayList<Object[]>();
 
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
@@ -73,13 +71,13 @@ public class SearchActivity extends Activity {
 				// now you know coordinates of touch
 				float  sideIndexX = event.getX();
 				float  sideIndexY = event.getY();
+				
+				sideIndexHeight = sideIndex.getHeight();
 
 				if(sideIndexX>0 && sideIndexY>0) {
 					// and can display a proper item it country list
 					displayListItem(sideIndexY);
 				}
-			} else {
-				sideIndex.setBackgroundColor(Color.WHITE);
 			}
 			return true;
 		}
@@ -108,27 +106,20 @@ public class SearchActivity extends Activity {
 			return view;
 		}
 
-		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return items.size();
 		}
 
-		@Override
 		public Filter getFilter() {
 			Filter listfilter=new SpeciesFilter();
 			return listfilter;
 		}
 
-		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return items.get(position);
 		}
 
-		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 	}
@@ -189,7 +180,7 @@ public class SearchActivity extends Activity {
 
 		// compute the item index for given event position belongs to
 		int itemPosition = (int) (sideIndexY / pixelPerIndexItem);
-
+				
 		if(itemPosition<sideIndexList.size()) {
 			// get the item (we can do it since we know item index)
 			Object[] indexItem = sideIndexList.get(itemPosition);
@@ -221,6 +212,8 @@ public class SearchActivity extends Activity {
 				latter_txt.setSingleLine(true);
 				latter_txt.setHorizontallyScrolling(false);
 				latter_txt.setTypeface(null, Typeface.BOLD);
+				latter_txt.setTextSize(12);
+				latter_txt.setTextColor(getResources().getColor(R.color.color_50_transparent_white));
 				//latter_txt.setTextSize(TypedValue.COMPLEX_UNIT_DIP,getResources().getDimension(R.dimen.index_list_font));
 				LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,1);
 				params.gravity=Gravity.CENTER_HORIZONTAL;    
@@ -229,10 +222,8 @@ public class SearchActivity extends Activity {
 				latter_txt.setPadding(10, 0,10, 0);
 
 				sideIndex.addView(latter_txt);
-			}
+			}			
 		}
-
-		sideIndexSize=sideIndexList.size();
 	}
 
 	private TextWatcher filterTextWatcher = new TextWatcher() {

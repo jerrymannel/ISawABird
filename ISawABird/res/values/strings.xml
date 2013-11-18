@@ -16,7 +16,7 @@
     <string name="login">Login</string>
     <string name="skip"><u>Skip</u></string>
     <string name="signup"><u>Sign up</u></string>
-    <color name="color_white">#DDD</color>
+    <color name="color_white">#FFF</color>
     <string name="current_list">Current List: </string>
     <string name="defaultText">Default</string>
     <color name="color_grey">#999</color>
@@ -26,6 +26,7 @@
     <color name="color_50_transparent_black">#80000000</color>
     <string name="search">Search</string>
     <string name="logout">Logout</string>
+    <color name="color_black_333">#333</color>
     
 
 </resources>

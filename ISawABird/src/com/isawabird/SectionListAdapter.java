@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 /**
  * Adapter for sections.
@@ -142,9 +143,8 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter, OnIt
     }
 
     protected void setSectionText(final String section, final View sectionView) {
-//        final TextView textView = (TextView) sectionView
-//                .findViewById(R.id.listTextView);
-//        textView.setText(section);
+		final TextView textView = (TextView) sectionView.findViewById(R.id.listTextView);
+		textView.setText(section);
     }
 
     protected synchronized void replaceSectionViewsInMaps(final String section,

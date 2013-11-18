@@ -8,11 +8,11 @@
         android:id="@+id/listTextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingBottom="10dp"
-        android:text="Section"
+        android:paddingLeft="20dp"
+        android:background="@color/color_black_333"
         android:textColor="@color/color_white"
-        android:textSize="15sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center_vertical|left" />
 
 </LinearLayout>
