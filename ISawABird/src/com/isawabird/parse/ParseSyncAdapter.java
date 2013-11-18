@@ -233,7 +233,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				postEntries = new ArrayList<Long>(); 
 			}
 		} catch (Exception e) {
-			Log.e(Consts.TAG, e.getMessage());
+			//Log.e(Consts.TAG, e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -244,8 +244,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			if(batchRequest == null) return null;
 			HttpClient client = new DefaultHttpClient();
 			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
-			postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
-			postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.CLIENT_KEY);
+			Log.i(Consts.TAG, "Sending request...");
+			//postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
+			postReq.addHeader("X-Parse-Application-Id","bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK");
+			//postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.CLIENT_KEY);
+			postReq.addHeader("X-Parse-REST-API-Key", "ZTOXQtWbX3sCD9umliYbdymvNDPSvwLGa40LKWZR");
 			postReq.addHeader("Content-Type", "application/json");
 			Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
 			StringEntity entity = new StringEntity(batchRequest.toString());
