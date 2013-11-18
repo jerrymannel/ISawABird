@@ -9,7 +9,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:focusableInTouchMode="true"
-        android:padding="5dip" >
+        android:padding="10dp" >
 
         <EditText
             android:id="@+id/search_query"
@@ -28,11 +28,13 @@
     <FrameLayout
         android:id="@+id/listView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:padding="5dp" >
 
         <FrameLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="left" >
 
             <com.isawabird.SectionListView
                 android:id="@+id/section_list_view"
@@ -44,13 +46,12 @@
 
         <LinearLayout
             android:id="@+id/list_index"
-            android:layout_width="wrap_content"
+            android:layout_width="24dp"
             android:layout_height="fill_parent"
             android:layout_gravity="right"
-            android:layout_margin="10dp"
-            android:orientation="vertical"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp" />
+            android:background="@color/color_50_transparent_white"
+            android:orientation="vertical"/>
+
     </FrameLayout>
 
 </LinearLayout>
