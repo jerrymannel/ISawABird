@@ -63,7 +63,7 @@ public class Utils {
 		while(iter.hasNext()){
 			String temp = iter.next(); 
 			if (unpunctuate(temp).indexOf(unpunctuate(searchTerm)) != -1) {
-				Log.d(Consts.TAG, "Adding " + temp + " to search results.");
+				//Log.d(Consts.TAG, "Adding " + temp + " to search results.");
 				returnVal.add(temp);
 			}
 		}
@@ -110,5 +110,11 @@ public class Utils {
 	
 	public static void setChecklistName(String checklistName){ 
 		prefs.edit().putString(Consts.CHECKLIST, checklistName).apply();
+	}
+	
+	private void initializePrefs(Context context){
+		if (prefs==null){
+			prefs = context. getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
+		}
 	}
 }

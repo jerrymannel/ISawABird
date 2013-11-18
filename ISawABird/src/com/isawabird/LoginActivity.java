@@ -44,7 +44,7 @@ public class LoginActivity extends Activity {
 					String user = mLoginButton.getText().toString();
 					String pass = mPassText.getText().toString();
 					// TODO : (jerry) app crashing here. Fix it!
-//					ParseUtils.login(user, pass);
+					ParseUtils.login(user, pass);
 				} catch (Exception e) {
 					// TODO handle login exception
 					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
