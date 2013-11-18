@@ -72,6 +72,9 @@ public class LoginActivity extends Activity {
 				showHome();
 			}
 		});
+		
+		mEmailText.setText("sriniketana");
+        mPassText.setText("test123");
 	}
 	
 	private void showHome() {
