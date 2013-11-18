@@ -79,7 +79,7 @@ public class SearchActivity extends Activity {
 					displayListItem(sideIndexY);
 				}
 			} else {
-				sideIndex.setBackgroundColor(Color.TRANSPARENT);
+				sideIndex.setBackgroundColor(Color.WHITE);
 			}
 			return true;
 		}

@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 
 				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// move heavy work to asynctask
-				// new InitAsyncTask().execute();
+				new InitAsyncTask().execute();
 
 				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// ParseUtils.updateCurrentLocation();

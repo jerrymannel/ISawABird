@@ -1,6 +1,5 @@
 package com.isawabird.parse;
 
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,70 +35,72 @@ import com.parse.Parse;
 
 public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 
-
 	private DBHandler dh;
 	private JSONArray requestArray = new JSONArray();
-	private ArrayList<Long> postEntries = new  ArrayList<Long>();
+	private ArrayList<Long> postEntries = new ArrayList<Long>();
 	private static final int MAX_REQUESTS_PER_MONTH = 1000000;
-	private static final int NUM_ACTIVE_USERS = 5000 ; 
-	private static final float QUOTA_PER_MONTH = MAX_REQUESTS_PER_MONTH/NUM_ACTIVE_USERS; // 200
+	private static final int NUM_ACTIVE_USERS = 5000;
+	private static final float QUOTA_PER_MONTH = MAX_REQUESTS_PER_MONTH / NUM_ACTIVE_USERS; // 200
 	private static final String KEY_REQUESTS_THIS_MONTH = "RequestsThisMonth";
-	private static final String KEY_LAST_SYNC_DATE = "LastSyncDate"; 
-	
+	private static final String KEY_LAST_SYNC_DATE = "LastSyncDate";
+
 	public ParseSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
 		dh = DBHandler.getInstance(context);
 	}
 
-	private boolean isNetworkAvailable(){
-		ConnectivityManager connectivityManager 
-		= (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+	private boolean isNetworkAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
-	/* We have 1,000,000 requests per month available for free from Parse. 
-	 * Assuming 5000 active users a month, it leaves 200 /user/month = 6.666 / day.
-	 * Use this method to throttle the number of requests we send to Parse.  
+	/*
+	 * We have 1,000,000 requests per month available for free from Parse.
+	 * Assuming 5000 active users a month, it leaves 200 /user/month = 6.666 /
+	 * day. Use this method to throttle the number of requests we send to Parse.
 	 */
-	private boolean areSyncCreditsAvailable(){
+	private boolean areSyncCreditsAvailable() {
 		Calendar lastSyncDate = Calendar.getInstance();
-		/* We can't use Utils.prefs because sync happens independent of the app */ 
-		Preferences prefs = Preferences.userRoot(); 
-		//SharedPreferences prefs = MainActivity.getContext().getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
+		/* We can't use Utils.prefs because sync happens independent of the app */
+		Preferences prefs = Preferences.userRoot();
+		// SharedPreferences prefs =
+		// MainActivity.getContext().getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
 		lastSyncDate.setTimeInMillis(prefs.getLong(KEY_LAST_SYNC_DATE, new Date().getTime()));
-		
-		if (lastSyncDate.get(Calendar.MONTH) != Calendar.getInstance().get(Calendar.MONTH) || 
-			lastSyncDate.get(Calendar.YEAR) != Calendar.getInstance().get(Calendar.YEAR)){
-			Log.i(Consts.TAG, "Syncing for the first time this month "); 
-			/* We are syncing for the first time this month. Reset the request count and return true */ 
+
+		if (lastSyncDate.get(Calendar.MONTH) != Calendar.getInstance().get(Calendar.MONTH) || lastSyncDate.get(Calendar.YEAR) != Calendar.getInstance().get(Calendar.YEAR)) {
+			Log.i(Consts.TAG, "Syncing for the first time this month ");
+			/*
+			 * We are syncing for the first time this month. Reset the request
+			 * count and return true
+			 */
 			prefs.putInt(KEY_REQUESTS_THIS_MONTH, 0);
-			return true; 
+			return true;
 		}
-		
-		int date = Calendar.getInstance().get(Calendar.DATE); 
+
+		int date = Calendar.getInstance().get(Calendar.DATE);
 		int requestsSpentThisMonth = prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0);
-		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE); 
-		
-		float availableRequests =  ( date * quotaPerDay) - requestsSpentThisMonth;
-		Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month"); 
-		return (availableRequests > 0); 
+		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE);
+
+		float availableRequests = (date * quotaPerDay) - requestsSpentThisMonth;
+		Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
+		return (availableRequests > 0);
 	}
-	
-	
-	private void syncBirdLists(){
-		try{
+
+	private void syncBirdLists() {
+		try {
 			// get bird list to sync create/update/delete
 			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
-	
+
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
 			for (BirdList birdList : birdListToSync) {
 				Log.i(Consts.TAG, "Adding to postEntries " + birdList.getId());
-				if(birdList.isMarkedForDelete()) {
+				if (birdList.isMarkedForDelete()) {
 					// DELETE
-					if(birdList.getParseObjectID() == null) {
-						// exclude DELETE since object is not created at server yet
+					if (birdList.getParseObjectID() == null) {
+						// exclude DELETE since object is not created at server
+						// yet
 						staleEntries.add(birdList.getId());
 					} else {
 						// include DELETE
@@ -113,8 +114,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.LIST_USER, birdList.getUsername());
 					body.put(DBConsts.LIST_NOTES, birdList.getNotes());
 					body.put(DBConsts.LIST_DATE, birdList.getDate());
-	
-					if(birdList.getParseObjectID() == null) {
+
+					if (birdList.getParseObjectID() == null) {
 						// CREATE
 						postEntries.add(birdList.getId());
 						addCreateRequest(DBConsts.TABLE_LIST, body);
@@ -125,30 +126,30 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					}
 				}
 			}
-	
+
 			// delete staleEntries from db
 			for (Long id : staleEntries) {
 				dh.deleteLocally(DBConsts.TABLE_LIST, id);
 			}
-		}catch(JSONException ex){
+		} catch (JSONException ex) {
 			Log.e(Consts.TAG, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
 
-	
-	private void syncSightings(){
-		try{
+	private void syncSightings() {
+		try {
 			// get bird list to sync create/update/delete
 			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync(ParseUtils.getCurrentUsername());
-	
+
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
-			for (Sighting  sighting : sightingsToSync) {
-				if(sighting.isMarkedForDelete()) {
+			for (Sighting sighting : sightingsToSync) {
+				if (sighting.isMarkedForDelete()) {
 					// DELETE
-					if(sighting.getParseObjectID() == null) {
-						// exclude DELETE since object is not created at server yet
+					if (sighting.getParseObjectID() == null) {
+						// exclude DELETE since object is not created at server
+						// yet
 						staleEntries.add(sighting.getId());
 					} else {
 						// include DELETE
@@ -165,8 +166,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());
 					// TODO: Add list name instead of list id
 					body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListId());
-	
-					if(sighting.getParseObjectID() == null) {
+
+					if (sighting.getParseObjectID() == null) {
 						// CREATE
 						postEntries.add(sighting.getId());
 						addCreateRequest(DBConsts.TABLE_SIGHTING, body);
@@ -177,71 +178,81 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					}
 				}
 			}
-	
+
 			// delete staleEntries from db
 			for (Long id : staleEntries) {
 				dh.deleteLocally(DBConsts.TABLE_SIGHTING, id);
 			}
-		}catch(JSONException ex){
+		} catch (JSONException ex) {
 			Log.e(Consts.TAG, ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void onPerformSync(Account account, Bundle extras, String authority,
-			ContentProviderClient provider, SyncResult syncResult) {
+	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 		Log.w(Consts.TAG, "IN onPerformSync");
 
 		try {
 			if (isNetworkAvailable() && areSyncCreditsAvailable()) {
 				Log.w(Consts.TAG, "SYNCING NOW");
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
-				syncBirdLists(); 
-				syncSightings(); 
-				if(requestArray.length() > 0) {
+				syncBirdLists();
+				syncSightings();
+				if (requestArray.length() > 0) {
 					JSONObject batchRequest = buildRequest(requestArray);
 					JSONArray respArray = postRequest(batchRequest);
-					/* Parse the response */ 
-					if(respArray != null) {
-						for(int i = 0 ; i < respArray.length() ; i++){
+					/* Parse the response */
+					if (respArray != null) {
+						for (int i = 0; i < respArray.length(); i++) {
 							JSONObject reponseObject = respArray.getJSONObject(i);
-							if (reponseObject.has(ParseConsts.SUCCESS)){
-								JSONObject requestObj =requestArray.getJSONObject(i); 
+							if (reponseObject.has(ParseConsts.SUCCESS)) {
+								JSONObject requestObj = requestArray.getJSONObject(i);
 								String method = requestObj.getString("method");
 								String table = requestObj.getString("className");
 								// update parseObjectId for POST requests
 								if (method == "POST") {
-									// We added a new entry to Parse  
+									// We added a new entry to Parse
 									String objID = reponseObject.getJSONObject(ParseConsts.SUCCESS).getString(ParseConsts.OBJECTID);
 									dh.updateParseObjectID(table, postEntries.get(i), objID);
-								}else if (method == "PUT") {
-									// We Updated Parse. So, just reset the upload required flag.
-									dh.resetUploadRequiredFlag(table, postEntries.get(i)); 
-								}else if (method == "DELETE") {
+								} else if (method == "PUT") {
+									// We Updated Parse. So, just reset the
+									// upload required flag.
+									dh.resetUploadRequiredFlag(table, postEntries.get(i));
+								} else if (method == "DELETE") {
 									// delete invalid rows for DELETE requests
-									dh.deleteLocally(table,  postEntries.get(i));
+									dh.deleteLocally(table, postEntries.get(i));
 								}
-								dh.dumpTable(table);	
-							}else{
+								dh.dumpTable(table);
+							} else {
 								// TODO : Handle failure
 							}
 						}
 					}
 				}
 				requestArray = new JSONArray();
-				postEntries = new ArrayList<Long>(); 
+				postEntries = new ArrayList<Long>();
 			}
 		} catch (Exception e) {
 			//Log.e(Consts.TAG, e.getMessage());
 			e.printStackTrace();
+			String err;
+			if (e.getMessage()==null){
+				err = "Sync Failed";
+				Log.e(Consts.TAG, err);
+			}else {
+				err = e.getMessage();	
+				Log.e(Consts.TAG, err);
+				e.printStackTrace();
+			}
 		}
 	}
-	
+
 	public JSONArray postRequest(JSONObject batchRequest) {
 
 		try {
-			if(batchRequest == null) return null;
+			if (batchRequest == null)
+				return null;
 			HttpClient client = new DefaultHttpClient();
 			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
 			Log.i(Consts.TAG, "Sending request...");
@@ -258,10 +269,10 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			HttpEntity respEntity = resp.getEntity();
 			String response = EntityUtils.toString(respEntity);
 			Log.i(Consts.TAG, "Response is " + response);
-			Preferences prefs = Preferences.userRoot() ; 
+			Preferences prefs = Preferences.userRoot();
 			prefs.putInt(KEY_REQUESTS_THIS_MONTH, prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0) + 1);
 			prefs.putLong(KEY_LAST_SYNC_DATE, new Date().getTime());
-			Log.i(Consts.TAG, "Number of requests so far this month " + prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0)); 
+			Log.i(Consts.TAG, "Number of requests so far this month " + prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0));
 			return new JSONArray(response);
 		} catch (Exception e) {
 			Log.e(Consts.TAG, e.getMessage());
