@@ -18,24 +18,24 @@ public class Utils {
 	public static SharedPreferences prefs = null;
 
 	public static void initializeChecklist(Context context, String checklist) throws IOException{
-		try{
-			DataInputStream fis = new DataInputStream((InputStream) context.getAssets().open("checklists/" + checklist));
-			String fileText = "";
-			ArrayList<String> speciesList = new ArrayList<String>(1000); 
-			while ( (fileText = fis.readLine()) != null){
-				speciesList.add(fileText);
+		if (!checklist.equals(Utils.getChecklistName()) || allSpecies == null){
+			/* Load the checklist only if (a) the default checklist has changed (b) It has not been initialized */
+			try{
+				Log.i(Consts.TAG, "Initializing checklist for " + checklist);
+				DataInputStream fis = new DataInputStream((InputStream) context.getAssets().open("checklists/" + checklist));
+				String fileText = "";
+				allSpecies = new ArrayList<Species>();
+				ArrayList<String> speciesList = new ArrayList<String>(1000); 
+				while ( (fileText = fis.readLine()) != null){
+					speciesList.add(fileText);
+					allSpecies.add(new Species(fileText));
+				}
+				Log.d(Consts.TAG,  allSpecies.size() + " species added to checklist");
+				checklistLoaded = true; 
+				Utils.setChecklistName(checklist);
+			}catch(IOException ioex){
+				throw ioex;
 			}
-			
-			for (String speciesName : speciesList){
-				//Log.d("ISawABird", speciesList[i]);
-				Species temp = new Species(speciesName);
-				allSpecies.add(temp);
-				//Log.d("ISawABird", temp.getUnPunctuatedName());
-			}
-			Log.d(Consts.TAG,  allSpecies.size() + " species added to checklist");
-			checklistLoaded = true; 
-		}catch(IOException ioex){
-			throw ioex;
 		}
 	}
 
