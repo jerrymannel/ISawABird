@@ -32,8 +32,8 @@ import android.widget.Toast;
 
 public class SearchActivity extends Activity {
 
-	private ArrayList<String> species = null;
-	private ArrayList<String> speciesSubset = new ArrayList<String>();
+	private ArrayList<Species> species = null;
+	private ArrayList<Species> speciesSubset = new ArrayList<Species>();
 
 	// listview section
 	private static StandardArrayAdapter arrayAdapter;
@@ -76,7 +76,7 @@ public class SearchActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view , int position,
 					long id) {
 				Toast toast; 
-				Species species = new Species((String)parent.getItemAtPosition(position));
+				String species = (String)parent.getItemAtPosition(position);
 				DBHandler dh = DBHandler.getInstance(MainActivity.getContext()); 
 				try{
 					dh.addSightingToCurrentList(species);
@@ -84,7 +84,7 @@ public class SearchActivity extends Activity {
 					// TODO Change to use strings.xml
 					toast = Toast.makeText(SearchActivity.getContext(), "Species already exists", 2000);
 				}
-				toast = Toast.makeText(SearchActivity.getContext(), "added successfully to list", 2000);
+				toast = Toast.makeText(SearchActivity.getContext(), species+  " added successfully to list", 2000);
 				toast.show();
 				//dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			}
@@ -122,10 +122,12 @@ public class SearchActivity extends Activity {
 
 	private class StandardArrayAdapter extends BaseAdapter implements Filterable {
 
-		private final ArrayList<String> items;
+		private final ArrayList<String> items = new ArrayList<String>();
 
-		public StandardArrayAdapter(ArrayList<String> args) {
-			this.items = args;
+		public StandardArrayAdapter(ArrayList<Species> args) {
+			for (Species species : args){
+				items.add(species.getFullName());
+			}
 		}
 
 		@Override
@@ -178,7 +180,7 @@ public class SearchActivity extends Activity {
 					}
 				});
 
-				ArrayList<String> searchResult = Utils.search(constraint.toString(), speciesSubset);
+				ArrayList<Species> searchResult = Utils.search(constraint.toString(), speciesSubset);
 
 				result.count = searchResult.size();
 				result.values = searchResult;
@@ -202,7 +204,7 @@ public class SearchActivity extends Activity {
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			@SuppressWarnings("unchecked")
-			ArrayList<String> filtered = (ArrayList<String>)results.values;
+			ArrayList<Species> filtered = (ArrayList<Species>)results.values;
 			arrayAdapter=  new StandardArrayAdapter(filtered);
 			sectionAdapter = new SectionListAdapter(getLayoutInflater(),arrayAdapter);
 			listView.setAdapter(sectionAdapter);
@@ -233,7 +235,7 @@ public class SearchActivity extends Activity {
 		sideIndexList.clear();
 		for(int i=0; i < species.size(); i++) {
 			Object[] temp=new Object[2];
-			latter_temp=(species.get(i)).substring(0, 1).toUpperCase();
+			latter_temp=(species.get(i).getFullName()).substring(0, 1).toUpperCase();
 			if(!latter_temp.equals(latter)) {
 				// latter with its array index
 				latter=latter_temp;

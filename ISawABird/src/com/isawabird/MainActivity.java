@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
 				currentLocation = (TextView) findViewById(R.id.text_location);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 
-				Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.CLIENT_KEY);
+				Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.REST_CLIENT_KEY);
 
 				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// move heavy work to asynctask
@@ -162,11 +162,11 @@ public class MainActivity extends Activity {
 			// put all the dump tables and testing in data loader
 			// new
 			// DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
-			new DataLoader(getApplicationContext())
-					.srihariTestFunction(getApplicationContext()
-							.getDatabasePath(DBConsts.DATABASE_NAME)
-							.getAbsolutePath());
-
+//			new DataLoader(getApplicationContext())
+//					.srihariTestFunction(getApplicationContext()
+//							.getDatabasePath(DBConsts.DATABASE_NAME)
+//							.getAbsolutePath());
+//
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			// TODO: not happy with static access to Utils class in DBHandler
 			return dh.getBirdCountForCurrentList();

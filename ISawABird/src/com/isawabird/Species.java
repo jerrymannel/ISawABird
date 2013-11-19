@@ -12,6 +12,7 @@ public class Species {
 		parseFullName(); 
 	}
 	
+	
 	/* A species name is stored in the text file as 
 	 * Ashy-crowned Finch-lark (Eremopterix griseus)
 	 * Separate out the common and the scientifc names

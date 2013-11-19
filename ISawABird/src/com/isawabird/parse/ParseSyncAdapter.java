@@ -196,7 +196,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			if (isNetworkAvailable() && areSyncCreditsAvailable()) {
 				Log.w(Consts.TAG, "SYNCING NOW");
-				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
+				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
 				syncBirdLists();
 				syncSightings();
 				if (requestArray.length() > 0) {

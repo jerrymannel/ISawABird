@@ -142,8 +142,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	/* Add a sighting to the current active list */
 	//TODO: do we really need this method?
-	public long addSightingToCurrentList(Species species) throws ISawABirdException{
-		Sighting sighting = new Sighting(species);
+	public long addSightingToCurrentList(String species) throws ISawABirdException{
+		Sighting sighting = new Sighting(new Species(species));
 		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUsername());
 	}
 

@@ -53,14 +53,14 @@ public class DataLoader {
 				blist.setUsername(username);
 				long listId = dh.addBirdList(blist, true);
 
-				Species sighting = new Species("Brown Shrike");
-				dh.addSightingToCurrentList(sighting);
+				//Species sighting = new Species("Brown Shrike");
+				dh.addSightingToCurrentList("Brown Shrike");
 
-				sighting = new Species("Purple-rumped Sunbird");
-				dh.addSightingToCurrentList(sighting);
+				//sighting = new Species("Purple-rumped Sunbird");
+				dh.addSightingToCurrentList("Purple-rumped Sunbird");
 
-				sighting = new Species("Common Coot");
-				dh.addSightingToCurrentList(sighting);
+				//sighting = new Species("Common Coot");
+				dh.addSightingToCurrentList("Common Coot");
 			}
 			Log.e(Consts.TAG, "Querying ...");
 			query();
@@ -136,7 +136,7 @@ public class DataLoader {
 			BirdList list = new BirdList("Bangalore BirdRace 2014"); 
 			dh.addBirdList(list, true); 
 			Log.i(Consts.TAG, "Adding a sighting");
-			dh.addSightingToCurrentList(new Species("Spotted Owlet"));
+			dh.addSightingToCurrentList("Spotted Owlet");
 			dh.dumpTable(DBConsts.TABLE_LIST) ; 
 			dh.dumpTable(DBConsts.TABLE_SIGHTING) ;
 			

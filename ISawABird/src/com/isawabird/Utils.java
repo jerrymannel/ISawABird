@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class Utils {
 
-	private static ArrayList<String>  allSpecies = new ArrayList<String>(); 
+	private static ArrayList<Species>  allSpecies = new ArrayList<Species>(); 
 	private static boolean checklistLoaded = false; 
 
 	public static SharedPreferences prefs = null;
@@ -29,7 +29,7 @@ public class Utils {
 			for (String speciesName : speciesList){
 				//Log.d("ISawABird", speciesList[i]);
 				Species temp = new Species(speciesName);
-				allSpecies.add(temp.getCommonName());
+				allSpecies.add(temp);
 				//Log.d("ISawABird", temp.getUnPunctuatedName());
 			}
 			Log.d(Consts.TAG,  allSpecies.size() + " species added to checklist");
@@ -39,7 +39,7 @@ public class Utils {
 		}
 	}
 
-	public static ArrayList<String> getAllSpecies() {
+	public static ArrayList<Species> getAllSpecies() {
 		return allSpecies;
 	}
 
@@ -52,17 +52,17 @@ public class Utils {
 	 * 
 	 * @returns A ArrayList of Species objects matching the search terms.
 	 */
-	public static ArrayList<String> search(String searchTerm, ArrayList<String> subset) {
-		ArrayList<String> returnVal = new ArrayList<String> ();
+	public static ArrayList<Species> search(String searchTerm, ArrayList<Species> subset) {
+		ArrayList<Species> returnVal = new ArrayList<Species> ();
 		if (!checklistLoaded){
 			return returnVal;
 		}
-		ArrayList<String> searchList = (subset == null || subset.size() == 0) ? allSpecies : subset ;
+		ArrayList<Species> searchList = (subset == null || subset.size() == 0) ? allSpecies : subset ;
 
-		Iterator<String> iter = searchList.iterator();
+		Iterator<Species> iter = searchList.iterator();
 		while(iter.hasNext()){
-			String temp = iter.next(); 
-			if (unpunctuate(temp).indexOf(unpunctuate(searchTerm)) != -1) {
+			Species temp = iter.next(); 
+			if (unpunctuate(temp.getFullName()).indexOf(unpunctuate(searchTerm)) != -1) {
 				//Log.d(Consts.TAG, "Adding " + temp + " to search results.");
 				returnVal.add(temp);
 			}
