@@ -52,7 +52,6 @@ public class MainActivity extends Activity {
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
 				numberSpecies = (TextView) findViewById(R.id.text_mode);
-				currentLocation = (TextView) findViewById(R.id.text_location);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 
 				
