@@ -33,19 +33,6 @@
         android:text="@string/mode_offline" />
 
     <TextView
-        android:id="@+id/text_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btn_isawabird"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:textSize="12sp"
-        android:text="@string/loc_undef"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_main_title"
-        android:textStyle="bold" />
-
-    <TextView
         android:id="@+id/textView_currentList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

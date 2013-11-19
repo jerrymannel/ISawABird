@@ -75,17 +75,20 @@ public class SearchActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view , int position,
 					long id) {
-				Toast toast; 
+				Toast toast ; 
 				String species = (String)parent.getItemAtPosition(position);
 				DBHandler dh = DBHandler.getInstance(MainActivity.getContext()); 
 				try{
 					dh.addSightingToCurrentList(species);
+					toast = Toast.makeText(SearchActivity.getContext(), species+  " added successfully to list", Toast.LENGTH_SHORT);
+					toast.show();
 				}catch(ISawABirdException ex){
 					// TODO Change to use strings.xml
-					toast = Toast.makeText(SearchActivity.getContext(), "Species already exists", 2000);
+					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS){
+						toast = Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT);
+						toast.show();
+					}
 				}
-				toast = Toast.makeText(SearchActivity.getContext(), species+  " added successfully to list", 2000);
-				toast.show();
 				//dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			}
 			

@@ -40,6 +40,8 @@ public class MainActivity extends Activity {
 			// TODO: hide action bar before switching to login screen
 			Utils.prefs = getSharedPreferences(Consts.PREF,
 					Context.MODE_PRIVATE);
+			Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.REST_CLIENT_KEY);
+			ParseUtils.updateCurrentLocation();
 
 			if (Utils.isFirstTime()) {
 				login();
@@ -53,8 +55,7 @@ public class MainActivity extends Activity {
 				currentLocation = (TextView) findViewById(R.id.text_location);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 
-				Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.REST_CLIENT_KEY);
-
+				
 				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// move heavy work to asynctask
 				new InitAsyncTask().execute();
@@ -153,6 +154,7 @@ public class MainActivity extends Activity {
 			try {
 				Utils.initializeChecklist(getApplicationContext(),
 						Utils.getChecklistName());
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

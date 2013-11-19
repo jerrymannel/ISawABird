@@ -72,7 +72,7 @@ public class ParseUtils {
 		criteria.setBearingRequired(false);
 		criteria.setCostAllowed(true);
 		Log.i(Consts.TAG, "Fetching location...");
-		ParseGeoPoint.getCurrentLocationInBackground(50000, new LocationCallback() {
+		ParseGeoPoint.getCurrentLocationInBackground(120000, new LocationCallback() {
 
 			@Override
 			public void done(ParseGeoPoint point, ParseException ex) {

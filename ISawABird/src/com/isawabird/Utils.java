@@ -18,7 +18,7 @@ public class Utils {
 	public static SharedPreferences prefs = null;
 
 	public static void initializeChecklist(Context context, String checklist) throws IOException{
-		if (!checklist.equals(Utils.getChecklistName()) || allSpecies == null){
+		if (!checklist.equals(Utils.getChecklistName()) || allSpecies.size() == 0){
 			/* Load the checklist only if (a) the default checklist has changed (b) It has not been initialized */
 			try{
 				Log.i(Consts.TAG, "Initializing checklist for " + checklist);

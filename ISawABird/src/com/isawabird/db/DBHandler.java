@@ -106,7 +106,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	/* Add a sighting to a given list */
 	public long addSighting(Sighting sighting, long listId, String username) throws ISawABirdException { 
-
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		if(sighting == null) {
@@ -134,8 +133,8 @@ public class DBHandler extends SQLiteOpenHelper {
 				throw new ISawABirdException(ex.getMessage());
 			}
 		} else{
-			// TODO : Increment number of birds if this entry is already there. 
-			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list with listID: " + listId + ", usrename: " + Utils.getCurrentListName()); 
+			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list with listID: " + listId + ", usrename: " + Utils.getCurrentListName());
+			throw new ISawABirdException(ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS); 
 		}
 		return result;
 	}
@@ -144,7 +143,11 @@ public class DBHandler extends SQLiteOpenHelper {
 	//TODO: do we really need this method?
 	public long addSightingToCurrentList(String species) throws ISawABirdException{
 		Sighting sighting = new Sighting(new Species(species));
-		return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUsername());
+		try{
+			return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUsername());
+		}catch(ISawABirdException ex){
+			throw ex; 
+		}
 	}
 
 	public boolean isSightingExist(String species, long listId,
