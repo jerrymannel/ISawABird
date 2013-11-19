@@ -24,15 +24,18 @@ import com.parse.ParseInstallation;
 
 public class MainActivity extends Activity {
 
+	static MainActivity act = null; 
+	
 	TextView numberSpecies;
 	TextView currentListName;
 	TextView currentLocation;
 	Button mSawBirdButton;
 
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		act = this; 
 		try {
 			// TODO: hide action bar before switching to login screen
 			Utils.prefs = getSharedPreferences(Consts.PREF,
@@ -86,6 +89,10 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	public static Context getContext(){
+		return act.getApplicationContext();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

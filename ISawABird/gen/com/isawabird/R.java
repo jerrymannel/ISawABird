@@ -14,6 +14,7 @@ public final class R {
         public static final int color_50_transparent_black=0x7f070005;
         public static final int color_50_transparent_white=0x7f070004;
         public static final int color_app_bg=0x7f070000;
+        public static final int color_black_333=0x7f070006;
         public static final int color_grey=0x7f070003;
         public static final int color_main_title=0x7f070001;
         public static final int color_white=0x7f070002;

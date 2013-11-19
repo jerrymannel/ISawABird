@@ -2,6 +2,9 @@ package com.isawabird;
 
 import java.util.ArrayList;
 
+import com.isawabird.db.DBConsts;
+import com.isawabird.db.DBHandler;
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -10,18 +13,22 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterViewFlipper;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SearchActivity extends Activity {
 
@@ -33,6 +40,7 @@ public class SearchActivity extends Activity {
 	private SectionListAdapter sectionAdapter;
 	private SectionListView listView;
 
+	private static SearchActivity searchAct ; 
 	EditText search;
 
 	//sideIndex
@@ -46,6 +54,7 @@ public class SearchActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
+		searchAct = this ; 
 
 		search=(EditText)findViewById(R.id.search_query);
 		search.addTextChangedListener(filterTextWatcher);
@@ -60,8 +69,35 @@ public class SearchActivity extends Activity {
 		sectionAdapter = new SectionListAdapter(this.getLayoutInflater(), arrayAdapter);
 		listView.setAdapter(sectionAdapter);
 		PoplulateSideview();
+		
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view , int position,
+					long id) {
+				Toast toast; 
+				Species species = new Species((String)parent.getItemAtPosition(position));
+				DBHandler dh = DBHandler.getInstance(MainActivity.getContext()); 
+				try{
+					dh.addSightingToCurrentList(species);
+				}catch(ISawABirdException ex){
+					// TODO Change to use strings.xml
+					toast = Toast.makeText(SearchActivity.getContext(), "Species already exists", 2000);
+				}
+				toast = Toast.makeText(SearchActivity.getContext(), "added successfully to list", 2000);
+				toast.show();
+				//dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			}
+			
+		});
+		
 	}
 
+	public static Context getContext(){
+		return searchAct.getApplicationContext();
+	}
+	
+	
 	private class Indextouch implements OnTouchListener {
 
 		@Override
