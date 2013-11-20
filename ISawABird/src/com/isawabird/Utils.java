@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import android.content.Context;
@@ -112,7 +113,27 @@ public class Utils {
 		prefs.edit().putString(Consts.CHECKLIST, checklistName).apply();
 	}
 	
-	private void initializePrefs(Context context){
+	public static int getNumberOfRequestsThisMonth(){
+		return prefs.getInt(Consts.NUMBER_REQUESTS_THIS_MONTH, 0);
+	}
+	
+	public static void incrementNumberRequestsThisMonth(){
+		prefs.edit().putInt(Consts.NUMBER_REQUESTS_THIS_MONTH, getNumberOfRequestsThisMonth() + 1 ).apply();
+	}
+	
+	public static void resetNumberRequestsThisMonth(){
+		prefs.edit().putInt(Consts.NUMBER_REQUESTS_THIS_MONTH,0 ).apply();
+	}
+	
+	public static long getLastSyncDate(){
+		return prefs.getLong(Consts.LAST_SYNC_DATE, new Date().getTime()); 		
+	}
+	
+	public static void setLastSyncDate(long time){
+		prefs.edit().putLong(Consts.LAST_SYNC_DATE, time).apply();
+	}
+	
+	public static void initializePrefs(Context context){
 		if (prefs==null){
 			prefs = context. getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
 		}

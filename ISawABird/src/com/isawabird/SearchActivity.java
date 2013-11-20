@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
+import com.isawabird.parse.extra.SyncUtils;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
@@ -75,21 +76,22 @@ public class SearchActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view , int position,
 					long id) {
-				Toast toast ; 
 				String species = (String)parent.getItemAtPosition(position);
 				DBHandler dh = DBHandler.getInstance(MainActivity.getContext()); 
 				try{
 					dh.addSightingToCurrentList(species);
-					toast = Toast.makeText(SearchActivity.getContext(), species+  " added successfully to list", Toast.LENGTH_SHORT);
-					toast.show();
+					Toast.makeText(SearchActivity.getContext(), species+  " added successfully to list", Toast.LENGTH_SHORT).show();
+					SyncUtils.triggerRefresh();
 				}catch(ISawABirdException ex){
 					// TODO Change to use strings.xml
 					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS){
-						toast = Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT);
-						toast.show();
+						Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
 					}
 				}
-				//dh.dumpTable(DBConsts.TABLE_SIGHTING);
+				
+				
+				// TODO : Comment out later 
+				dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			}
 			
 		});

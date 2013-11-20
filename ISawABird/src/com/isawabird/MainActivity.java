@@ -20,7 +20,9 @@ import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
 import com.isawabird.test.DataLoader;
 import com.parse.Parse;
+import com.parse.ParseAnalytics;
 import com.parse.ParseInstallation;
+import com.parse.PushService;
 
 public class MainActivity extends Activity {
 
@@ -40,9 +42,12 @@ public class MainActivity extends Activity {
 			// TODO: hide action bar before switching to login screen
 			Utils.prefs = getSharedPreferences(Consts.PREF,
 					Context.MODE_PRIVATE);
-			Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.REST_CLIENT_KEY);
+			Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.CLIENT_KEY);
 			ParseUtils.updateCurrentLocation();
 
+			PushService.setDefaultPushCallback(this, MainActivity.class);
+			ParseInstallation.getCurrentInstallation().saveInBackground();
+			//ParseAnalytics.trackAppOpened(getIntent());
 			if (Utils.isFirstTime()) {
 				login();
 				// exit this activity
@@ -153,7 +158,8 @@ public class MainActivity extends Activity {
 			try {
 				Utils.initializeChecklist(getApplicationContext(),
 						Utils.getChecklistName());
-				
+				SyncUtils.createSyncAccount(MainActivity.getContext());
+				SyncUtils.triggerRefresh();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

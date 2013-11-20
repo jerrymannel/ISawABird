@@ -23,6 +23,10 @@ public class Consts {
 
 	public static final CharSequence LOGIN = "Login";
 	public static final CharSequence LOGOUT = "Logout";
+
+	public static final String NUMBER_REQUESTS_THIS_MONTH = "NumberRequestThisMonth";
+
+	public static final String LAST_SYNC_DATE = "LastSyncDate";
 	
 	
 	

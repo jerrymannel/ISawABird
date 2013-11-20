@@ -20,6 +20,7 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.SyncResult;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -29,6 +30,7 @@ import android.util.Log;
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.Sighting;
+import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.parse.Parse;
@@ -63,10 +65,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private boolean areSyncCreditsAvailable() {
 		Calendar lastSyncDate = Calendar.getInstance();
 		/* We can't use Utils.prefs because sync happens independent of the app */
-		Preferences prefs = Preferences.userRoot();
-		// SharedPreferences prefs =
 		// MainActivity.getContext().getSharedPreferences("MyPrefs",Context.MODE_PRIVATE);
-		lastSyncDate.setTimeInMillis(prefs.getLong(KEY_LAST_SYNC_DATE, new Date().getTime()));
+		lastSyncDate.setTimeInMillis(Utils.getLastSyncDate());
 
 		if (lastSyncDate.get(Calendar.MONTH) != Calendar.getInstance().get(Calendar.MONTH) || lastSyncDate.get(Calendar.YEAR) != Calendar.getInstance().get(Calendar.YEAR)) {
 			Log.i(Consts.TAG, "Syncing for the first time this month ");
@@ -74,12 +74,12 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			 * We are syncing for the first time this month. Reset the request
 			 * count and return true
 			 */
-			prefs.putInt(KEY_REQUESTS_THIS_MONTH, 0);
+			Utils.resetNumberRequestsThisMonth();
 			return true;
 		}
 
 		int date = Calendar.getInstance().get(Calendar.DATE);
-		int requestsSpentThisMonth = prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0);
+		int requestsSpentThisMonth = Utils.getNumberOfRequestsThisMonth();
 		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE);
 
 		float availableRequests = (date * quotaPerDay) - requestsSpentThisMonth;
@@ -194,6 +194,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		Log.w(Consts.TAG, "IN onPerformSync");
 
 		try {
+			Utils.initializePrefs(getContext());
+			
 			if (isNetworkAvailable() && areSyncCreditsAvailable()) {
 				Log.w(Consts.TAG, "SYNCING NOW");
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
@@ -256,10 +258,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			HttpClient client = new DefaultHttpClient();
 			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
 			Log.i(Consts.TAG, "Sending request...");
-			//postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
-			postReq.addHeader("X-Parse-Application-Id","bIUifzSsg8NsFXkZiy47tXP5dzP9v7rQ8vQGQECK");
-			//postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.CLIENT_KEY);
-			postReq.addHeader("X-Parse-REST-API-Key", "ZTOXQtWbX3sCD9umliYbdymvNDPSvwLGa40LKWZR");
+			postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
+			postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.REST_CLIENT_KEY);
 			postReq.addHeader("Content-Type", "application/json");
 			Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
 			StringEntity entity = new StringEntity(batchRequest.toString());
@@ -269,10 +269,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			HttpEntity respEntity = resp.getEntity();
 			String response = EntityUtils.toString(respEntity);
 			Log.i(Consts.TAG, "Response is " + response);
-			Preferences prefs = Preferences.userRoot();
-			prefs.putInt(KEY_REQUESTS_THIS_MONTH, prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0) + 1);
-			prefs.putLong(KEY_LAST_SYNC_DATE, new Date().getTime());
-			Log.i(Consts.TAG, "Number of requests so far this month " + prefs.getInt(KEY_REQUESTS_THIS_MONTH, 0));
+			Utils.incrementNumberRequestsThisMonth();
+			Log.i(Consts.TAG, "Number of requests so far this month " +Utils.getNumberOfRequestsThisMonth());
 			return new JSONArray(response);
 		} catch (Exception e) {
 			Log.e(Consts.TAG, e.getMessage());
