@@ -125,8 +125,6 @@ public class MainActivity extends Activity {
 			login.setVisibility(View.INVISIBLE);
 			break;
 			// TODO :: (jerry) remove this
-		case R.id.action_developerSettings:
-			startActivity(new Intent(getApplicationContext(), DeveloperSettings.class));
 		default:
 			return super.onOptionsItemSelected(item);
 		}
