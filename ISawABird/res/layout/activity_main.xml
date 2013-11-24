@@ -54,42 +54,4 @@
         android:textColor="@color/color_grey"
         android:textStyle="italic" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/btn_myLists"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_margin="1dp"
-            android:drawableLeft="@android:drawable/ic_menu_more"
-            android:background="@drawable/button_bottom_selector"
-            android:text="@string/my_list"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_white"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btn_settings"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_margin="1dp"
-            android:drawableLeft="@android:drawable/ic_menu_preferences"
-            android:background="@drawable/button_bottom_selector"
-            android:text="@string/settings"
-            android:textColor="@color/color_white"
-            android:textStyle="bold"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </LinearLayout>
-
 </RelativeLayout>
