@@ -14,7 +14,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterViewFlipper;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -41,11 +39,11 @@ public class SearchActivity extends Activity {
 	private SectionListAdapter sectionAdapter;
 	private SectionListView listView;
 
-	private static SearchActivity searchAct ; 
+	private static SearchActivity searchAct;
 	EditText search;
 
-	//sideIndex
-	LinearLayout sideIndex;	
+	// sideIndex
+	LinearLayout sideIndex;
 	// height of side index
 	private int sideIndexHeight;
 	private int sideIndexSize = 26;
@@ -55,9 +53,9 @@ public class SearchActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
-		searchAct = this ; 
+		searchAct = this;
 
-		search=(EditText)findViewById(R.id.search_query);
+		search = (EditText) findViewById(R.id.search_query);
 		search.addTextChangedListener(filterTextWatcher);
 		listView = (SectionListView) findViewById(R.id.section_list_view);
 		sideIndex = (LinearLayout) findViewById(R.id.list_index);
@@ -65,57 +63,54 @@ public class SearchActivity extends Activity {
 
 		// TODO: load species in bg if it uses db
 		species = Utils.getAllSpecies();
-		//adaptor for section
+		// adaptor for section
 		arrayAdapter = new StandardArrayAdapter(species);
 		sectionAdapter = new SectionListAdapter(this.getLayoutInflater(), arrayAdapter);
 		listView.setAdapter(sectionAdapter);
 		PoplulateSideview();
-		
+
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view , int position,
-					long id) {
-				String species = (String)parent.getItemAtPosition(position);
-				DBHandler dh = DBHandler.getInstance(MainActivity.getContext()); 
-				try{
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				String species = (String) parent.getItemAtPosition(position);
+				DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
+				try {
 					dh.addSightingToCurrentList(species);
-					Toast.makeText(SearchActivity.getContext(), species+  " added successfully to list", Toast.LENGTH_SHORT).show();
+					Toast.makeText(SearchActivity.getContext(), species + " added successfully to list", Toast.LENGTH_SHORT).show();
 					SyncUtils.triggerRefresh();
-				}catch(ISawABirdException ex){
+				} catch (ISawABirdException ex) {
 					// TODO Change to use strings.xml
-					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS){
+					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
 						Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
 					}
 				}
-				
-				
-				// TODO : Comment out later 
+
+				// TODO : Comment out later
 				dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			}
-			
+
 		});
-		
+
 	}
 
-	public static Context getContext(){
+	public static Context getContext() {
 		return searchAct.getApplicationContext();
 	}
-	
-	
+
 	private class Indextouch implements OnTouchListener {
 
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
 
-			if(event.getAction() ==MotionEvent.ACTION_MOVE  || event.getAction() ==MotionEvent.ACTION_DOWN) {
+			if (event.getAction() == MotionEvent.ACTION_MOVE || event.getAction() == MotionEvent.ACTION_DOWN) {
 				// now you know coordinates of touch
-				float  sideIndexX = event.getX();
-				float  sideIndexY = event.getY();
-				
+				float sideIndexX = event.getX();
+				float sideIndexY = event.getY();
+
 				sideIndexHeight = sideIndex.getHeight();
 
-				if(sideIndexX>0 && sideIndexY>0) {
+				if (sideIndexX > 0 && sideIndexY > 0) {
 					// and can display a proper item it country list
 					displayListItem(sideIndexY);
 				}
@@ -124,13 +119,12 @@ public class SearchActivity extends Activity {
 		}
 	};
 
-
 	private class StandardArrayAdapter extends BaseAdapter implements Filterable {
 
 		private final ArrayList<String> items = new ArrayList<String>();
 
 		public StandardArrayAdapter(ArrayList<Species> args) {
-			for (Species species : args){
+			for (Species species : args) {
 				items.add(species.getFullName());
 			}
 		}
@@ -139,10 +133,10 @@ public class SearchActivity extends Activity {
 		public View getView(final int position, final View convertView, final ViewGroup parent) {
 			View view = convertView;
 			if (view == null) {
-				final LayoutInflater vi = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				final LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				view = vi.inflate(R.layout.search_row, null);
 			}
-			TextView textView = (TextView)view.findViewById(R.id.row_title);
+			TextView textView = (TextView) view.findViewById(R.id.row_title);
 			if (textView != null) {
 				textView.setText(items.get(position));
 			}
@@ -154,7 +148,7 @@ public class SearchActivity extends Activity {
 		}
 
 		public Filter getFilter() {
-			Filter listfilter=new SpeciesFilter();
+			Filter listfilter = new SpeciesFilter();
 			return listfilter;
 		}
 
@@ -170,18 +164,18 @@ public class SearchActivity extends Activity {
 	public class SpeciesFilter extends Filter {
 
 		@Override
-		protected FilterResults performFiltering(CharSequence constraint)
-		{
-			// NOTE: this function is *always* called from a background thread, and
+		protected FilterResults performFiltering(CharSequence constraint) {
+			// NOTE: this function is *always* called from a background thread,
+			// and
 			// not the UI thread.
 			constraint = search.getText().toString();
 			FilterResults result = new FilterResults();
-			if(constraint != null && constraint.toString().length() > 0) {
-				//do not show side index while filter results
+			if (constraint != null && constraint.toString().length() > 0) {
+				// do not show side index while filter results
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						((LinearLayout)findViewById(R.id.list_index)).setVisibility(View.INVISIBLE);
+						((LinearLayout) findViewById(R.id.list_index)).setVisibility(View.INVISIBLE);
 					}
 				});
 
@@ -189,16 +183,15 @@ public class SearchActivity extends Activity {
 
 				result.count = searchResult.size();
 				result.values = searchResult;
-			}
-			else {
+			} else {
 				speciesSubset.clear();
 				runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						((LinearLayout)findViewById(R.id.list_index)).setVisibility(View.VISIBLE);
+						((LinearLayout) findViewById(R.id.list_index)).setVisibility(View.VISIBLE);
 					}
 				});
-				synchronized(this) {
+				synchronized (this) {
 					result.count = species.size();
 					result.values = species;
 				}
@@ -209,9 +202,9 @@ public class SearchActivity extends Activity {
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			@SuppressWarnings("unchecked")
-			ArrayList<Species> filtered = (ArrayList<Species>)results.values;
-			arrayAdapter=  new StandardArrayAdapter(filtered);
-			sectionAdapter = new SectionListAdapter(getLayoutInflater(),arrayAdapter);
+			ArrayList<Species> filtered = (ArrayList<Species>) results.values;
+			arrayAdapter = new StandardArrayAdapter(filtered);
+			sectionAdapter = new SectionListAdapter(getLayoutInflater(), arrayAdapter);
 			listView.setAdapter(sectionAdapter);
 		}
 	}
@@ -223,33 +216,33 @@ public class SearchActivity extends Activity {
 
 		// compute the item index for given event position belongs to
 		int itemPosition = (int) (sideIndexY / pixelPerIndexItem);
-				
-		if(itemPosition<sideIndexList.size()) {
+
+		if (itemPosition < sideIndexList.size()) {
 			// get the item (we can do it since we know item index)
 			Object[] indexItem = sideIndexList.get(itemPosition);
-			listView.setSelectionFromTop((Integer)indexItem[1], 0);
+			listView.setSelectionFromTop((Integer) indexItem[1], 0);
 		}
 	}
 
 	@SuppressLint("DefaultLocale")
 	private void PoplulateSideview() {
 
-		String latter_temp,latter="";
-		int index=0;
+		String latter_temp, latter = "";
+		int index = 0;
 		sideIndex.removeAllViews();
 		sideIndexList.clear();
-		for(int i=0; i < species.size(); i++) {
-			Object[] temp=new Object[2];
-			latter_temp=(species.get(i).getFullName()).substring(0, 1).toUpperCase();
-			if(!latter_temp.equals(latter)) {
+		for (int i = 0; i < species.size(); i++) {
+			Object[] temp = new Object[2];
+			latter_temp = (species.get(i).getFullName()).substring(0, 1).toUpperCase();
+			if (!latter_temp.equals(latter)) {
 				// latter with its array index
-				latter=latter_temp;
-				temp[0]=latter;
-				temp[1]=i+index;
+				latter = latter_temp;
+				temp[0] = latter;
+				temp[1] = i + index;
 				index++;
 				sideIndexList.add(temp);
 
-				TextView latter_txt=new TextView(this);
+				TextView latter_txt = new TextView(this);
 				latter_txt.setText(latter);
 
 				latter_txt.setSingleLine(true);
@@ -257,15 +250,15 @@ public class SearchActivity extends Activity {
 				latter_txt.setTypeface(null, Typeface.BOLD);
 				latter_txt.setTextSize(12);
 				latter_txt.setTextColor(getResources().getColor(R.color.color_50_transparent_white));
-				//latter_txt.setTextSize(TypedValue.COMPLEX_UNIT_DIP,getResources().getDimension(R.dimen.index_list_font));
-				LinearLayout.LayoutParams params= new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT,1);
-				params.gravity=Gravity.CENTER_HORIZONTAL;    
+				// latter_txt.setTextSize(TypedValue.COMPLEX_UNIT_DIP,getResources().getDimension(R.dimen.index_list_font));
+				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1);
+				params.gravity = Gravity.CENTER_HORIZONTAL;
 
 				latter_txt.setLayoutParams(params);
-				latter_txt.setPadding(10, 0,10, 0);
+				latter_txt.setPadding(10, 0, 10, 0);
 
 				sideIndex.addView(latter_txt);
-			}			
+			}
 		}
 	}
 

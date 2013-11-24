@@ -21,6 +21,7 @@
     <string name="defaultText">Default</string>
     <color name="color_grey">#999</color>
     <string name="my_list">My Lists</string>
+    <string name="my_sightings">Sightings in the selected list:</string>
     <string name="settings">Settings</string>
     <color name="color_50_transparent_white">#80FFFFFF</color>
     <color name="color_50_transparent_black">#80000000</color>
@@ -35,6 +36,8 @@
     <color name="gplus_pressed">#737373</color>
     <color name="fb_normal">#3B5998</color>
     <color name="fb_pressed">#6E7B98</color>
+    <string name="close">X</string>
+    <string name="dummy">hello world</string>
     
 
 </resources>

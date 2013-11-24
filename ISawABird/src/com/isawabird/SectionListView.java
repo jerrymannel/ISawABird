@@ -17,8 +17,7 @@ public class SectionListView extends ListView implements OnScrollListener {
 
 	private View transparentView;
 
-	public SectionListView(final Context context, final AttributeSet attrs,
-			final int defStyle) {
+	public SectionListView(final Context context, final AttributeSet attrs, final int defStyle) {
 		super(context, attrs, defStyle);
 		commonInitialisation();
 	}
@@ -42,16 +41,12 @@ public class SectionListView extends ListView implements OnScrollListener {
 	@Override
 	public void setAdapter(final ListAdapter adapter) {
 		if (!(adapter instanceof SectionListAdapter)) {
-			throw new IllegalArgumentException(
-					"The adapter needds to be of type "
-							+ SectionListAdapter.class + " and is "
-							+ adapter.getClass());
+			throw new IllegalArgumentException("The adapter needds to be of type " + SectionListAdapter.class + " and is " + adapter.getClass());
 		}
 		super.setAdapter(adapter);
 		final ViewParent parent = getParent();
 		if (!(parent instanceof FrameLayout)) {
-			throw new IllegalStateException(
-					"Section List should have FrameLayout as parent!");
+			throw new IllegalStateException("Section List should have FrameLayout as parent!");
 		}
 		if (transparentView != null) {
 			((FrameLayout) parent).removeView(transparentView);
@@ -65,8 +60,7 @@ public class SectionListView extends ListView implements OnScrollListener {
 	}
 
 	@Override
-	public void onScroll(final AbsListView view, final int firstVisibleItem,
-			final int visibleItemCount, final int totalItemCount) {
+	public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
 		final SectionListAdapter adapter = (SectionListAdapter) getAdapter();
 		if (adapter != null) {
 			adapter.makeSectionInvisibleIfFirstInList(firstVisibleItem);
@@ -74,10 +68,8 @@ public class SectionListView extends ListView implements OnScrollListener {
 	}
 
 	@Override
-	public void onScrollStateChanged(final AbsListView view,
-			final int scrollState) {
+	public void onScrollStateChanged(final AbsListView view, final int scrollState) {
 		// do nothing
 	}
-
 
 }
