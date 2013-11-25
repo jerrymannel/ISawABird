@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
 		mLoginButton = (Button) findViewById(R.id.btn_login);
 		mSignupButton = (TextView) findViewById(R.id.btn_signup);
 		mSkipButton = (TextView) findViewById(R.id.btn_skip);
-		mUsernameText = (EditText) findViewById(R.id.text_username);
+		mUsernameText = (EditText) findViewById(R.id.text_email);
 		mEmailText = (EditText) findViewById(R.id.text_email);
 		mPassText = (EditText) findViewById(R.id.text_pass);
 

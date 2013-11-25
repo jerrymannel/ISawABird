@@ -95,7 +95,7 @@ public class MainActivity extends Activity {
 			Toast.makeText(getBaseContext(), "Press Back again to exit.", Toast.LENGTH_SHORT).show();
 			lastPress = currentTime;
 		} else {
-			super.onBackPressed();
+			finish();
 		}
 	}
 
