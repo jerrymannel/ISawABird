@@ -2,9 +2,6 @@ package com.isawabird;
 
 import java.util.ArrayList;
 
-import com.isawabird.db.DBHandler;
-import com.isawabird.parse.ParseUtils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.isawabird.db.DBHandler;
+import com.isawabird.parse.ParseUtils;
+import com.isawabird.utilities.SwipeDismissListViewTouchListener;
+
 public class MyListActivity extends Activity {
 
 	private ArrayList<String> myList;
@@ -26,7 +27,7 @@ public class MyListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mylists);
-		
+
 		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
 		ArrayList<BirdList> myBirdLists = mydbh.getBirdLists(ParseUtils.getCurrentUsername());
 
@@ -36,20 +37,39 @@ public class MyListActivity extends Activity {
 		for (BirdList bird : myBirdLists) {
 			myList.add(bird.getListName());
 		}
-		
-		listview.setAdapter(new MyListAdapter(this, myList));
+
+		final MyListAdapter listAdapter = new MyListAdapter(this, myList);
+		listview.setAdapter(listAdapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				Log.i(Consts.TAG, "Clicked list :: " + parent.getItemAtPosition(position));
-				
+
 				Bundle b = new Bundle();
 				b.putString("listName", parent.getItemAtPosition(position).toString());
-				
+
 				Intent mySightingIntent = new Intent(getApplicationContext(), MySightingsActivity.class);
 				mySightingIntent.putExtras(b);
 				startActivity(mySightingIntent);
 			}
 		});
+
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listview,
+				new SwipeDismissListViewTouchListener.DismissCallbacks() {
+					@Override
+					public boolean canDismiss(int position) {
+						return true;
+					}
+
+					@Override
+					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+						for (int position : reverseSortedPositions) {
+							listAdapter.remove(listAdapter.getItem(position));
+						}
+						listAdapter.notifyDataSetChanged();
+					}
+				});
+		listview.setOnTouchListener(touchListener);
+		listview.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
 	private class MyListAdapter extends ArrayAdapter<String> {
@@ -65,13 +85,13 @@ public class MyListActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.mylists_row, parent, false);
-			
+
 			TextView textView1 = (TextView) rowView.findViewById(R.id.mylistsItem_name);
 			TextView textView2 = (TextView) rowView.findViewById(R.id.mylistItem_close);
-			
+
 			textView1.setText(values.get(position));
 			textView2.setText(" ");
-			
+
 			return rowView;
 		}
 	}
