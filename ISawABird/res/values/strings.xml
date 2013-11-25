@@ -42,6 +42,7 @@
     <string name="count">Birds in this list: </string>
     <string name="total">Total sightings</string>
     <string name="spotted">Spotted</string>
-    
+    <string name="undo">Undo</string>
+    <string name="retry">Retry</string>
 
 </resources>
