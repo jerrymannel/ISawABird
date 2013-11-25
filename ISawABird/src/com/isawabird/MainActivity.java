@@ -103,8 +103,6 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		View login = findViewById(R.id.action_login);
-		View logout = findViewById(R.id.action_logout);
 		
 		switch (item.getItemId()) {
 		case R.id.action_mylists:
@@ -114,17 +112,12 @@ public class MainActivity extends Activity {
 			// TODO implement
 			return true;
 		case R.id.action_login:
-			//login();
-			logout.setVisibility(View.INVISIBLE);
-			login.setVisibility(View.VISIBLE);
+			login();
 			// don't exit this activity
 			break;
 		case R.id.action_logout:
-			//logout();
-			logout.setVisibility(View.VISIBLE);
-			login.setVisibility(View.INVISIBLE);
+			logout();
 			break;
-			// TODO :: (jerry) remove this
 		default:
 			return super.onOptionsItemSelected(item);
 		}
