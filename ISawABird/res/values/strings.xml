@@ -4,7 +4,7 @@
     <string name="app_name">I saw a bird</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <color name="color_app_bg">#444</color>
+    <color name="color_app_bg">#FFFFFF</color>
     <color name="color_main_title">#EEE</color>
     <string name="tag">Record Details</string>
     <string name="mode_online">Online</string>
@@ -40,6 +40,8 @@
     <string name="dummy">hello world</string>
     <string name="zero">0</string>
     <string name="count">Birds in this list: </string>
+    <string name="total">Total sightings</string>
+    <string name="spotted">Spotted</string>
     
 
 </resources>
