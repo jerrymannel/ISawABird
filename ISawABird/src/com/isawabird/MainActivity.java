@@ -135,6 +135,12 @@ public class MainActivity extends Activity {
 						}
 					}
 				});
+				
+				btn_loginLogout.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						
+					}
+				});
 
 				Log.i(Consts.TAG, "current List ID: " + Utils.getCurrentListID());
 				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
@@ -203,7 +209,8 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 * public static ConnectivityManager getConnectivityManager(){ return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
+	 * public static ConnectivityManager getConnectivityManager(){ return
+	 * (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
 	 */
 
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
