@@ -2,9 +2,6 @@ package com.isawabird;
 
 import java.util.ArrayList;
 
-import com.isawabird.db.DBHandler;
-import com.isawabird.parse.ParseUtils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.isawabird.db.DBHandler;
+import com.isawabird.parse.ParseUtils;
+import com.isawabird.utilities.SwipeDismissListViewTouchListener;
+
 public class MySightingsActivity extends Activity {
 
 	private ArrayList<String> myList;
@@ -23,10 +24,10 @@ public class MySightingsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mysightings);
-		
+
 		Bundle b = getIntent().getExtras();
 		String listName = b.getString("listName");
-		
+
 		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
 		ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
 
@@ -37,8 +38,26 @@ public class MySightingsActivity extends Activity {
 			Log.i(Consts.TAG, "Sighting :: " + sighting.getListName());
 			myList.add(sighting.getListName());
 		}
-		
-		listview.setAdapter(new MyListAdapter(this, myList));
+		final MyListAdapter listAdapter = new MyListAdapter(this, myList);
+		listview.setAdapter(listAdapter);
+
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listview,
+				new SwipeDismissListViewTouchListener.DismissCallbacks() {
+					@Override
+					public boolean canDismiss(int position) {
+						return true;
+					}
+
+					@Override
+					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+						for (int position : reverseSortedPositions) {
+							listAdapter.remove(listAdapter.getItem(position));
+						}
+						listAdapter.notifyDataSetChanged();
+					}
+				});
+		listview.setOnTouchListener(touchListener);
+		listview.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
 	private class MyListAdapter extends ArrayAdapter<String> {
@@ -54,13 +73,13 @@ public class MySightingsActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View rowView = inflater.inflate(R.layout.mysightings_row, parent, false);
-			
+
 			TextView textView1 = (TextView) rowView.findViewById(R.id.mysightingsItem_name);
 			TextView textView2 = (TextView) rowView.findViewById(R.id.mysightingsItem_close);
-			
+
 			textView1.setText(values.get(position));
 			textView2.setText(" ");
-			
+
 			return rowView;
 		}
 	}
