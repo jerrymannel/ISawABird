@@ -91,9 +91,9 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		// FIXME : (jerry) commenting this. App is crashing. Issue with
+		// FIXME : (jerry) commenting this. Not really working.
 		// ParseUtils.
-		// if(ParseUtils.isLoggedIn()) {
+		// if (ParseUtils.isLoggedIn()) {
 		// menu.removeItem(R.id.action_login);
 		// } else {
 		// menu.removeItem(R.id.action_logout);
@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		switch (item.getItemId()) {
 		case R.id.action_mylists:
 			startActivity(new Intent(getApplicationContext(), MyListActivity.class));

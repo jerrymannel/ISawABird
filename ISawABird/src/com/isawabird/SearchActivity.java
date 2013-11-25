@@ -46,7 +46,10 @@ public class SearchActivity extends Activity {
 	LinearLayout sideIndex;
 	// height of side index
 	private int sideIndexHeight;
+	
+	// How many alphabets are there in the English language?
 	private int sideIndexSize = 26;
+	
 	// list with items for side index
 	private ArrayList<Object[]> sideIndexList = new ArrayList<Object[]>();
 
