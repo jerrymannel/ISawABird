@@ -40,6 +40,7 @@
     <string name="dummy">hello world</string>
     <string name="zero">0</string>
     <string name="count">Birds in this list: </string>
-    
+    <string name="undo">Undo</string>
+    <string name="retry">Retry</string>
 
 </resources>

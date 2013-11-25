@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +19,8 @@ import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
+import com.isawabird.utilities.UndoBarController;
+import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
@@ -74,7 +76,7 @@ public class MainActivity extends Activity {
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
-						startActivity(searchIntent);
+						startActivityForResult(searchIntent, 7);
 					}
 				});
 
@@ -84,6 +86,38 @@ public class MainActivity extends Activity {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		// beware: usage of magic numbers 7 and 14
+		if (requestCode == 7) {
+			if (resultCode == 14) {
+				Bundle extras = data.getExtras();
+				final String speciesName = extras.getString(Consts.SPECIES_NAME);
+
+				final DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
+				try {
+					dh.addSightingToCurrentList(speciesName);
+					UndoBarController.show(MainActivity.this, speciesName + " added successfully to list", new UndoListener() {
+
+						@Override
+						public void onUndo(Parcelable token) {
+							dh.deleteSightingFromCurrentList(speciesName);
+							SyncUtils.triggerRefresh();
+						}
+					});
+					SyncUtils.triggerRefresh();
+				} catch (ISawABirdException ex) {
+					// TODO Change to use strings.xml
+					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
+						Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
+					}
+				}
+
+			}
 		}
 	}
 
@@ -150,8 +184,7 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 * public static ConnectivityManager getConnectivityManager(){ return
-	 * (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
+	 * public static ConnectivityManager getConnectivityManager(){ return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
 	 */
 
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {

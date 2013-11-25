@@ -2,10 +2,6 @@ package com.isawabird;
 
 import java.util.ArrayList;
 
-import com.isawabird.db.DBConsts;
-import com.isawabird.db.DBHandler;
-import com.isawabird.parse.extra.SyncUtils;
-
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
@@ -28,7 +24,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class SearchActivity extends Activity {
 
@@ -47,10 +42,10 @@ public class SearchActivity extends Activity {
 	LinearLayout sideIndex;
 	// height of side index
 	private int sideIndexHeight;
-	
+
 	// How many alphabets are there in the English language?
 	private int sideIndexSize = 26;
-	
+
 	// list with items for side index
 	private ArrayList<Object[]> sideIndexList = new ArrayList<Object[]>();
 
@@ -77,25 +72,13 @@ public class SearchActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				String species = (String) parent.getItemAtPosition(position);
-				DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
-				try {
-					dh.addSightingToCurrentList(species);
-					Toast.makeText(SearchActivity.getContext(), species + " added successfully to list", Toast.LENGTH_SHORT).show();
-					SyncUtils.triggerRefresh();
-				} catch (ISawABirdException ex) {
-					// TODO Change to use strings.xml
-					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
-						Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
-					}
-				}
+				final String species = (String) parent.getItemAtPosition(position);
 
-				// TODO : Comment out later
-				dh.dumpTable(DBConsts.TABLE_SIGHTING);
-				
 				// Jerry: Return to main intend after adding a bird
 				Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-				startActivity(mainIntent);
+				mainIntent.putExtra(Consts.SPECIES_NAME, species);
+				setResult(14, mainIntent);
+				finish();
 			}
 
 		});

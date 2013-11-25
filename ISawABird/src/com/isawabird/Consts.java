@@ -1,9 +1,9 @@
 package com.isawabird;
 
-public class Consts {
+public abstract class Consts {
 
 	public static final String TAG = "Lyre";
-	
+
 	// Shared Preferences
 	public static final String PREF = "Lorikeet";
 	public static final String CURRENT_LIST_KEY = "CurrentList";
@@ -27,8 +27,7 @@ public class Consts {
 	public static final String NUMBER_REQUESTS_THIS_MONTH = "NumberRequestThisMonth";
 
 	public static final String LAST_SYNC_DATE = "LastSyncDate";
-	
-	
-	
+
+	public static final String SPECIES_NAME = "SpeciesName";
 
 }
