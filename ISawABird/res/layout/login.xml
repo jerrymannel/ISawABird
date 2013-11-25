@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:paddingBottom="5dp"
         android:background="@drawable/textarea_normal"
         android:ellipsize="start"
@@ -78,10 +78,56 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_add_selector"
+        android:background="@drawable/button_login_selector"
         android:gravity="center_vertical|center_horizontal"
         
         android:text="@string/login" />
+
+    <TextView
+        android:id="@+id/btn_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password"
+        android:layout_gravity="center"
+        android:textColor="@color/color_grey"
+        android:layout_marginTop="15dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/textView_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_or"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:textColor="@color/color_white"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/btn_login_with_google"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="@string/login_with_google"
+        android:textSize="14sp"
+        android:textColor="@color/color_white"
+        android:drawableLeft="@drawable/gplus"
+        android:background="@drawable/button_gplus_login_selector"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/btn_login_with_facebook"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="@string/login_with_facebook"
+        android:textSize="14sp"
+        android:textColor="@color/color_white"
+        android:background="@drawable/button_fb_login_selector"
+        android:drawableLeft="@drawable/fb"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <LinearLayout
         android:layout_width="match_parent"

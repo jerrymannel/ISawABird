@@ -13,41 +13,36 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
-import com.isawabird.test.DataLoader;
 import com.parse.Parse;
-import com.parse.ParseAnalytics;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
 
 public class MainActivity extends Activity {
 
-	static MainActivity act = null; 
-	
+	static MainActivity act = null;
+
 	TextView numberSpecies;
 	TextView currentListName;
 	TextView currentLocation;
 	Button mSawBirdButton;
 
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		act = this; 
+		act = this;
 		try {
 			// TODO: hide action bar before switching to login screen
-			Utils.prefs = getSharedPreferences(Consts.PREF,
-					Context.MODE_PRIVATE);
-			Parse.initialize(this, ParseConsts.APP_ID,ParseConsts.CLIENT_KEY);
+			Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
+			Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
 			ParseUtils.updateCurrentLocation();
 
 			PushService.setDefaultPushCallback(this, MainActivity.class);
 			ParseInstallation.getCurrentInstallation().saveInBackground();
-			//ParseAnalytics.trackAppOpened(getIntent());
+			// ParseAnalytics.trackAppOpened(getIntent());
 			if (Utils.isFirstTime()) {
 				login();
 				// exit this activity
@@ -59,8 +54,6 @@ public class MainActivity extends Activity {
 				numberSpecies = (TextView) findViewById(R.id.text_mode);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 
-				
-				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				// move heavy work to asynctask
 				new InitAsyncTask().execute();
 
@@ -72,39 +65,38 @@ public class MainActivity extends Activity {
 				// SyncUtils.createSyncAccount(this);
 				// SyncUtils.triggerRefresh();
 				// ParseInstallation.getCurrentInstallation().saveInBackground();
+				
+				DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
+				numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						Intent searchIntent = new Intent(
-								getApplicationContext(), SearchActivity.class);
+						Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
 						startActivity(searchIntent);
 					}
 				});
 
-				Log.i(Consts.TAG,
-						"current List ID: " + Utils.getCurrentListID());
-				Log.i(Consts.TAG,
-						"current List Name: " + Utils.getCurrentListName());
-				Log.i(Consts.TAG,
-						"current Username: " + ParseUtils.getCurrentUsername());
+				Log.i(Consts.TAG, "current List ID: " + Utils.getCurrentListID());
+				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
+				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
 
-	public static Context getContext(){
+	public static Context getContext() {
 		return act.getApplicationContext();
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		// FIXME : (jerry) commenting this. App is crashing. Issue with
+		// FIXME : (jerry) commenting this. Not really working.
 		// ParseUtils.
-		// if(ParseUtils.isLoggedIn()) {
+		// if (ParseUtils.isLoggedIn()) {
 		// menu.removeItem(R.id.action_login);
 		// } else {
 		// menu.removeItem(R.id.action_logout);
@@ -114,29 +106,29 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		switch (item.getItemId()) {
+		case R.id.action_mylists:
+			startActivity(new Intent(getApplicationContext(), MyListActivity.class));
+			break;
 		case R.id.action_settings:
 			// TODO implement
 			return true;
 		case R.id.action_login:
 			login();
 			// don't exit this activity
-			return true;
+			break;
 		case R.id.action_logout:
 			logout();
-			return true;
-			// TODO :: (jerry) remove this
-		case R.id.action_developerSettings:
-			startActivity(new Intent(getApplicationContext(),
-					DeveloperSettings.class));
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+		return true;
 	}
 
 	private void login() {
-		Intent loginIntent = new Intent(getApplicationContext(),
-				LoginActivity.class);
+		Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
 		startActivity(loginIntent);
 	}
 
@@ -156,8 +148,7 @@ public class MainActivity extends Activity {
 			/* Initialize the checklists */
 			Log.i(Consts.TAG, "Starting checklist init...");
 			try {
-				Utils.initializeChecklist(getApplicationContext(),
-						Utils.getChecklistName());
+				Utils.initializeChecklist(getApplicationContext(), Utils.getChecklistName());
 				SyncUtils.createSyncAccount(MainActivity.getContext());
 				SyncUtils.triggerRefresh();
 			} catch (Exception e) {
@@ -169,11 +160,11 @@ public class MainActivity extends Activity {
 			// put all the dump tables and testing in data loader
 			// new
 			// DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
-//			new DataLoader(getApplicationContext())
-//					.srihariTestFunction(getApplicationContext()
-//							.getDatabasePath(DBConsts.DATABASE_NAME)
-//							.getAbsolutePath());
-//
+			// new DataLoader(getApplicationContext())
+			// .srihariTestFunction(getApplicationContext()
+			// .getDatabasePath(DBConsts.DATABASE_NAME)
+			// .getAbsolutePath());
+			//
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			// TODO: not happy with static access to Utils class in DBHandler
 			return dh.getBirdCountForCurrentList();

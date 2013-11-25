@@ -15,7 +15,7 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/btn_forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dev Settings"
