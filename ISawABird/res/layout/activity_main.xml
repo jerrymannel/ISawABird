@@ -9,6 +9,61 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView_current_list_title"
+                android:layout_width="104dp"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:text="@string/current_list"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_grey"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/textView_currentList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/defaultText"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_main_title"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/textView_count_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:text="@string/count"
+                android:textColor="@color/color_grey"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/text_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/zero"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/color_main_title"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_isawabird"
         style="android:buttonStyle"
@@ -16,42 +71,9 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:drawableLeft="@android:drawable/ic_menu_myplaces"
         android:background="@drawable/button_add_selector"
+        android:drawableLeft="@android:drawable/ic_menu_myplaces"
         android:minWidth="61dip"
         android:text="@string/app_name" />
-
-    <TextView
-        android:id="@+id/text_mode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_main_title"
-        android:textStyle="italic"
-        android:text="@string/mode_offline" />
-
-    <TextView
-        android:id="@+id/textView_currentList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView_current_list_title"
-        android:layout_alignParentRight="true"
-        android:text="@string/defaultText"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_main_title"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textView_current_list_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/text_mode"
-        android:layout_alignBottom="@+id/text_mode"
-        android:layout_toLeftOf="@+id/textView_currentList"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_grey"
-        android:textStyle="italic" />
 
 </RelativeLayout>

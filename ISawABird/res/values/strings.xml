@@ -38,6 +38,8 @@
     <color name="fb_pressed">#6E7B98</color>
     <string name="close">X</string>
     <string name="dummy">hello world</string>
+    <string name="zero">0</string>
+    <string name="count">Birds in this list: </string>
     
 
 </resources>
