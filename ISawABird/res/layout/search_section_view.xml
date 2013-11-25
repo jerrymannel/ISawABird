@@ -7,9 +7,9 @@
     <TextView
         android:id="@+id/listTextView"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:paddingLeft="20dp"
-        android:background="@color/color_black_333"
+        android:background="#333745"
         android:textColor="@color/color_white"
         android:textSize="20sp"
         android:textStyle="bold"

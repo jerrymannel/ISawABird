@@ -18,6 +18,7 @@ package com.isawabird.utilities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
@@ -31,6 +32,8 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.content.ContextWrapper;
+import android.content.res.AssetManager;
 
 import com.isawabird.R;
 import com.isawabird.R.drawable;
@@ -48,7 +51,7 @@ public class UndoBarController extends LinearLayout {
 	public interface UndoListener {
 		void onUndo(Parcelable token);
 	}
-
+	
 	private final TextView mMessageView;
 	private final TextView mButton;
 	private final Handler mHideHandler = new Handler();
@@ -68,9 +71,11 @@ public class UndoBarController extends LinearLayout {
 
 	private UndoBarController(final Context context, final AttributeSet attrs) {
 		super(context, attrs);
+		
 		LayoutInflater.from(context).inflate(R.layout.undobar, this, true);
 		mMessageView = (TextView) findViewById(R.id.undobar_message);
 		mButton = (TextView) findViewById(id.undobar_button);
+		
 		mButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View view) {

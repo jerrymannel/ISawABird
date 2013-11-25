@@ -10,7 +10,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:textSize="15sp"
-        android:textColor="@color/color_white"
+        android:textColor="@color/color_black_333"
         android:padding="10dp" />
 
 </RelativeLayout>

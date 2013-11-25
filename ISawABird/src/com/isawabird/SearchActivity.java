@@ -37,6 +37,10 @@ public class SearchActivity extends Activity {
 
 	private static SearchActivity searchAct;
 	EditText search;
+	
+	Typeface openSansLight;
+	Typeface openSansBold;
+	Typeface openSansBoldItalic;
 
 	// sideIndex
 	LinearLayout sideIndex;
@@ -53,12 +57,18 @@ public class SearchActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		searchAct = this;
+		
+		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
+		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
+		openSansBoldItalic = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-BoldItalic.ttf");
 
 		search = (EditText) findViewById(R.id.search_query);
 		search.addTextChangedListener(filterTextWatcher);
 		listView = (SectionListView) findViewById(R.id.section_list_view);
 		sideIndex = (LinearLayout) findViewById(R.id.list_index);
 		sideIndex.setOnTouchListener(new Indextouch());
+		
+		search.setTypeface(openSansLight);
 
 		// TODO: load species in bg if it uses db
 		species = Utils.getAllSpecies();
@@ -130,6 +140,7 @@ public class SearchActivity extends Activity {
 			TextView textView = (TextView) view.findViewById(R.id.row_title);
 			if (textView != null) {
 				textView.setText(items.get(position));
+				textView.setTypeface(openSansBoldItalic);
 			}
 			return view;
 		}
@@ -240,13 +251,14 @@ public class SearchActivity extends Activity {
 				latter_txt.setHorizontallyScrolling(false);
 				latter_txt.setTypeface(null, Typeface.BOLD);
 				latter_txt.setTextSize(12);
-				latter_txt.setTextColor(getResources().getColor(R.color.color_50_transparent_white));
+				latter_txt.setTextColor(getResources().getColor(R.color.color_50_transparent_black));
 				// latter_txt.setTextSize(TypedValue.COMPLEX_UNIT_DIP,getResources().getDimension(R.dimen.index_list_font));
 				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1);
 				params.gravity = Gravity.CENTER_HORIZONTAL;
 
 				latter_txt.setLayoutParams(params);
 				latter_txt.setPadding(10, 0, 10, 0);
+				latter_txt.setTypeface(openSansLight);
 
 				sideIndex.addView(latter_txt);
 			}
