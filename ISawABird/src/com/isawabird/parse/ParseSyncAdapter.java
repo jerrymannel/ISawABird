@@ -51,12 +51,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		dh = DBHandler.getInstance(context);
 	}
 
-	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
-
 	/*
 	 * We have 1,000,000 requests per month available for free from Parse.
 	 * Assuming 5000 active users a month, it leaves 200 /user/month = 6.666 /
@@ -196,7 +190,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			Utils.initializePrefs(getContext());
 			
-			if (isNetworkAvailable() && areSyncCreditsAvailable()) {
+			if (Utils.isNetworkAvailable(getContext()) && areSyncCreditsAvailable()) {
 				Log.w(Consts.TAG, "SYNCING NOW");
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
 				syncBirdLists();

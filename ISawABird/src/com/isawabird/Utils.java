@@ -9,6 +9,8 @@ import java.util.Iterator;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 public class Utils {
@@ -137,5 +139,11 @@ public class Utils {
 		if (prefs==null){
 			prefs = context. getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
 		}
+	}
+	
+	public static boolean isNetworkAvailable(Context context) {
+		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 }
