@@ -10,6 +10,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -91,6 +92,10 @@ public class SearchActivity extends Activity {
 
 				// TODO : Comment out later
 				dh.dumpTable(DBConsts.TABLE_SIGHTING);
+				
+				// Jerry: Return to main intend after adding a bird
+				Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+				startActivity(mainIntent);
 			}
 
 		});

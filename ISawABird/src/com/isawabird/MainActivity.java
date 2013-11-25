@@ -65,6 +65,9 @@ public class MainActivity extends Activity {
 				// SyncUtils.createSyncAccount(this);
 				// SyncUtils.triggerRefresh();
 				// ParseInstallation.getCurrentInstallation().saveInBackground();
+				
+				DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
+				numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					@Override
