@@ -6,12 +6,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
@@ -65,12 +67,11 @@ public class MainActivity extends Activity {
 				// SyncUtils.createSyncAccount(this);
 				// SyncUtils.triggerRefresh();
 				// ParseInstallation.getCurrentInstallation().saveInBackground();
-				
+
 				DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
 				numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
 						startActivity(searchIntent);
@@ -83,6 +84,18 @@ public class MainActivity extends Activity {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	long lastPress;
+
+	public void onBackPressed() {
+		long currentTime = System.currentTimeMillis();
+		if (currentTime - lastPress > 5000) {
+			Toast.makeText(getBaseContext(), "Press Back again to exit.", Toast.LENGTH_SHORT).show();
+			lastPress = currentTime;
+		} else {
+			super.onBackPressed();
 		}
 	}
 
