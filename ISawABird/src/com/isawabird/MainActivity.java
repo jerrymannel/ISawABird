@@ -138,7 +138,10 @@ public class MainActivity extends Activity {
 				
 				btn_loginLogout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						
+						btn_settings.setVisibility(View.INVISIBLE);
+						btn_loginLogout.setVisibility(View.INVISIBLE);
+						btn_more.setWidth(88);
+						startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 					}
 				});
 

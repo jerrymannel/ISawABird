@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,24 +24,43 @@ import com.parse.SignUpCallback;
 public class LoginActivity extends Activity {
 
 	private Button mLoginButton;
+	private TextView tv_title;
 	private TextView mSignupButton;
 	private TextView mSkipButton;
+	private TextView tv_forgot;
+	private TextView tv_or;
 	private EditText mUsernameText;
-	private EditText mEmailText;
 	private EditText mPassText;
+	
+	Typeface openSansLight;
+	Typeface openSansBold;
+	Typeface openSansBoldItalic;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		
+		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
+		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
+		openSansBoldItalic = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-BoldItalic.ttf");
 
-		getActionBar().hide();
-
+		tv_title = (TextView)findViewById(R.id.textView_title);
 		mLoginButton = (Button) findViewById(R.id.btn_login);
 		mSignupButton = (TextView) findViewById(R.id.btn_signup);
 		mSkipButton = (TextView) findViewById(R.id.btn_skip);
+		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
+		tv_or = (TextView) findViewById(R.id.textView_or);
 		mUsernameText = (EditText) findViewById(R.id.text_email);
-		mEmailText = (EditText) findViewById(R.id.text_email);
 		mPassText = (EditText) findViewById(R.id.text_pass);
+		
+		tv_title.setTypeface(openSansBold);
+		mLoginButton.setTypeface(openSansBold);
+		mUsernameText.setTypeface(openSansLight);
+		mPassText.setTypeface(openSansLight);
+		tv_forgot.setTypeface(openSansLight);
+		tv_or.setTypeface(openSansBold);
+		mSignupButton.setTypeface(openSansBold);
+		mSkipButton.setTypeface(openSansBold);
 
 		mLoginButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -76,7 +96,7 @@ public class LoginActivity extends Activity {
 				}
 				
 				final String username = mUsernameText.getText().toString();
-				final String email = mEmailText.getText().toString();
+				final String email = mUsernameText.getText().toString();
 				final String pass = mPassText.getText().toString();
 				
 				ParseQuery<ParseUser> query = ParseUser.getQuery();

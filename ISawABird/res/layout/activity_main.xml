@@ -80,6 +80,7 @@
         android:drawableLeft="@android:drawable/ic_menu_more"
         android:gravity="center"
         android:text="@string/my_list"
+        android:textColor="@color/color_black_333"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
@@ -93,6 +94,7 @@
         android:drawablePadding="2dp"
         android:drawableRight="@android:drawable/ic_menu_sort_by_size"
         android:gravity="center"
+        android:textColor="@color/color_black_333"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
@@ -106,6 +108,7 @@
         android:drawableRight="@android:drawable/presence_offline"
         android:text="@string/login"
         android:visibility="invisible"
+        android:textColor="@color/color_black_333"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
@@ -118,6 +121,7 @@
         android:drawableRight="@android:drawable/ic_menu_preferences"
         android:text="@string/settings"
         android:visibility="invisible"
+        android:textColor="@color/color_black_333"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
