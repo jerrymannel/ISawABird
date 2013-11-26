@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 
 				mSawBirdButton.setTypeface(openSansLight);
 				currentListName.setTypeface(openSansBold);
-				numberSpecies.setTypeface(openSansBoldItalic);
+				numberSpecies.setTypeface(openSansBold);
 				total_sightings_title.setTypeface(openSansBold);
 				total_sightings.setTypeface(openSansLight);
 				btn_myLists.setTypeface(openSansLight);

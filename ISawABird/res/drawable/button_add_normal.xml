@@ -4,20 +4,15 @@
     <item>
         <shape android:shape="oval" >
 
-            <!-- <solid android:color="#55363636" /> -->
             <gradient
-                android:angle="270"
-                android:endColor="#737370"
-                android:startColor="#BFBFBB" />
-        </shape>
-    </item>
-    <item
-        android:bottom="1dp"
-        android:left="1dp"
-        android:right="1dp"
-        android:top="1dp">
-        <shape android:shape="oval" >
-            <solid android:color="#363636" />
+                android:type="radial"
+                android:gradientRadius="230"
+                android:endColor="#EEEEEE"
+                android:startColor="#000000" />
+
+            <stroke
+                android:width="1dp"
+                android:color="#BABABA" />
         </shape>
     </item>
     <item
