@@ -197,7 +197,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		return DatabaseUtils.queryNumEntries(db, DBConsts.TABLE_SIGHTING,
-				DBConsts.SIGHTING_LIST_ID + "=?", new String[] {Long.toString(listId)});
+				DBConsts.SIGHTING_LIST_ID + "=? AND " + DBConsts.PARSE_IS_DELETE_MARKED + "!= 1", new String[] {Long.toString(listId)});
 	}
 
 	public long getBirdCountForCurrentList() {
@@ -316,6 +316,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1);
 		db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.QUERY_DELETE_SIGHTING, 
 				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
+		//TODO : Remove later
+		dumpTable(DBConsts.TABLE_SIGHTING);
 	}
 	
 	public void deleteSightingFromList(String species, String listName ){
