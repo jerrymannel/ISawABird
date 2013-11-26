@@ -3,16 +3,21 @@
 
     <item>
         <shape android:shape="oval" >
-            <solid android:color="#55363636" />
+
+            <!-- <solid android:color="#55363636" /> -->
+            <gradient
+                android:angle="270"
+                android:endColor="#737370"
+                android:startColor="#BFBFBB" />
         </shape>
     </item>
     <item
-        android:bottom="2dp"
+        android:bottom="1dp"
         android:left="1dp"
         android:right="1dp"
         android:top="1dp">
         <shape android:shape="oval" >
-            <solid android:color="#EEEEEE" />
+            <solid android:color="#363636" />
         </shape>
     </item>
     <item
@@ -25,11 +30,14 @@
                 android:bottom="15dp"
                 android:top="50dp" />
 
-            <solid android:color="#EA2E49" />
+            <gradient
+                android:angle="270"
+                android:endColor="#225378"
+                android:startColor="#1695A3" />
 
             <stroke
                 android:width="10dp"
-                android:color="#333745" />
+                android:color="#EEEEEE" />
         </shape>
     </item>
 
