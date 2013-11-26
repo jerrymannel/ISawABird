@@ -49,6 +49,7 @@ public class LoginActivity extends Activity {
 	Typeface openSansLight;
 	Typeface openSansBold;
 	Typeface openSansBoldItalic;
+	Typeface sonsie;
 
 
 	@Override
@@ -60,6 +61,7 @@ public class LoginActivity extends Activity {
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
 		openSansBoldItalic = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-BoldItalic.ttf");
+		sonsie = Typeface.createFromAsset(getAssets(), "fonts/SonsieOne-Regular.ttf");
 
 		tv_title = (TextView)findViewById(R.id.textView_title);
 		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
@@ -80,7 +82,7 @@ public class LoginActivity extends Activity {
 		mGoogleButton = (Button) findViewById(R.id.btn_login_with_google);
 		mFacebookButton = (Button) findViewById(R.id.btn_login_with_facebook);
 
-		tv_title.setTypeface(openSansBold);
+		tv_title.setTypeface(sonsie);
 		tv_forgot.setTypeface(openSansLight);
 		tv_or.setTypeface(openSansBold);
 

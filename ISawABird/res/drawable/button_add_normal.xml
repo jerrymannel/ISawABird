@@ -22,7 +22,7 @@
         android:top="5dp">
         <shape android:shape="oval" >
             <padding
-                android:bottom="15dp"
+                android:bottom="20dp"
                 android:top="50dp" />
 
             <gradient

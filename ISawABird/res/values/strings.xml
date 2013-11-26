@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">I saw a bird</string>
+    <string name="app_name">Feather</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <color name="color_app_bg">#FFFFFF</color>
@@ -24,8 +24,8 @@
     <string name="my_list">My Lists</string>
     <string name="my_sightings">Sightings in the selected list:</string>
     <string name="settings">Settings</string>
-    <color name="color_50_transparent_white">#80FFFFFF</color>
-    <color name="color_50_transparent_black">#80000000</color>
+    <color name="color_50_transparent_white">#08FFFFFF</color>
+    <color name="color_50_transparent_black">#08000000</color>
     <string name="search">Search</string>
     <string name="logout">Logout</string>
     <color name="color_black_333">#333</color>

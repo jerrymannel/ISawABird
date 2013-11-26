@@ -43,6 +43,7 @@ public class MainActivity extends Activity {
 	Typeface openSansLight;
 	Typeface openSansBold;
 	Typeface openSansBoldItalic;
+	Typeface tangerine;
 	ImageView helpOverlay;
 
 	@Override
@@ -53,6 +54,7 @@ public class MainActivity extends Activity {
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
 		openSansBoldItalic = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-BoldItalic.ttf");
+		tangerine = Typeface.createFromAsset(getAssets(), "fonts/Tangerine_Bold.ttf");
 
 		try {
 			// TODO: hide action bar before switching to login screen
@@ -81,7 +83,7 @@ public class MainActivity extends Activity {
 				btn_settings = (Button) findViewById(R.id.btn_settings);
 				helpOverlay = (ImageView) findViewById(R.id.help_overlay);
 
-				mSawBirdButton.setTypeface(openSansLight);
+				mSawBirdButton.setTypeface(tangerine);
 				currentListName.setTypeface(openSansBold);
 				numberSpecies.setTypeface(openSansBold);
 				total_sightings_title.setTypeface(openSansBold);
