@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.utilities.SwipeDismissListViewTouchListener;
+import com.isawabird.utilities.UndoBarController;
+import com.isawabird.utilities.UndoBarController.UndoListener;
 
 public class MyListActivity extends Activity {
 
@@ -62,8 +65,17 @@ public class MyListActivity extends Activity {
 
 					@Override
 					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-						for (int position : reverseSortedPositions) {
-							listAdapter.remove(listAdapter.getItem(position));
+						for (final int position : reverseSortedPositions) {
+							final String itemToRemove = listAdapter.getItem(position);
+							UndoBarController.show(MyListActivity.this, itemToRemove + " is removed from the list", new UndoListener() {
+
+								@Override
+								public void onUndo(Parcelable token) {
+									listAdapter.insert(itemToRemove, position);
+									listAdapter.notifyDataSetChanged();
+								}
+							});
+							listAdapter.remove(itemToRemove);
 						}
 						listAdapter.notifyDataSetChanged();
 					}
