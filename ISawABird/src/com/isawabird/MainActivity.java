@@ -152,7 +152,7 @@ public class MainActivity extends Activity {
 
 		// TODO : there is no method to find total birds spotted till
 		// date.
-		total_sightings.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
+		total_sightings.setText(Long.toString(mydbh.getTotalSpeciesCount()));
 
 	}
 

@@ -135,6 +135,11 @@ public class DBConsts {
 			DBConsts.SIGHTING_SPECIES + "= ? AND " + 
 			DBConsts.SIGHTING_LIST_ID + "=?"; 
 	
+	// TODO: Include username 
+	public static final String QUERY_TOTAL_SPECIES_COUNT = 
+			"SELECT  DISTINCT COUNT(" + SIGHTING_SPECIES + ") FROM " + TABLE_SIGHTING +  
+			" WHERE " + PARSE_IS_DELETE_MARKED + " != 1";
+	
 	/*public static final String QUERY_LIST_SYNC_CREATE = 
 			"SELECT l." + ID + " as " + ID + ", " + LIST_DATE + ", " + LIST_NAME +
 			", " + LIST_NOTES + ", " + LIST_USER + ", " + PARSE_IS_DELETE_MARKED +

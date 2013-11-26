@@ -203,6 +203,16 @@ public class DBHandler extends SQLiteOpenHelper {
 	public long getBirdCountForCurrentList() {
 		return getBirdCountByListId(Utils.getCurrentListID());
 	}
+	
+	public long getTotalSpeciesCount(){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		Cursor result = db.rawQuery(DBConsts.QUERY_TOTAL_SPECIES_COUNT, null);
+		result.moveToNext();
+		Log.i(Consts.TAG, "Returning count of " + result.getLong(0));
+		return result.getLong(0); 
+	}
+	
 	/* Get the lists for the current user */
 	public ArrayList<BirdList> getBirdLists(String username){
 
