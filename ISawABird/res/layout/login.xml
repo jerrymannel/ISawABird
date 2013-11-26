@@ -109,7 +109,7 @@
         android:padding="5dp" >
 
         <Button
-            android:id="@+id/Button01"
+            android:id="@+id/btn_login_with_twitter"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"

@@ -10,5 +10,8 @@ public class ParseConsts {
 	public static final String BATCH_URL = "https://api.parse.com/1/batch";
 	public static final String SUCCESS = "success";
 	public static final String OBJECTID = "objectId";
+	
+	public static final String TWITTER_CONSUMER_KEY = "VM8OpBmJSdS9UinFQos7LQ";
+	public static final String TWITTER_CONSUMER_SECRET = "KsA7l8EWIhpG20YghMBxswvlHCUs6Ii2RXWDbZA";
 
 }

@@ -14,10 +14,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.isawabird.parse.ParseConsts;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -31,6 +33,9 @@ public class LoginActivity extends Activity {
 	private TextView tv_or;
 	private EditText mUsernameText;
 	private EditText mPassText;
+	private Button twitterLogin ; 
+	
+	private static LoginActivity loginActivity ; 
 	
 	Typeface openSansLight;
 	Typeface openSansBold;
@@ -39,6 +44,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
+		loginActivity = this ;
 		
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
@@ -52,6 +58,7 @@ public class LoginActivity extends Activity {
 		tv_or = (TextView) findViewById(R.id.textView_or);
 		mUsernameText = (EditText) findViewById(R.id.text_email);
 		mPassText = (EditText) findViewById(R.id.text_pass);
+		twitterLogin =(Button)findViewById(R.id.btn_login_with_twitter); 
 		
 		tv_title.setTypeface(openSansBold);
 		mLoginButton.setTypeface(openSansBold);
@@ -153,10 +160,34 @@ public class LoginActivity extends Activity {
 			}
 		});
 
+		twitterLogin.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
+				ParseTwitterUtils.logIn(LoginActivity.getLoginActivity(), new LogInCallback() {
+					
+					@Override
+					public void done(ParseUser user, ParseException ex) {
+						if (user == null){
+							Toast.makeText(LoginActivity.getLoginActivity(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show(); 
+						}else{
+							Utils.setCurrentUsername(user.getUsername()); 
+							showHome(); 
+						}
+					}
+				});
+			}
+		});
+		
 		//mEmailText.setText("sriniketana");
 		//mPassText.setText("test123");
 	}
 
+	public static LoginActivity getLoginActivity(){
+		return loginActivity;		
+	}	
+	
 	private void showHome() {
 		Log.i(Consts.TAG, "TO HOME");
 		Utils.setFirstTime(false);
@@ -166,4 +197,7 @@ public class LoginActivity extends Activity {
 		startActivity(homeIntent);
 		finish();
 	}
+	
+	
+
 }

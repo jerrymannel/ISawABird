@@ -69,7 +69,6 @@ public final class R {
         public static final int undobar_divider=0x7f020020;
     }
     public static final class id {
-        public static final int Button01=0x7f0a0010;
         public static final int _undobar=0x7f0a0025;
         public static final int action_login=0x7f0a002b;
         public static final int action_logout=0x7f0a002c;
@@ -81,6 +80,7 @@ public final class R {
         public static final int btn_loginOrOut=0x7f0a0007;
         public static final int btn_login_with_facebook=0x7f0a0012;
         public static final int btn_login_with_google=0x7f0a0011;
+        public static final int btn_login_with_twitter=0x7f0a0010;
         public static final int btn_more=0x7f0a0006;
         public static final int btn_myLists=0x7f0a0005;
         public static final int btn_settings=0x7f0a0008;
