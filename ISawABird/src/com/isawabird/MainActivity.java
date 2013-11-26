@@ -3,6 +3,7 @@ package com.isawabird;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class MainActivity extends Activity {
 	Typeface openSansLight;
 	Typeface openSansBold;
 	Typeface openSansBoldItalic;
+	ImageView helpOverlay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class MainActivity extends Activity {
 				btn_more = (Button) findViewById(R.id.btn_more);
 				btn_loginLogout = (Button) findViewById(R.id.btn_loginOrOut);
 				btn_settings = (Button) findViewById(R.id.btn_settings);
+				helpOverlay = (ImageView) findViewById(R.id.help_overlay);
 
 				mSawBirdButton.setTypeface(openSansLight);
 				currentListName.setTypeface(openSansBold);
@@ -99,6 +103,7 @@ public class MainActivity extends Activity {
 				// SyncUtils.triggerRefresh();
 				// ParseInstallation.getCurrentInstallation().saveInBackground();
 
+				showHelpOverlay();
 				updateBirdsCount();
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
@@ -143,6 +148,22 @@ public class MainActivity extends Activity {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	private void showHelpOverlay() {
+		SharedPreferences prefs = this.getSharedPreferences("com.isawabird", Context.MODE_PRIVATE);
+		if (prefs.getBoolean("IsFirstRun", true)) {
+			prefs.edit().putBoolean("IsFirstRun", false).commit();
+			helpOverlay.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					helpOverlay.setVisibility(View.INVISIBLE);
+				}
+			});
+		} else {
+			helpOverlay.setVisibility(View.INVISIBLE);
 		}
 	}
 
