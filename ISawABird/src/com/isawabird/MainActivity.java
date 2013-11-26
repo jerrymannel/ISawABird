@@ -8,11 +8,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,12 +99,7 @@ public class MainActivity extends Activity {
 				// SyncUtils.triggerRefresh();
 				// ParseInstallation.getCurrentInstallation().saveInBackground();
 
-				DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
-				numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
-
-				// TODO : there is no method to find total birds spotted till
-				// date.
-				total_sightings.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
+				updateBirdsCount();
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
@@ -135,7 +127,7 @@ public class MainActivity extends Activity {
 						}
 					}
 				});
-				
+
 				btn_loginLogout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						btn_settings.setVisibility(View.INVISIBLE);
@@ -152,6 +144,16 @@ public class MainActivity extends Activity {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+	}
+
+	private void updateBirdsCount() {
+		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
+		numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
+
+		// TODO : there is no method to find total birds spotted till
+		// date.
+		total_sightings.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
+
 	}
 
 	@Override
@@ -172,6 +174,7 @@ public class MainActivity extends Activity {
 						public void onUndo(Parcelable token) {
 							dh.deleteSightingFromCurrentList(speciesName);
 							SyncUtils.triggerRefresh();
+							updateBirdsCount();
 						}
 					});
 					SyncUtils.triggerRefresh();
@@ -181,6 +184,8 @@ public class MainActivity extends Activity {
 						Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
 					}
 				}
+
+				updateBirdsCount();
 
 			}
 		}
@@ -212,8 +217,7 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 * public static ConnectivityManager getConnectivityManager(){ return
-	 * (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
+	 * public static ConnectivityManager getConnectivityManager(){ return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
 	 */
 
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
