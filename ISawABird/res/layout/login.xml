@@ -43,7 +43,6 @@
         android:layout_gravity="center"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="10dp"
-        android:paddingBottom="5dp"
         android:background="@drawable/textarea_normal"
         android:ellipsize="start"
         android:ems="8"
@@ -59,16 +58,16 @@
         android:layout_width="225dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingBottom="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/textarea_normal"
         android:ellipsize="start"
         android:ems="8"
-        android:hint="@string/password"
+        android:hint="@string/confirm_password"
         android:inputType="textPassword"
-        android:textColor="@color/color_white"
+        android:paddingBottom="5dp"
+        android:textColor="@color/color_black_333"
         android:textCursorDrawable="@null"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:visibility="gone" />
 
     <Button
@@ -79,24 +78,33 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/button_login_selector"
         android:gravity="center_vertical|center_horizontal"
-        
         android:text="@string/login" />
+
+    <Button
+        android:id="@+id/btn_signup"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_login_selector"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/signup"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/btn_forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
         android:layout_gravity="center"
-        android:textColor="@color/color_grey"
         android:layout_marginTop="15dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:text="@string/forgot_password"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/color_grey" />
 
     <TextView
         android:id="@+id/textView_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/login_or"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
         android:textColor="@color/color_50_transparent_black"
@@ -161,7 +169,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/btn_signup"
+            android:id="@+id/btn_showsignup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -172,6 +180,18 @@
             android:textColor="@color/color_black_333"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/btn_showlogin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="0.50"
+            android:gravity="right"
+            android:text="@string/login"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/color_black_333"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 
 </LinearLayout>

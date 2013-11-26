@@ -12,6 +12,7 @@
     <string name="loc_undef">Unable to get location &#8230;</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="description_short">I saw a bird</string>
     <string name="login">Login</string>
     <string name="skip"><u>Skip</u></string>
