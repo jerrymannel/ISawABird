@@ -26,6 +26,7 @@
     <string name="settings">Settings</string>
     <color name="color_50_transparent_white">#08FFFFFF</color>
     <color name="color_50_transparent_black">#08000000</color>
+    <color name="color_light_grey">#555555</color>
     <string name="search">Search</string>
     <string name="logout">Logout</string>
     <color name="color_black_333">#333</color>
@@ -45,5 +46,6 @@
     <string name="spotted">Spotted</string>
     <string name="undo">Undo</string>
     <string name="retry">Retry</string>
+    <string name="newlist">Enter list name ... </string>
 
 </resources>

@@ -97,13 +97,13 @@ public class MainActivity extends Activity {
 				new InitAsyncTask().execute();
 
 				// FIXME : (jerry) commenting this. App is crashing. Fix.
-				// ParseUtils.updateCurrentLocation();
+				ParseUtils.updateCurrentLocation();
 
 				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				/* Set up the sync service */
-				// SyncUtils.createSyncAccount(this);
-				// SyncUtils.triggerRefresh();
-				// ParseInstallation.getCurrentInstallation().saveInBackground();
+				SyncUtils.createSyncAccount(this);
+				SyncUtils.triggerRefresh();
+				ParseInstallation.getCurrentInstallation().saveInBackground();
 
 				showHelpOverlay();
 				updateBirdsCount();
@@ -240,7 +240,8 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 * public static ConnectivityManager getConnectivityManager(){ return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
+	 * public static ConnectivityManager getConnectivityManager(){ return
+	 * (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
 	 */
 
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
@@ -274,7 +275,8 @@ public class MainActivity extends Activity {
 
 		protected void onPostExecute(Long param) {
 			numberSpecies.setText(String.valueOf(param));
-			currentListName.setText(Utils.getCurrentListName());
+			if (Utils.getCurrentListName() != "")
+				currentListName.setText(Utils.getCurrentListName());
 		}
 	}
 }
