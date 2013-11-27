@@ -111,7 +111,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		if(sighting == null) {
 			throw new RuntimeException("Sighting = " + sighting + ", listId = " + listId);
 		}
-
+		if (listId == -1){
+			throw new ISawABirdException(ISawABirdException.ERR_NO_CURRENT_LIST);
+		}
+		
 		long result = -1;
 		if(!isSightingExist(sighting.getSpecies().getFullName(), listId, username)) {
 			try {
@@ -144,6 +147,9 @@ public class DBHandler extends SQLiteOpenHelper {
 	public long addSightingToCurrentList(String species) throws ISawABirdException{
 		Sighting sighting = new Sighting(new Species(species));
 		try{
+			if (Utils.getCurrentListID() == -1){
+				throw new ISawABirdException(ISawABirdException.ERR_NO_CURRENT_LIST);
+			}
 			return addSighting(sighting, Utils.getCurrentListID(), ParseUtils.getCurrentUsername());
 		}catch(ISawABirdException ex){
 			throw ex; 
