@@ -82,12 +82,14 @@ public class DBConsts {
 	 */
 
 	public static final String QUERY_SIGHTINGS_BY_LISTNAME = 
-			"SELECT " +  ID + ", " + SIGHTING_SPECIES + ", " + SIGHTING_NOTES +
+			"SELECT s." +  ID + ", " + SIGHTING_SPECIES + ", " + SIGHTING_NOTES +
 			", " + SIGHTING_LATITUDE + ", " + SIGHTING_LONGITUDE + ", " +  SIGHTING_DATE +
-			", " + PARSE_OBJECT_ID + ", " + PARSE_IS_DELETE_MARKED + ", " + PARSE_IS_UPLOAD_REQUIRED +
-			" FROM " + TABLE_SIGHTING + 
-			" WHERE " + SIGHTING_LIST_ID  + "= ? AND " + 
-			PARSE_IS_DELETE_MARKED + "!=1" + " COLLATE NOCASE" +
+			", s." + PARSE_OBJECT_ID + ", s." + PARSE_IS_DELETE_MARKED + ", s." + PARSE_IS_UPLOAD_REQUIRED +
+			", l." + LIST_NAME + 
+			" FROM " + TABLE_SIGHTING + " as s LEFT OUTER JOIN " + TABLE_LIST + " as l" +
+			" ON (s." + SIGHTING_LIST_ID + "= l." + ID + " ) " + 
+			" WHERE s." + PARSE_IS_DELETE_MARKED + "!=1" +
+			" AND l." + LIST_NAME + "= ? " +
 			" ORDER BY " + SIGHTING_DATE + " DESC";
 
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 

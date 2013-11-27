@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
@@ -69,7 +70,11 @@ public class MainActivity extends Activity {
 				// exit this activity
 				finish();
 			} else {
-
+				// TODO : Remove later
+				DBHandler dh = DBHandler.getInstance(this);
+				dh.dumpTable(DBConsts.TABLE_LIST);
+				Log.i(Consts.TAG, DBConsts.QUERY_SIGHTINGS_BY_LISTNAME);
+				
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
 				numberSpecies = (TextView) findViewById(R.id.text_mode);
@@ -96,7 +101,8 @@ public class MainActivity extends Activity {
 				new InitAsyncTask().execute();
 
 				ParseUtils.updateCurrentLocation();
-
+				
+				
 				/* Set up the sync service */
 				SyncUtils.createSyncAccount(this);
 				SyncUtils.triggerRefresh();

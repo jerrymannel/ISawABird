@@ -29,7 +29,7 @@ public class MySightingsActivity extends Activity {
 		setContentView(R.layout.mysightings);
 
 		Bundle b = getIntent().getExtras();
-		String listName = b.getString("listName");
+		final String listName = b.getString("listName");
 
 		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
 		ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
@@ -38,8 +38,8 @@ public class MySightingsActivity extends Activity {
 
 		myList = new ArrayList<String>();
 		for (Sighting sighting : myBirdLists) {
-			Log.i(Consts.TAG, "Sighting :: " + sighting.getListName());
-			myList.add(sighting.getListName());
+			Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
+			myList.add(sighting.getSpecies().getFullName());
 		}
 		final MyListAdapter listAdapter = new MyListAdapter(this, myList);
 		listview.setAdapter(listAdapter);
@@ -65,6 +65,8 @@ public class MySightingsActivity extends Activity {
 										}
 									});
 							listAdapter.remove(itemToRemove);
+							DBHandler dh = DBHandler.getInstance(getApplicationContext());
+							dh.deleteSightingFromList(itemToRemove, listName);
 						}
 						listAdapter.notifyDataSetChanged();
 					}

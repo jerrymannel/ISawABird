@@ -99,7 +99,7 @@ public class MyListActivity extends Activity {
 
 				Bundle b = new Bundle();
 				b.putString("listName", parent.getItemAtPosition(position).toString());
-
+				
 				Intent mySightingIntent = new Intent(getApplicationContext(), MySightingsActivity.class);
 				mySightingIntent.putExtras(b);
 				startActivity(mySightingIntent);
@@ -125,6 +125,8 @@ public class MyListActivity extends Activity {
 						}
 					});
 					listAdapter.remove(itemToRemove);
+					DBHandler dh = DBHandler.getInstance(getApplicationContext()); 
+					dh.deleteList(itemToRemove);
 				}
 				listAdapter.notifyDataSetChanged();
 			}
