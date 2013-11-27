@@ -11,17 +11,18 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
-        public static final int color_50_transparent_black=0x7f070005;
-        public static final int color_50_transparent_white=0x7f070004;
-        public static final int color_app_bg=0x7f070000;
-        public static final int color_black_333=0x7f070006;
-        public static final int color_grey=0x7f070003;
-        public static final int color_main_title=0x7f070001;
-        public static final int color_white=0x7f070002;
-        public static final int fb_normal=0x7f070009;
-        public static final int fb_pressed=0x7f07000a;
-        public static final int gplus_normal=0x7f070007;
-        public static final int gplus_pressed=0x7f070008;
+        public static final int color_50_transparent_black=0x7f080005;
+        public static final int color_50_transparent_white=0x7f080004;
+        public static final int color_app_bg=0x7f080000;
+        public static final int color_black_333=0x7f080007;
+        public static final int color_grey=0x7f080003;
+        public static final int color_light_grey=0x7f080006;
+        public static final int color_main_title=0x7f080001;
+        public static final int color_white=0x7f080002;
+        public static final int fb_normal=0x7f08000a;
+        public static final int fb_pressed=0x7f08000b;
+        public static final int gplus_normal=0x7f080008;
+        public static final int gplus_pressed=0x7f080009;
     }
     public static final class dimen {
         /**  Default screen margins, per the Android Design guidelines. 
@@ -55,28 +56,31 @@ public final class R {
         public static final int button_login_selector=0x7f020012;
         public static final int fb=0x7f020013;
         public static final int feather=0x7f020014;
-        public static final int feather2=0x7f020015;
+        public static final int gear=0x7f020015;
         public static final int gplus=0x7f020016;
         public static final int ic_launcher=0x7f020017;
         public static final int ic_retry=0x7f020018;
         public static final int ic_undobar_undo=0x7f020019;
-        public static final int main_button_isawabird=0x7f02001a;
-        public static final int menu=0x7f02001b;
-        public static final int separator=0x7f02001c;
-        public static final int textarea_normal=0x7f02001d;
-        public static final int twitter32=0x7f02001e;
-        public static final int undobar=0x7f02001f;
-        public static final int undobar_button=0x7f020020;
-        public static final int undobar_button_focused=0x7f020021;
-        public static final int undobar_button_pressed=0x7f020022;
-        public static final int undobar_divider=0x7f020023;
+        public static final int list=0x7f02001a;
+        public static final int login_form_backgroud=0x7f02001b;
+        public static final int main_button_isawabird=0x7f02001c;
+        public static final int menu=0x7f02001d;
+        public static final int separator=0x7f02001e;
+        public static final int textarea_normal=0x7f02001f;
+        public static final int twitter32=0x7f020020;
+        public static final int undobar=0x7f020021;
+        public static final int undobar_button=0x7f020022;
+        public static final int undobar_button_focused=0x7f020023;
+        public static final int undobar_button_pressed=0x7f020024;
+        public static final int undobar_divider=0x7f020025;
     }
     public static final class id {
-        public static final int _undobar=0x7f0a0028;
-        public static final int action_login=0x7f0a002e;
-        public static final int action_logout=0x7f0a002f;
-        public static final int action_mylists=0x7f0a002c;
-        public static final int action_settings=0x7f0a002d;
+        public static final int _undobar=0x7f0a002d;
+        public static final int action_login=0x7f0a0033;
+        public static final int action_logout=0x7f0a0034;
+        public static final int action_mylists=0x7f0a0031;
+        public static final int action_settings=0x7f0a0032;
+        public static final int btn_add_new_list=0x7f0a0019;
         public static final int btn_forgot_password=0x7f0a0010;
         public static final int btn_isawabird=0x7f0a0000;
         public static final int btn_login=0x7f0a000e;
@@ -86,28 +90,32 @@ public final class R {
         public static final int btn_login_with_twitter=0x7f0a0012;
         public static final int btn_more=0x7f0a0006;
         public static final int btn_myLists=0x7f0a0005;
+        public static final int btn_new_list_cancel=0x7f0a001c;
+        public static final int btn_new_list_save=0x7f0a001d;
         public static final int btn_settings=0x7f0a0008;
         public static final int btn_showlogin=0x7f0a0017;
         public static final int btn_showsignup=0x7f0a0016;
         public static final int btn_signup=0x7f0a000f;
         public static final int btn_skip=0x7f0a0015;
-        public static final int button_dev_showloginscreen=0x7f0a0027;
+        public static final int button_dev_showloginscreen=0x7f0a002c;
+        public static final int editText_new_list_name=0x7f0a001b;
         public static final int help_overlay=0x7f0a0009;
-        public static final int listTextView=0x7f0a0025;
-        public static final int listView=0x7f0a0021;
-        public static final int list_index=0x7f0a0023;
-        public static final int mylistItem_close=0x7f0a001b;
-        public static final int mylistView=0x7f0a0019;
-        public static final int mylistsItem_name=0x7f0a001a;
+        public static final int layout_new_list=0x7f0a001a;
+        public static final int listTextView=0x7f0a002a;
+        public static final int listView=0x7f0a0026;
+        public static final int list_index=0x7f0a0028;
+        public static final int mylistItem_close=0x7f0a0020;
+        public static final int mylistView=0x7f0a001e;
+        public static final int mylistsItem_name=0x7f0a001f;
         public static final int mylists_title=0x7f0a0018;
-        public static final int mysightingsItem_close=0x7f0a001f;
-        public static final int mysightingsItem_name=0x7f0a001e;
-        public static final int mysightingsView=0x7f0a001d;
-        public static final int mysightings_title=0x7f0a001c;
-        public static final int row_title=0x7f0a0024;
-        public static final int scrollView1=0x7f0a0026;
-        public static final int search_query=0x7f0a0020;
-        public static final int section_list_view=0x7f0a0022;
+        public static final int mysightingsItem_close=0x7f0a0024;
+        public static final int mysightingsItem_name=0x7f0a0023;
+        public static final int mysightingsView=0x7f0a0022;
+        public static final int mysightings_title=0x7f0a0021;
+        public static final int row_title=0x7f0a0029;
+        public static final int scrollView1=0x7f0a002b;
+        public static final int search_query=0x7f0a0025;
+        public static final int section_list_view=0x7f0a0027;
         public static final int textView_currentList=0x7f0a0001;
         public static final int textView_or=0x7f0a0011;
         public static final int textView_title=0x7f0a000a;
@@ -117,9 +125,9 @@ public final class R {
         public static final int text_email=0x7f0a000b;
         public static final int text_mode=0x7f0a0002;
         public static final int text_pass=0x7f0a000c;
-        public static final int undobar_button=0x7f0a002b;
-        public static final int undobar_divider=0x7f0a002a;
-        public static final int undobar_message=0x7f0a0029;
+        public static final int undobar_button=0x7f0a0030;
+        public static final int undobar_divider=0x7f0a002f;
+        public static final int undobar_message=0x7f0a002e;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -138,39 +146,40 @@ public final class R {
         public static final int main=0x7f090000;
     }
     public static final class string {
-        public static final int action_settings=0x7f060001;
-        public static final int app_name=0x7f060000;
-        public static final int close=0x7f060019;
-        public static final int confirm_password=0x7f060009;
-        public static final int count=0x7f06001c;
-        public static final int current_list=0x7f06000e;
-        public static final int defaultText=0x7f06000f;
-        public static final int description_short=0x7f06000a;
-        public static final int dummy=0x7f06001a;
-        public static final int email=0x7f060007;
-        public static final int forgot_password=0x7f060015;
-        public static final int hello_world=0x7f060002;
-        public static final int loc_undef=0x7f060006;
-        public static final int login=0x7f06000b;
-        public static final int login_or=0x7f060018;
-        public static final int login_with_facebook=0x7f060017;
-        public static final int login_with_google=0x7f060016;
-        public static final int logout=0x7f060014;
-        public static final int mode_offline=0x7f060005;
-        public static final int mode_online=0x7f060004;
-        public static final int my_list=0x7f060010;
-        public static final int my_sightings=0x7f060011;
-        public static final int password=0x7f060008;
-        public static final int retry=0x7f060020;
-        public static final int search=0x7f060013;
-        public static final int settings=0x7f060012;
-        public static final int signup=0x7f06000d;
-        public static final int skip=0x7f06000c;
-        public static final int spotted=0x7f06001e;
-        public static final int tag=0x7f060003;
-        public static final int total=0x7f06001d;
-        public static final int undo=0x7f06001f;
-        public static final int zero=0x7f06001b;
+        public static final int action_settings=0x7f070001;
+        public static final int app_name=0x7f070000;
+        public static final int close=0x7f070019;
+        public static final int confirm_password=0x7f070009;
+        public static final int count=0x7f07001c;
+        public static final int current_list=0x7f07000e;
+        public static final int defaultText=0x7f07000f;
+        public static final int description_short=0x7f07000a;
+        public static final int dummy=0x7f07001a;
+        public static final int email=0x7f070007;
+        public static final int forgot_password=0x7f070015;
+        public static final int hello_world=0x7f070002;
+        public static final int loc_undef=0x7f070006;
+        public static final int login=0x7f07000b;
+        public static final int login_or=0x7f070018;
+        public static final int login_with_facebook=0x7f070017;
+        public static final int login_with_google=0x7f070016;
+        public static final int logout=0x7f070014;
+        public static final int mode_offline=0x7f070005;
+        public static final int mode_online=0x7f070004;
+        public static final int my_list=0x7f070010;
+        public static final int my_sightings=0x7f070011;
+        public static final int newlist=0x7f070021;
+        public static final int password=0x7f070008;
+        public static final int retry=0x7f070020;
+        public static final int search=0x7f070013;
+        public static final int settings=0x7f070012;
+        public static final int signup=0x7f07000d;
+        public static final int skip=0x7f07000c;
+        public static final int spotted=0x7f07001e;
+        public static final int tag=0x7f070003;
+        public static final int total=0x7f07001d;
+        public static final int undo=0x7f07001f;
+        public static final int zero=0x7f07001b;
     }
     public static final class style {
         /** 
@@ -194,14 +203,15 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f080000;
+        public static final int AppBaseTheme=0x7f060001;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f080001;
-        public static final int UndoBar=0x7f080002;
-        public static final int UndoBarButton=0x7f080004;
-        public static final int UndoBarMessage=0x7f080003;
+        public static final int AppTheme=0x7f060002;
+        public static final int UndoBar=0x7f060003;
+        public static final int UndoBarButton=0x7f060005;
+        public static final int UndoBarMessage=0x7f060004;
+        public static final int font_border=0x7f060000;
     }
     public static final class xml {
         public static final int authenticator=0x7f040000;

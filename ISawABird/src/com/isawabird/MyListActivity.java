@@ -69,6 +69,14 @@ public class MyListActivity extends Activity {
 				InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				// mydbh.addBirdList(editText_new_list_name.getText(), true);
+				DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
+				BirdList list = new BirdList(editText_new_list_name.getText().toString()); 
+				try{
+					dh.addBirdList(list, true);
+				}catch(ISawABirdException ex){
+					// TODO : Specify a proper error code if list already exists
+					Toast.makeText(MainActivity.getContext(), "List already exists. Specify a different name", Toast.LENGTH_SHORT);
+				}
 				Toast.makeText(getBaseContext(), "Added new list :: " + editText_new_list_name.getText(), Toast.LENGTH_SHORT).show();
 				editText_new_list_name.setText("");
 				layout_new_list.setVisibility(View.INVISIBLE);
