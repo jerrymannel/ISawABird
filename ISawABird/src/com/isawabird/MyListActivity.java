@@ -63,7 +63,7 @@ public class MyListActivity extends Activity {
 			}
 		});
 
-		// FIXME : how to create a new list
+		// TODO: Read more fields from user to create a new list
 		btn_new_list_save.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

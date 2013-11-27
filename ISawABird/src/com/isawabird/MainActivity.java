@@ -96,10 +96,8 @@ public class MainActivity extends Activity {
 				// move heavy work to asynctask
 				new InitAsyncTask().execute();
 
-				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				ParseUtils.updateCurrentLocation();
 
-				// FIXME : (jerry) commenting this. App is crashing. Fix.
 				/* Set up the sync service */
 				SyncUtils.createSyncAccount(this);
 				SyncUtils.triggerRefresh();
