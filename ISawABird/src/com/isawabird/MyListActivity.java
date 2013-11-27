@@ -114,6 +114,8 @@ public class MyListActivity extends Activity {
 
 			@Override
 			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+				DBHandler dh = DBHandler.getInstance(getApplicationContext()); 
+				
 				for (final int position : reverseSortedPositions) {
 					final String itemToRemove = listAdapter.getItem(position);
 					UndoBarController.show(MyListActivity.this, itemToRemove + " is removed from the list", new UndoListener() {
@@ -125,7 +127,6 @@ public class MyListActivity extends Activity {
 						}
 					});
 					listAdapter.remove(itemToRemove);
-					DBHandler dh = DBHandler.getInstance(getApplicationContext()); 
 					dh.deleteList(itemToRemove);
 				}
 				listAdapter.notifyDataSetChanged();
