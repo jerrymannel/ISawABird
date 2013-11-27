@@ -194,7 +194,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			}
 		}catch(SQLiteException ex){
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
-			throw new ISawABirdException("Unable to create a new list. Perhaps, a list by the name already exists ?");
+			throw new ISawABirdException(ISawABirdException.ERR_LIST_ALREADY_EXISTS);
 		}
 		return result;
 	}

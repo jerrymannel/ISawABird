@@ -170,11 +170,7 @@ public class MainActivity extends Activity {
 	private void updateBirdsCount() {
 		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
 		numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
-
-		// TODO : there is no method to find total birds spotted till
-		// date.
 		total_sightings.setText(Long.toString(mydbh.getTotalSpeciesCount()));
-
 	}
 
 	@Override
