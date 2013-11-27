@@ -37,10 +37,10 @@ public class SearchActivity extends Activity {
 
 	private static SearchActivity searchAct;
 	EditText search;
-	
+
 	Typeface openSansLight;
 	Typeface openSansBold;
-	Typeface openSansBoldItalic;
+	Typeface arvo;
 
 	// sideIndex
 	LinearLayout sideIndex;
@@ -57,18 +57,18 @@ public class SearchActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
 		searchAct = this;
-		
+
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
-		openSansBoldItalic = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-BoldItalic.ttf");
+		arvo = Typeface.createFromAsset(getAssets(), "fonts/Arvo-Regular.ttf");
 
 		search = (EditText) findViewById(R.id.search_query);
 		search.addTextChangedListener(filterTextWatcher);
 		listView = (SectionListView) findViewById(R.id.section_list_view);
 		sideIndex = (LinearLayout) findViewById(R.id.list_index);
 		sideIndex.setOnTouchListener(new Indextouch());
-		
-		search.setTypeface(openSansLight);
+
+		search.setTypeface(arvo);
 
 		// TODO: load species in bg if it uses db
 		species = Utils.getAllSpecies();
@@ -140,7 +140,7 @@ public class SearchActivity extends Activity {
 			TextView textView = (TextView) view.findViewById(R.id.row_title);
 			if (textView != null) {
 				textView.setText(items.get(position));
-				textView.setTypeface(openSansBoldItalic);
+				textView.setTypeface(arvo);
 			}
 			return view;
 		}

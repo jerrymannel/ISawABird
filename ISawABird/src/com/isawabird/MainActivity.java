@@ -3,7 +3,6 @@ package com.isawabird;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -152,9 +151,7 @@ public class MainActivity extends Activity {
 	}
 
 	private void showHelpOverlay() {
-		SharedPreferences prefs = this.getSharedPreferences("com.isawabird", Context.MODE_PRIVATE);
-		if (prefs.getBoolean("IsFirstRun", true)) {
-			prefs.edit().putBoolean("IsFirstRun", false).commit();
+		if (Utils.isFirstTime()) {
 			helpOverlay.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -234,8 +231,7 @@ public class MainActivity extends Activity {
 	}
 
 	/*
-	 * public static ConnectivityManager getConnectivityManager(){ return
-	 * (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
+	 * public static ConnectivityManager getConnectivityManager(){ return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
 	 */
 
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
