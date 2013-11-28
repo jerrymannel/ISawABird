@@ -46,6 +46,7 @@
     <string name="spotted">Spotted</string>
     <string name="undo">Undo</string>
     <string name="retry">Retry</string>
-    <string name="newlist">Enter list name ... </string>
+    <string name="newlist">Enter list name &#8230;</string>
+    <string name="currentlist">Select the active list</string>
 
 </resources>

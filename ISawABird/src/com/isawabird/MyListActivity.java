@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +38,19 @@ public class MyListActivity extends Activity {
 	TextView btn_new_list_cancel;
 	TextView btn_new_list_save;
 	View layout_new_list;
+	DBHandler mydbh;
+	RadioButton listRadioButton = null;
+	int active_list_position;
+	int listIndex = -1;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mylists);
 
-		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
+		mydbh = DBHandler.getInstance(MainActivity.getContext());
 		ArrayList<BirdList> myBirdLists = mydbh.getBirdLists(ParseUtils.getCurrentUsername());
+
+		final InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 		final ListView listview = (ListView) findViewById(R.id.mylistView);
 		btn_add_new_list = (TextView) findViewById(R.id.btn_add_new_list);
@@ -55,27 +62,28 @@ public class MyListActivity extends Activity {
 		btn_add_new_list.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				layout_new_list.setVisibility(View.VISIBLE);
+				btn_add_new_list.setVisibility(View.INVISIBLE);
 			}
 		});
 
 		btn_new_list_cancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
+				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				editText_new_list_name.setText("");
-				layout_new_list.setVisibility(View.INVISIBLE);
+				layout_new_list.setVisibility(View.GONE);
+				btn_add_new_list.setVisibility(View.VISIBLE);
 			}
 		});
 
 		// TODO: Read more fields from user to create a new list
 		btn_new_list_save.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				// mydbh.addBirdList(editText_new_list_name.getText(), true);
-				DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
-				BirdList list = new BirdList(editText_new_list_name.getText().toString()); 
-				try{
-					dh.addBirdList(list, true);
-				}catch(ISawABirdException ex){
+				BirdList list = new BirdList(editText_new_list_name.getText().toString());
+				try {
+					mydbh.addBirdList(list, true);
+				} catch (ISawABirdException ex) {
 					// TODO : Specify a proper error code if list already exists
 					Toast.makeText(MainActivity.getContext(), "List already exists. Specify a different name", Toast.LENGTH_SHORT);
 				}
@@ -101,7 +109,7 @@ public class MyListActivity extends Activity {
 
 				Bundle b = new Bundle();
 				b.putString("listName", parent.getItemAtPosition(position).toString());
-				
+
 				Intent mySightingIntent = new Intent(getApplicationContext(), MySightingsActivity.class);
 				mySightingIntent.putExtras(b);
 				startActivity(mySightingIntent);
@@ -116,20 +124,19 @@ public class MyListActivity extends Activity {
 
 			@Override
 			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-				final DBHandler dh = DBHandler.getInstance(getApplicationContext()); 
 				for (final int position : reverseSortedPositions) {
 					final String itemToRemove = listAdapter.getItem(position);
-					BirdList list = null; 
-					try{
-						list = dh.getBirdListByName(itemToRemove);							
-					}catch(ISawABirdException ex){
-						Toast.makeText(getApplicationContext(), "Unable to delete list", Toast.LENGTH_SHORT).show(); 
+					BirdList list = null;
+					try {
+						list = mydbh.getBirdListByName(itemToRemove);
+					} catch (ISawABirdException ex) {
+						Toast.makeText(getApplicationContext(), "Unable to delete list", Toast.LENGTH_SHORT).show();
 					}
 					PostUndoAction action = new PostUndoAction() {
-						
+
 						@Override
 						public void action() {
-							dh.deleteList(itemToRemove);
+							mydbh.deleteList(itemToRemove);
 						}
 					};
 					UndoBarController.show(MyListActivity.this, itemToRemove + " removed from the list", new UndoListener() {
@@ -138,11 +145,12 @@ public class MyListActivity extends Activity {
 						public void onUndo(Parcelable token) {
 							listAdapter.insert(itemToRemove, position);
 							listAdapter.notifyDataSetChanged();
-							// TODO Handle case when data has been uploaded to parse and when it has not been uploaded to parse. 
+							// TODO Handle case when data has been uploaded to
+							// parse and when it has not been uploaded to parse.
 						}
 					}, action);
 					listAdapter.remove(itemToRemove);
-					
+
 				}
 				listAdapter.notifyDataSetChanged();
 			}
@@ -166,10 +174,29 @@ public class MyListActivity extends Activity {
 			View rowView = inflater.inflate(R.layout.mylists_row, parent, false);
 
 			TextView textView1 = (TextView) rowView.findViewById(R.id.mylistsItem_name);
-			TextView textView2 = (TextView) rowView.findViewById(R.id.mylistItem_close);
+			RadioButton rb = (RadioButton) rowView.findViewById(R.id.radioButton_currList);
 
 			textView1.setText(values.get(position));
-			textView2.setText(" ");
+			if (values.get(position).equals(Utils.getCurrentListName())) {
+				rb.setChecked(true);
+				listRadioButton = rb;
+				active_list_position = position;
+				Log.i(Consts.TAG, values.get(position) + " >>> " + active_list_position);
+			}
+
+			rb.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					View vMain = ((View) v.getParent());
+			        int newIndex = ((ViewGroup) vMain.getParent()).indexOfChild(vMain);
+			        Log.i(Consts.TAG, "Active Pos >>> " + newIndex);
+			        
+			        if (active_list_position == newIndex) return;
+
+	                listRadioButton.setChecked(false);
+			        listRadioButton = (RadioButton) v;
+			        active_list_position = newIndex;
+				}
+			});
 
 			return rowView;
 		}

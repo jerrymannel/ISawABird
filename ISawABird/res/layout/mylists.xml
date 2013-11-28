@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_grey"
+        android:background="@drawable/title_gradient"
         android:padding="10dp" >
 
         <TextView
@@ -18,12 +18,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="0.93"
-            android:background="@color/color_50_transparent_white"
             android:gravity="center_vertical"
             android:padding="10dp"
             android:text="@string/my_list"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/color_black_333" />
+            android:textColor="#F3FFE2" />
 
         <TextView
             android:id="@+id/btn_add_new_list"
@@ -35,13 +34,25 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="@string/currentlist"
+        android:textColor="#999"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingRight="10dp"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
     <LinearLayout
         android:id="@+id/layout_new_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_50_transparent_black"
+        android:background="#225378"
         android:padding="10dp"
-        android:visibility="invisible" >
+        android:visibility="gone" >
 
         <EditText
             android:id="@+id/editText_new_list_name"
@@ -49,7 +60,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:textColor="@color/color_black_333"
+            android:textColor="@color/color_white"
+            android:textColorHint="#AAAAAA"
             android:hint="@string/newlist" >
         </EditText>
 
@@ -69,6 +81,7 @@
             android:layout_marginRight="10dp"
             android:background="@android:drawable/ic_menu_save"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        
     </LinearLayout>
 
     <ListView
