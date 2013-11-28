@@ -20,6 +20,7 @@ import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
+import com.isawabird.utilities.PostUndoAction;
 import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
@@ -74,7 +75,7 @@ public class MainActivity extends Activity {
 				DBHandler dh = DBHandler.getInstance(this);
 				dh.dumpTable(DBConsts.TABLE_LIST);
 				Log.i(Consts.TAG, DBConsts.QUERY_SIGHTINGS_BY_LISTNAME);
-				
+
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
 				numberSpecies = (TextView) findViewById(R.id.text_mode);
@@ -101,8 +102,8 @@ public class MainActivity extends Activity {
 				new InitAsyncTask().execute();
 
 				ParseUtils.updateCurrentLocation();
-				
-				
+
+
 				/* Set up the sync service */
 				SyncUtils.createSyncAccount(this);
 				SyncUtils.triggerRefresh();
@@ -186,25 +187,30 @@ public class MainActivity extends Activity {
 				final String speciesName = extras.getString(Consts.SPECIES_NAME);
 
 				final DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
-				try {
-					dh.addSightingToCurrentList(speciesName);
-					UndoBarController.show(MainActivity.this, speciesName + " added successfully to list", new UndoListener() {
+				PostUndoAction action = new PostUndoAction() {
 
-						@Override
-						public void onUndo(Parcelable token) {
-							dh.deleteSightingFromCurrentList(speciesName);
+					@Override
+					public void action() {
+						try {
+							Log.i(Consts.TAG, "User did not undo");
+							dh.addSightingToCurrentList(speciesName);
 							SyncUtils.triggerRefresh();
-							updateBirdsCount();
-						}
-					});
-					SyncUtils.triggerRefresh();
-				} catch (ISawABirdException ex) {
-					// TODO Change to use strings.xml
-					if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
-						Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
-					}
-				}
 
+						} catch (ISawABirdException ex) {
+							// TODO Change to use strings.xml
+							if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
+								Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
+							}
+						}
+					}
+				};
+				UndoBarController.show(MainActivity.this, speciesName + " added successfully to list", new UndoListener() {
+
+					@Override
+					public void onUndo(Parcelable token) {
+						updateBirdsCount();
+					}
+				}, action);
 				updateBirdsCount();
 
 			}

@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import android.widget.TextView;
 import android.content.ContextWrapper;
 import android.content.res.AssetManager;
 
+import com.isawabird.Consts;
 import com.isawabird.R;
 import com.isawabird.R.drawable;
 import com.isawabird.R.id;
@@ -57,10 +59,13 @@ public class UndoBarController extends LinearLayout {
 	private final Handler mHideHandler = new Handler();
 	private UndoListener mUndoListener;
 	private UndoBarStyle style = UndoBarController.UNDOSTYLE;
-
+	private PostUndoAction action = null; 
+	private boolean didUndo = false; 
+	
 	// State objects
 	private Parcelable mUndoToken;
 
+	
 	private CharSequence mUndoMessage;
 	private final Runnable mHideRunnable = new Runnable() {
 		@Override
@@ -69,8 +74,9 @@ public class UndoBarController extends LinearLayout {
 		}
 	};
 
-	private UndoBarController(final Context context, final AttributeSet attrs) {
+	private UndoBarController(final Context context, final AttributeSet attrs, PostUndoAction action) {
 		super(context, attrs);
+		this.action = action;
 		
 		LayoutInflater.from(context).inflate(R.layout.undobar, this, true);
 		mMessageView = (TextView) findViewById(R.id.undobar_message);
@@ -82,6 +88,12 @@ public class UndoBarController extends LinearLayout {
 				if (mUndoListener != null) {
 					mUndoListener.onUndo(mUndoToken);
 				}
+				/* hideUndoBar() is called in two cases 
+				 * 1. When user presses undo 
+				 * 2. After timeout. 
+				 * Set the didUndo flag to indicate user pressed undo. 
+				 */
+				didUndo = true; 
 				hideUndoBar(false);
 			}
 		});
@@ -107,7 +119,12 @@ public class UndoBarController extends LinearLayout {
 			clearAnimation();
 			startAnimation(UndoBarController.outToBottomAnimation(null));
 			setVisibility(View.GONE);
+			/*Execute the lazy action only if the user did not undo */
+			if (!didUndo){
+				action.action();
+			}
 		}
+		
 	}
 
 	private static Animation outToBottomAnimation(final android.view.animation.Animation.AnimationListener animationlistener) {
@@ -196,10 +213,10 @@ public class UndoBarController extends LinearLayout {
 	 * @return
 	 */
 	public static UndoBarController show(final Activity activity, final CharSequence message, final UndoListener listener,
-			final Parcelable undoToken, final boolean immediate, final UndoBarStyle style) {
+			final Parcelable undoToken, final boolean immediate, final UndoBarStyle style, PostUndoAction action) {
 		UndoBarController undo = UndoBarController.getView(activity);
 		if (undo == null) {
-			undo = new UndoBarController(activity, null);
+			undo = new UndoBarController(activity, null, action);
 			((ViewGroup) activity.findViewById(android.R.id.content)).addView(undo);
 		}
 		undo.style = style;
@@ -218,26 +235,26 @@ public class UndoBarController extends LinearLayout {
 	}
 
 	public static UndoBarController show(final Activity activity, final int message, final UndoListener listener,
-			final Parcelable undoToken, final boolean immediate) {
-		return UndoBarController.show(activity, activity.getText(message), listener, undoToken, immediate, UndoBarController.UNDOSTYLE);
+			final Parcelable undoToken, final boolean immediate, PostUndoAction action) {
+		return UndoBarController.show(activity, activity.getText(message), listener, undoToken, immediate, UndoBarController.UNDOSTYLE,action);
 	}
 
 	public static UndoBarController show(final Activity activity, final CharSequence message, final UndoListener listener,
-			final Parcelable undoToken) {
-		return UndoBarController.show(activity, message, listener, undoToken, false, UndoBarController.UNDOSTYLE);
+			final Parcelable undoToken, PostUndoAction action) {
+		return UndoBarController.show(activity, message, listener, undoToken, false, UndoBarController.UNDOSTYLE,action);
 	}
 
 	public static UndoBarController show(final Activity activity, final CharSequence message, final UndoListener listener,
-			final UndoBarStyle style) {
-		return UndoBarController.show(activity, message, listener, null, false, style);
+			final UndoBarStyle style, PostUndoAction action) {
+		return UndoBarController.show(activity, message, listener, null, false, style,action);
 	}
 
-	public static UndoBarController show(final Activity activity, final CharSequence message, final UndoListener listener) {
-		return UndoBarController.show(activity, message, listener, null, false, UndoBarController.UNDOSTYLE);
+	public static UndoBarController show(final Activity activity, final CharSequence message, final UndoListener listener, PostUndoAction action) {
+		return UndoBarController.show(activity, message, listener, null, false, UndoBarController.UNDOSTYLE,action);
 	}
 
-	public static UndoBarController show(final Activity activity, final CharSequence message) {
-		return UndoBarController.show(activity, message, null, null, false, UndoBarController.MESSAGESTYLE);
+	public static UndoBarController show(final Activity activity, final CharSequence message, PostUndoAction action) {
+		return UndoBarController.show(activity, message, null, null, false, UndoBarController.MESSAGESTYLE,action);
 	}
 
 	/**

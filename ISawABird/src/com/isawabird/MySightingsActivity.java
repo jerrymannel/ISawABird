@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
+import com.isawabird.utilities.PostUndoAction;
 import com.isawabird.utilities.SwipeDismissListViewTouchListener;
 import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
@@ -55,6 +56,13 @@ public class MySightingsActivity extends Activity {
 					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
 						for (final int position : reverseSortedPositions) {
 							final String itemToRemove = listAdapter.getItem(position);
+							PostUndoAction action = new PostUndoAction() {
+								@Override
+								public void action() {
+									DBHandler dh = DBHandler.getInstance(getApplicationContext());
+									dh.deleteSightingFromList(itemToRemove, listName);									
+								}
+							};
 							UndoBarController.show(MySightingsActivity.this, itemToRemove + " is removed from the list",
 									new UndoListener() {
 
@@ -63,10 +71,9 @@ public class MySightingsActivity extends Activity {
 											listAdapter.insert(itemToRemove, position);
 											listAdapter.notifyDataSetChanged();
 										}
-									});
+									}, action);
 							listAdapter.remove(itemToRemove);
-							DBHandler dh = DBHandler.getInstance(getApplicationContext());
-							dh.deleteSightingFromList(itemToRemove, listName);
+							
 						}
 						listAdapter.notifyDataSetChanged();
 					}

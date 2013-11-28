@@ -91,6 +91,10 @@ public class DBConsts {
 			" WHERE s." + PARSE_IS_DELETE_MARKED + "!=1" +
 			" AND l." + LIST_NAME + "= ? " +
 			" ORDER BY " + SIGHTING_DATE + " DESC";
+	
+	public static final String QUERY_GET_LIST_BY_NAME = 
+			"SELECT * FROM " + TABLE_LIST + " WHERE " + 
+			LIST_NAME + " = ? AND " + LIST_USER + " = ? " ; 
 
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 
 			"SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +

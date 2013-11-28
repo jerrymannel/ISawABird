@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ClipData.Item;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
+import com.isawabird.utilities.PostUndoAction;
 import com.isawabird.utilities.SwipeDismissListViewTouchListener;
 import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
@@ -114,20 +116,33 @@ public class MyListActivity extends Activity {
 
 			@Override
 			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-				DBHandler dh = DBHandler.getInstance(getApplicationContext()); 
-				
+				final DBHandler dh = DBHandler.getInstance(getApplicationContext()); 
 				for (final int position : reverseSortedPositions) {
 					final String itemToRemove = listAdapter.getItem(position);
-					UndoBarController.show(MyListActivity.this, itemToRemove + " is removed from the list", new UndoListener() {
+					BirdList list = null; 
+					try{
+						list = dh.getBirdListByName(itemToRemove);							
+					}catch(ISawABirdException ex){
+						Toast.makeText(getApplicationContext(), "Unable to delete list", Toast.LENGTH_SHORT).show(); 
+					}
+					PostUndoAction action = new PostUndoAction() {
+						
+						@Override
+						public void action() {
+							dh.deleteList(itemToRemove);
+						}
+					};
+					UndoBarController.show(MyListActivity.this, itemToRemove + " removed from the list", new UndoListener() {
 
 						@Override
 						public void onUndo(Parcelable token) {
 							listAdapter.insert(itemToRemove, position);
 							listAdapter.notifyDataSetChanged();
+							// TODO Handle case when data has been uploaded to parse and when it has not been uploaded to parse. 
 						}
-					});
+					}, action);
 					listAdapter.remove(itemToRemove);
-					dh.deleteList(itemToRemove);
+					
 				}
 				listAdapter.notifyDataSetChanged();
 			}

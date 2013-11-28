@@ -210,6 +210,24 @@ public class DBHandler extends SQLiteOpenHelper {
 		return getBirdCountByListId(Utils.getCurrentListID());
 	}
 	
+	public BirdList getBirdListByName(String listName) throws ISawABirdException {
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_NAME, new String [] { listName , ParseUtils.getCurrentUsername() });
+		if (result.getCount() == 0){
+			throw new ISawABirdException("List " + listName + " not found"); 
+		}
+		
+		result.moveToNext(); 
+		BirdList list = new BirdList(listName);
+		list.setId(result.getLong(result.getColumnIndex(DBConsts.ID)));
+		list.setDate( new Date(result.getLong(result.getColumnIndex(DBConsts.LIST_DATE))));
+		list.setNotes(result.getString(result.getColumnIndex(DBConsts.LIST_NOTES))); 
+		list.setUsername(result.getString(result.getColumnIndex(DBConsts.LIST_USER))); 
+		
+		return list;
+	}
+	
 	public long getTotalSpeciesCount(){
 		if(!db.isOpen()) db = getWritableDatabase();
 		
