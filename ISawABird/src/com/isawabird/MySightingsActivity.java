@@ -32,7 +32,7 @@ public class MySightingsActivity extends Activity {
 		Bundle b = getIntent().getExtras();
 		final String listName = b.getString("listName");
 
-		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
+		DBHandler mydbh = DBHandler.getInstance(getApplicationContext());
 		ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
 
 		final ListView listview = (ListView) findViewById(R.id.mysightingsView);
@@ -93,8 +93,12 @@ public class MySightingsActivity extends Activity {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.mysightings_row, parent, false);
+			View rowView = convertView;
+
+			if(rowView == null){
+				LayoutInflater inflater = getLayoutInflater();
+				rowView = inflater.inflate(R.layout.mysightings_row, parent, false);
+			}
 
 			TextView textView1 = (TextView) rowView.findViewById(R.id.mysightingsItem_name);
 			TextView textView2 = (TextView) rowView.findViewById(R.id.mysightingsItem_close);

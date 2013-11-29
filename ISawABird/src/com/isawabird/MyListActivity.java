@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ClipData.Item;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -32,13 +31,14 @@ import com.isawabird.utilities.UndoBarController.UndoListener;
 
 public class MyListActivity extends Activity {
 
-	private ArrayList<String> myList;
+	private ArrayList<String> listNameArray;
+	private ArrayList<String> listIdArray;
 	TextView btn_add_new_list;
 	EditText editText_new_list_name;
 	TextView btn_new_list_cancel;
 	TextView btn_new_list_save;
 	View layout_new_list;
-	DBHandler mydbh;
+	DBHandler dh;
 	RadioButton listRadioButton = null;
 	int active_list_position;
 	int listIndex = -1;
@@ -46,9 +46,6 @@ public class MyListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mylists);
-
-		mydbh = DBHandler.getInstance(MainActivity.getContext());
-		ArrayList<BirdList> myBirdLists = mydbh.getBirdLists(ParseUtils.getCurrentUsername());
 
 		final InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -79,13 +76,13 @@ public class MyListActivity extends Activity {
 		btn_new_list_save.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				// mydbh.addBirdList(editText_new_list_name.getText(), true);
+				// dh.addBirdList(editText_new_list_name.getText(), true);
 				BirdList list = new BirdList(editText_new_list_name.getText().toString());
 				try {
-					mydbh.addBirdList(list, true);
+					dh.addBirdList(list, true);
 				} catch (ISawABirdException ex) {
 					// TODO : Specify a proper error code if list already exists
-					Toast.makeText(MainActivity.getContext(), "List already exists. Specify a different name", Toast.LENGTH_SHORT);
+					Toast.makeText(getApplicationContext(), "List already exists. Specify a different name", Toast.LENGTH_SHORT);
 				}
 				Toast.makeText(getBaseContext(), "Added new list :: " + editText_new_list_name.getText(), Toast.LENGTH_SHORT).show();
 				editText_new_list_name.setText("");
@@ -96,12 +93,18 @@ public class MyListActivity extends Activity {
 		/*
 		 * (Jerry) Populate the list
 		 */
-		myList = new ArrayList<String>();
-		for (BirdList bird : myBirdLists) {
-			myList.add(bird.getListName());
-		}
+		dh = DBHandler.getInstance(getApplicationContext());
+		ArrayList<BirdList> myBirdLists = dh.getBirdLists(ParseUtils.getCurrentUsername());
 
-		final MyListAdapter listAdapter = new MyListAdapter(this, myList);
+		/*listNameArray = new ArrayList<String>();
+		listIdArray = new ArrayList<String>();
+		
+		for (BirdList bird : myBirdLists) {
+			listNameArray.add(bird.getListName());
+			listIdArray.add(bird)
+		}*/
+
+		final MyListAdapter listAdapter = new MyListAdapter(this, myBirdLists);
 		listview.setAdapter(listAdapter);
 		listview.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -125,32 +128,31 @@ public class MyListActivity extends Activity {
 			@Override
 			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
 				for (final int position : reverseSortedPositions) {
-					final String itemToRemove = listAdapter.getItem(position);
-					BirdList list = null;
+					final BirdList listToRemove = listAdapter.getItem(position);
+					final String listNameToRemove = listAdapter.getItem(position).getListName();
+					/*BirdList list = null;
 					try {
-						list = mydbh.getBirdListByName(itemToRemove);
+						list = dh.getBirdListByName(listNameToRemove);
 					} catch (ISawABirdException ex) {
 						Toast.makeText(getApplicationContext(), "Unable to delete list", Toast.LENGTH_SHORT).show();
-					}
+					}*/
 					PostUndoAction action = new PostUndoAction() {
-
 						@Override
 						public void action() {
-							mydbh.deleteList(itemToRemove);
+							dh.deleteList(listNameToRemove);
 						}
 					};
-					UndoBarController.show(MyListActivity.this, itemToRemove + " removed from the list", new UndoListener() {
+					UndoBarController.show(MyListActivity.this, listNameToRemove + " removed from the list", new UndoListener() {
 
 						@Override
 						public void onUndo(Parcelable token) {
-							listAdapter.insert(itemToRemove, position);
+							listAdapter.insert(listToRemove, position);
 							listAdapter.notifyDataSetChanged();
 							// TODO Handle case when data has been uploaded to
 							// parse and when it has not been uploaded to parse.
 						}
 					}, action);
-					listAdapter.remove(itemToRemove);
-
+					listAdapter.remove(listToRemove);
 				}
 				listAdapter.notifyDataSetChanged();
 			}
@@ -159,42 +161,46 @@ public class MyListActivity extends Activity {
 		listview.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
-	private class MyListAdapter extends ArrayAdapter<String> {
-		private final Context context;
-		private final ArrayList<String> values;
+	private class MyListAdapter extends ArrayAdapter<BirdList> {
+		private final ArrayList<BirdList> birdLists;
 
-		public MyListAdapter(Context context, ArrayList<String> values) {
-			super(context, R.layout.mylists_row, values);
-			this.context = context;
-			this.values = values;
+		public MyListAdapter(Context context, ArrayList<BirdList> birdLists) {
+			super(context, R.layout.mylists_row, birdLists);
+			this.birdLists = birdLists;
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.mylists_row, parent, false);
+
+			View rowView = convertView;
+
+			if(rowView == null){
+				LayoutInflater inflater = getLayoutInflater();
+				rowView = inflater.inflate(R.layout.mylists_row, parent, false);
+			}
 
 			TextView textView1 = (TextView) rowView.findViewById(R.id.mylistsItem_name);
 			RadioButton rb = (RadioButton) rowView.findViewById(R.id.radioButton_currList);
 
-			textView1.setText(values.get(position));
-			if (values.get(position).equals(Utils.getCurrentListName())) {
+			textView1.setText(birdLists.get(position).getListName());
+			if (birdLists.get(position).getId() == Utils.getCurrentListID()) {
 				rb.setChecked(true);
 				listRadioButton = rb;
 				active_list_position = position;
-				Log.i(Consts.TAG, values.get(position) + " >>> " + active_list_position);
 			}
 
 			rb.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					View vMain = ((View) v.getParent());
-			        int newIndex = ((ViewGroup) vMain.getParent()).indexOfChild(vMain);
-			        Log.i(Consts.TAG, "Active Pos >>> " + newIndex);
-			        
-			        if (active_list_position == newIndex) return;
+					int newIndex = ((ViewGroup) vMain.getParent()).indexOfChild(vMain);
+					Log.i(Consts.TAG, "Active Pos >>> " + newIndex);
 
-	                listRadioButton.setChecked(false);
-			        listRadioButton = (RadioButton) v;
-			        active_list_position = newIndex;
+					if (active_list_position == newIndex) return;
+
+					listRadioButton.setChecked(false);
+					listRadioButton = (RadioButton) v;
+					active_list_position = newIndex;
+					BirdList newList = birdLists.get(active_list_position);
+					Utils.setCurrentList(newList.getListName(), newList.getId());
 				}
 			});
 

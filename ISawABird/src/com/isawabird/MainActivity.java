@@ -1,5 +1,8 @@
 package com.isawabird;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,13 +32,11 @@ import com.parse.PushService;
 
 public class MainActivity extends Activity {
 
-	static MainActivity act = null;
-
-	TextView numberSpecies;
+	TextView mBirdCountText;
+	TextView mTotalBirdCountText;
 	TextView currentListName;
 	TextView currentLocation;
 	TextView total_sightings_title;
-	TextView total_sightings;
 	Button btn_myLists;
 	Button btn_more;
 	Button btn_loginLogout;
@@ -47,10 +48,12 @@ public class MainActivity extends Activity {
 	Typeface tangerine;
 	ImageView helpOverlay;
 
+	private long birdCount = 0;
+	private long totalBirdCount = 0;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		act = this;
 
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
@@ -71,17 +74,14 @@ public class MainActivity extends Activity {
 				// exit this activity
 				finish();
 			} else {
-				// TODO : Remove later
-				DBHandler dh = DBHandler.getInstance(this);
-				dh.dumpTable(DBConsts.TABLE_LIST);
 				Log.i(Consts.TAG, DBConsts.QUERY_SIGHTINGS_BY_LISTNAME);
 
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
-				numberSpecies = (TextView) findViewById(R.id.text_mode);
+				mBirdCountText = (TextView) findViewById(R.id.text_mode);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 				total_sightings_title = (TextView) findViewById(R.id.textView_total_text);
-				total_sightings = (TextView) findViewById(R.id.textView_total);
+				mTotalBirdCountText = (TextView) findViewById(R.id.textView_total);
 				btn_myLists = (Button) findViewById(R.id.btn_myLists);
 				btn_more = (Button) findViewById(R.id.btn_more);
 				btn_loginLogout = (Button) findViewById(R.id.btn_loginOrOut);
@@ -89,20 +89,19 @@ public class MainActivity extends Activity {
 				helpOverlay = (ImageView) findViewById(R.id.help_overlay);
 
 				mSawBirdButton.setTypeface(tangerine);
-				currentListName.setTypeface(openSansBold);
-				numberSpecies.setTypeface(openSansBold);
-				total_sightings_title.setTypeface(openSansBold);
-				total_sightings.setTypeface(openSansLight);
+				currentListName.setTypeface(openSansLight);
+				mBirdCountText.setTypeface(openSansLight);
+				total_sightings_title.setTypeface(openSansLight);
+				mTotalBirdCountText.setTypeface(openSansLight);
 				btn_myLists.setTypeface(openSansLight);
 				btn_more.setTypeface(openSansLight);
 				btn_loginLogout.setTypeface(openSansLight);
 				btn_settings.setTypeface(openSansLight);
 
 				// move heavy work to asynctask
-				new InitAsyncTask().execute();
+				new InitCheckListAsyncTask().execute();
 
 				ParseUtils.updateCurrentLocation();
-
 
 				/* Set up the sync service */
 				SyncUtils.createSyncAccount(this);
@@ -110,7 +109,6 @@ public class MainActivity extends Activity {
 				ParseInstallation.getCurrentInstallation().saveInBackground();
 
 				showHelpOverlay();
-				updateBirdsCount();
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
@@ -157,10 +155,15 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		new UpdateBirdCountAsyncTask().execute();
+	}
+
 	private void showHelpOverlay() {
 		if (Utils.isFirstTime()) {
 			helpOverlay.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View arg0) {
 					helpOverlay.setVisibility(View.INVISIBLE);
@@ -171,49 +174,36 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private void updateBirdsCount() {
-		DBHandler mydbh = DBHandler.getInstance(MainActivity.getContext());
-		numberSpecies.setText(Long.toString(mydbh.getBirdCountForCurrentList()));
-		total_sightings.setText(Long.toString(mydbh.getTotalSpeciesCount()));
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		// beware: usage of magic numbers 7 and 14
-		if (requestCode == 7) {
-			if (resultCode == 14) {
-				Bundle extras = data.getExtras();
-				final String speciesName = extras.getString(Consts.SPECIES_NAME);
+		if (requestCode == 7 && resultCode == 14) {
+			Bundle extras = data.getExtras();
+			final String speciesName = extras.getString(Consts.SPECIES_NAME);
 
-				final DBHandler dh = DBHandler.getInstance(MainActivity.getContext());
-				PostUndoAction action = new PostUndoAction() {
+			Log.e(Consts.TAG, "species selected: " + speciesName);
+			Log.e(Consts.TAG, "c: " + birdCount + ", t: " + totalBirdCount);
 
-					@Override
-					public void action() {
-						try {
-							Log.i(Consts.TAG, "User did not undo");
-							dh.addSightingToCurrentList(speciesName);
-							SyncUtils.triggerRefresh();
+			// we assume that new species is not in the list.
+			// if it is there, the count will be updated after PostUndoAction
+			mBirdCountText.setText(Long.toString(birdCount + 1));
+			mTotalBirdCountText.setText(Long.toString(totalBirdCount + 1));
+			PostUndoAction action = new PostUndoAction() {
+				@Override
+				public void action() {
+					Log.i(Consts.TAG, "User did not undo");
+					new AddSightingAsyncTask().execute(speciesName);
+				}
+			};
 
-						} catch (ISawABirdException ex) {
-							// TODO Change to use strings.xml
-							if (ex.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
-								Toast.makeText(SearchActivity.getContext(), "Species already exists", Toast.LENGTH_SHORT).show();
-							}
-						}
-					}
-				};
-				UndoBarController.show(MainActivity.this, speciesName + " added successfully to list", new UndoListener() {
-
-					@Override
-					public void onUndo(Parcelable token) {
-						updateBirdsCount();
-					}
-				}, action);
-				updateBirdsCount();
-
-			}
+			UndoBarController.show(this, speciesName + " added successfully to list", new UndoListener() {
+				@Override
+				public void onUndo(Parcelable token) {
+					mBirdCountText.setText(Long.toString(birdCount));
+					mTotalBirdCountText.setText(Long.toString(totalBirdCount));					
+				}
+			}, action);
 		}
 	}
 
@@ -229,10 +219,6 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	public static Context getContext() {
-		return act.getApplicationContext();
-	}
-
 	private void login() {
 		Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
 		startActivity(loginIntent);
@@ -242,11 +228,27 @@ public class MainActivity extends Activity {
 		// TODO implement
 	}
 
-	/*
-	 * public static ConnectivityManager getConnectivityManager(){ return (ConnectivityManager)act.getSystemService(CONNECTIVITY_SERVICE); }
-	 */
+	private class UpdateBirdCountAsyncTask extends AsyncTask<Void, Void, Long> {
 
-	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
+		protected Long doInBackground(Void... params) {
+
+			DBHandler dh = DBHandler.getInstance(getApplicationContext());
+			// TODO: not happy with static access to Utils class in DBHandler
+			birdCount = dh.getBirdCountForCurrentList();
+			totalBirdCount = dh.getTotalSpeciesCount();
+			return -1L;
+		}
+
+		protected void onPostExecute(Long param) {
+			Log.e(Consts.TAG, "Count: " + birdCount + ", total: " + totalBirdCount);
+			mBirdCountText.setText(String.valueOf(birdCount));
+			mTotalBirdCountText.setText(String.valueOf(totalBirdCount));
+			if (Utils.getCurrentListName() != "")
+				currentListName.setText(Utils.getCurrentListName());
+		}
+	}
+
+	private class InitCheckListAsyncTask extends AsyncTask<Void, Void, Long> {
 
 		protected Long doInBackground(Void... params) {
 
@@ -254,31 +256,50 @@ public class MainActivity extends Activity {
 			Log.i(Consts.TAG, "Starting checklist init...");
 			try {
 				Utils.initializeChecklist(getApplicationContext(), Utils.getChecklistName());
-				SyncUtils.createSyncAccount(MainActivity.getContext());
+				SyncUtils.createSyncAccount(getApplicationContext());
 				SyncUtils.triggerRefresh();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Log.i(Consts.TAG, "Checklist init complete");
+			return -1L;
+		}
+	}
 
-			// TODO: remove below line after dev
-			// put all the dump tables and testing in data loader
-			// new
-			// DataLoader(getApplicationContext()).load(this.getDatabasePath(DBConsts.DATABASE_NAME).getAbsolutePath());
-			// new DataLoader(getApplicationContext())
-			// .srihariTestFunction(getApplicationContext()
-			// .getDatabasePath(DBConsts.DATABASE_NAME)
-			// .getAbsolutePath());
-			//
+	private class AddSightingAsyncTask extends AsyncTask<String, String, Boolean> {
+
+		protected Boolean doInBackground(String... params) {
+
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
-			// TODO: not happy with static access to Utils class in DBHandler
-			return dh.getBirdCountForCurrentList();
+			try {
+				if(Utils.getCurrentListID() == -1) {
+					// create one based on todays date
+					BirdList list = new BirdList(new SimpleDateFormat("dd MMM yyyy").format(new Date()));
+					if(dh.addBirdList(list, true) == -1) {
+						return false;
+					}
+				}
+				dh.addSightingToCurrentList(params[0]);
+			} catch (ISawABirdException e) {
+				Log.e(Consts.TAG, e.getMessage());
+				if (e.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
+					publishProgress("Species already exists");
+				}
+				return false;
+			}
+			return true;
 		}
 
-		protected void onPostExecute(Long param) {
-			numberSpecies.setText(String.valueOf(param));
-			if (Utils.getCurrentListName() != "")
-				currentListName.setText(Utils.getCurrentListName());
+		@Override
+		protected void onProgressUpdate(String... values) {
+			Toast.makeText(SearchActivity.getContext(), values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(result) {
+				SyncUtils.triggerRefresh();
+			} 
+			new UpdateBirdCountAsyncTask().execute();
 		}
 	}
 }

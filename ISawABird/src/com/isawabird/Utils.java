@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,8 +17,9 @@ import android.util.Log;
 public class Utils {
 
 	private static ArrayList<Species>  allSpecies = new ArrayList<Species>(); 
-	private static boolean checklistLoaded = false; 
-
+	private static boolean checklistLoaded = false;
+	
+	static Pattern pattern = Pattern.compile("[-\\s']*");
 	public static SharedPreferences prefs = null;
 
 	public static void initializeChecklist(Context context, String checklist) throws IOException{
@@ -74,7 +76,7 @@ public class Utils {
 	}
 
 	public static String unpunctuate(String string){
-		return string.replaceAll("[-' ]", "").toLowerCase();
+		return pattern.matcher(string).replaceAll("").toLowerCase();
 	}
 
 	public static void setCurrentList(String listName, long listID){

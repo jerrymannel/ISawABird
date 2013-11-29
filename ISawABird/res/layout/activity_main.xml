@@ -33,7 +33,7 @@
         android:layout_alignParentRight="true"
         android:text="@string/defaultText"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_black_333"
+        android:textColor="#1695A3"
         android:textSize="15sp" />
 
     <TextView
@@ -44,9 +44,9 @@
         android:layout_alignRight="@+id/textView_currentList"
         android:paddingRight="20dp"
         android:text="@string/zero"
-        android:textSize="80sp"
+        android:textSize="50sp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_black_333"/>
+        android:textColor="#1695A3"/>
     
     <TextView
         android:id="@+id/textView_total_text"
@@ -55,7 +55,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:textColor="@color/color_grey"
-        android:textStyle="bold"
         android:text="@string/total" />
 
     <TextView

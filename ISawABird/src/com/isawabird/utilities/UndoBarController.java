@@ -220,6 +220,7 @@ public class UndoBarController extends LinearLayout {
 			((ViewGroup) activity.findViewById(android.R.id.content)).addView(undo);
 		}
 		undo.style = style;
+		undo.action = action;
 		undo.setUndoListener(listener);
 		undo.showUndoBar(immediate, message, undoToken);
 		return undo;
@@ -250,7 +251,7 @@ public class UndoBarController extends LinearLayout {
 	}
 
 	public static UndoBarController show(final Activity activity, final CharSequence message, final UndoListener listener, PostUndoAction action) {
-		return UndoBarController.show(activity, message, listener, null, false, UndoBarController.UNDOSTYLE,action);
+		return UndoBarController.show(activity, message, listener, null, false, UndoBarController.UNDOSTYLE, action);
 	}
 
 	public static UndoBarController show(final Activity activity, final CharSequence message, PostUndoAction action) {
