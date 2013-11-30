@@ -219,7 +219,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 									// delete invalid rows for DELETE requests
 									dh.deleteLocally(table, postEntries.get(i));
 								}
-								dh.dumpTable(table);
+								//dh.dumpTable(table);
 							} else {
 								// TODO : Handle failure
 							}

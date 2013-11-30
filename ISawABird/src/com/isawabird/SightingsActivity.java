@@ -21,7 +21,7 @@ import com.isawabird.utilities.SwipeDismissListViewTouchListener;
 import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 
-public class MySightingsActivity extends Activity {
+public class SightingsActivity extends Activity {
 
 	private ArrayList<String> myList;
 
@@ -63,7 +63,7 @@ public class MySightingsActivity extends Activity {
 									dh.deleteSightingFromList(itemToRemove, listName);									
 								}
 							};
-							UndoBarController.show(MySightingsActivity.this, itemToRemove + " is removed from the list",
+							UndoBarController.show(SightingsActivity.this, itemToRemove + " is removed from the list",
 									new UndoListener() {
 
 										@Override

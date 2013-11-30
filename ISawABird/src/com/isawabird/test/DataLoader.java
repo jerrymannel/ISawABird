@@ -137,8 +137,8 @@ public class DataLoader {
 			dh.addBirdList(list, true); 
 			Log.i(Consts.TAG, "Adding a sighting");
 			dh.addSightingToCurrentList("Spotted Owlet");
-			dh.dumpTable(DBConsts.TABLE_LIST) ; 
-			dh.dumpTable(DBConsts.TABLE_SIGHTING) ;
+			//dh.dumpTable(DBConsts.TABLE_LIST) ; 
+			//dh.dumpTable(DBConsts.TABLE_SIGHTING) ;
 			
 			SyncUtils.triggerRefresh(); 
 			

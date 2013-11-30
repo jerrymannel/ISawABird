@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
 
 	private long birdCount = 0;
 	private long totalBirdCount = 0;
+	private long undoSightingId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +120,7 @@ public class MainActivity extends Activity {
 
 				btn_myLists.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						startActivity(new Intent(getApplicationContext(), MyListActivity.class));
+						startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
 					}
 				});
 
@@ -181,27 +182,19 @@ public class MainActivity extends Activity {
 		if (requestCode == 7 && resultCode == 14) {
 			Bundle extras = data.getExtras();
 			final String speciesName = extras.getString(Consts.SPECIES_NAME);
+			new AddSightingAsyncTask().execute(speciesName);
 
-			Log.e(Consts.TAG, "species selected: " + speciesName);
-			Log.e(Consts.TAG, "c: " + birdCount + ", t: " + totalBirdCount);
-
-			// we assume that new species is not in the list.
-			// if it is there, the count will be updated after PostUndoAction
-			mBirdCountText.setText(Long.toString(birdCount + 1));
-			mTotalBirdCountText.setText(Long.toString(totalBirdCount + 1));
 			PostUndoAction action = new PostUndoAction() {
 				@Override
 				public void action() {
-					Log.i(Consts.TAG, "User did not undo");
-					new AddSightingAsyncTask().execute(speciesName);
+					undoSightingId = -1;
 				}
 			};
 
 			UndoBarController.show(this, speciesName + " added successfully to list", new UndoListener() {
 				@Override
 				public void onUndo(Parcelable token) {
-					mBirdCountText.setText(Long.toString(birdCount));
-					mTotalBirdCountText.setText(Long.toString(totalBirdCount));					
+					new DeleteSightingAsyncTask().execute();
 				}
 			}, action);
 		}
@@ -278,7 +271,7 @@ public class MainActivity extends Activity {
 						return false;
 					}
 				}
-				dh.addSightingToCurrentList(params[0]);
+				undoSightingId = dh.addSightingToCurrentList(params[0]);
 			} catch (ISawABirdException e) {
 				Log.e(Consts.TAG, e.getMessage());
 				if (e.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
@@ -298,8 +291,31 @@ public class MainActivity extends Activity {
 		protected void onPostExecute(Boolean result) {
 			if(result) {
 				SyncUtils.triggerRefresh();
+				new UpdateBirdCountAsyncTask().execute();
 			} 
-			new UpdateBirdCountAsyncTask().execute();
+		}
+	}
+
+	private class DeleteSightingAsyncTask extends AsyncTask<Void, String, Boolean> {
+
+		protected Boolean doInBackground(Void... params) {
+
+			DBHandler dh = DBHandler.getInstance(getApplicationContext());
+			dh.deleteSighting(undoSightingId);
+			return true;
+		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			Toast.makeText(SearchActivity.getContext(), values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(result) {
+				SyncUtils.triggerRefresh();
+				new UpdateBirdCountAsyncTask().execute();
+			} 
 		}
 	}
 }

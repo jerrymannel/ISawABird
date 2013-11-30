@@ -35,8 +35,8 @@
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".SearchActivity"></activity>
         <activity android:name=".DeveloperSettings"></activity>
-        <activity android:name=".MyListActivity"></activity>
-        <activity android:name=".MySightingsActivity"></activity>
+        <activity android:name=".BirdListActivity"></activity>
+        <activity android:name=".SightingsActivity"></activity>
         
 <!--         <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
 

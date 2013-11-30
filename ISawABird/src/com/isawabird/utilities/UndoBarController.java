@@ -18,12 +18,10 @@ package com.isawabird.utilities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +31,7 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.content.ContextWrapper;
-import android.content.res.AssetManager;
 
-import com.isawabird.Consts;
 import com.isawabird.R;
 import com.isawabird.R.drawable;
 import com.isawabird.R.id;
@@ -120,7 +115,7 @@ public class UndoBarController extends LinearLayout {
 			startAnimation(UndoBarController.outToBottomAnimation(null));
 			setVisibility(View.GONE);
 			/*Execute the lazy action only if the user did not undo */
-			if (!didUndo){
+			if (!didUndo && action != null){
 				action.action();
 			}
 		}
