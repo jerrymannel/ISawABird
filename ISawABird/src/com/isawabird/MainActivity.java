@@ -299,6 +299,7 @@ public class MainActivity extends Activity {
 	private class DeleteSightingAsyncTask extends AsyncTask<Void, String, Boolean> {
 
 		protected Boolean doInBackground(Void... params) {
+			if(undoSightingId == -1) return false;
 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			dh.deleteSighting(undoSightingId);
