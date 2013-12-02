@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +23,8 @@ import com.isawabird.utilities.UndoBarController.UndoListener;
 
 public class SightingsActivity extends Activity {
 
-	private ArrayList<String> myList;
+	private ArrayList<String> commonNameList;
+	private ArrayList<String> scientificNameList;
 	private TextView titleTextView;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,19 +35,21 @@ public class SightingsActivity extends Activity {
 		final String listName = b.getString("listName");
 
 		DBHandler mydbh = DBHandler.getInstance(getApplicationContext());
-		ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
+		final ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
 
 		final ListView listview = (ListView) findViewById(R.id.mysightingsView);
 		titleTextView = (TextView) findViewById(R.id.mysightings_title);
 
 		titleTextView.setText(listName);
 
-		myList = new ArrayList<String>();
+		commonNameList = new ArrayList<String>();
+		scientificNameList = new ArrayList<String>();
 		for (Sighting sighting : myBirdLists) {
 			Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
-			myList.add(sighting.getSpecies().getFullName());
+			commonNameList.add(sighting.getSpecies().getCommonName());
+			scientificNameList.add(sighting.getSpecies().getScientificName());
 		}
-		final MyListAdapter listAdapter = new MyListAdapter(this, myList);
+		final MyListAdapter listAdapter = new MyListAdapter(this, commonNameList, scientificNameList);
 		listview.setAdapter(listAdapter);
 
 		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listview,
@@ -59,24 +62,28 @@ public class SightingsActivity extends Activity {
 					@Override
 					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
 						for (final int position : reverseSortedPositions) {
-							final String itemToRemove = listAdapter.getItem(position);
+							final String commonName = commonNameList.get(position);
+							final String scientificName = scientificNameList.get(position);
 							PostUndoAction action = new PostUndoAction() {
 								@Override
 								public void action() {
 									DBHandler dh = DBHandler.getInstance(getApplicationContext());
-									dh.deleteSightingFromList(itemToRemove, listName);
+									dh.deleteSightingFromList(myBirdLists.get(position).getSpecies().getFullName(), listName);
 								}
 							};
-							UndoBarController.show(SightingsActivity.this, itemToRemove + " is removed from the list", new UndoListener() {
+							UndoBarController.show(SightingsActivity.this, commonNameList.get(position) + " is removed from the list",
+									new UndoListener() {
 
-								@Override
-								public void onUndo(Parcelable token) {
-									listAdapter.insert(itemToRemove, position);
-									listAdapter.notifyDataSetChanged();
-								}
-							}, action);
-							listAdapter.remove(itemToRemove);
-
+										@Override
+										public void onUndo(Parcelable token) {
+											// listAdapter.insert(position);
+											commonNameList.add(position, commonName);
+											scientificNameList.add(position, scientificName);
+											listAdapter.notifyDataSetChanged();
+										}
+									}, action);
+							commonNameList.remove(position);
+							scientificNameList.remove(position);
 						}
 						listAdapter.notifyDataSetChanged();
 					}
@@ -85,14 +92,15 @@ public class SightingsActivity extends Activity {
 		listview.setOnScrollListener(touchListener.makeScrollListener());
 	}
 
-	private class MyListAdapter extends ArrayAdapter<String> {
+	private class MyListAdapter extends BaseAdapter {
 		private final Context context;
-		private final ArrayList<String> values;
+		private final ArrayList<String> commonNameList;
+		private final ArrayList<String> scientificNameList;
 
-		public MyListAdapter(Context context, ArrayList<String> values) {
-			super(context, R.layout.mysightings_row, values);
+		public MyListAdapter(Context context, ArrayList<String> commonNameList, ArrayList<String> scientificNameList) {
 			this.context = context;
-			this.values = values;
+			this.commonNameList = commonNameList;
+			this.scientificNameList = scientificNameList;
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -103,11 +111,30 @@ public class SightingsActivity extends Activity {
 				rowView = inflater.inflate(R.layout.mysightings_row, parent, false);
 			}
 
-			TextView textView = (TextView) rowView.findViewById(R.id.mysightingsItem_name);
-			textView.setText(values.get(position));
-			textView.setTypeface(Utils.getOpenSansLightTypeface(SightingsActivity.this));
+			TextView commonView = (TextView) rowView.findViewById(R.id.mysightingsItem_name);
+			TextView scientificView = (TextView) rowView.findViewById(R.id.mysightingsItem_scientific_name);
+			commonView.setText(this.commonNameList.get(position));
+			commonView.setTypeface(Utils.getOpenSansLightTypeface(SightingsActivity.this));
+			scientificView.setText(this.scientificNameList.get(position));
+			scientificView.setTypeface(Utils.getOpenSansLightTypeface(SightingsActivity.this));
 
 			return rowView;
 		}
+
+		@Override
+		public int getCount() {
+			return this.commonNameList.size();
+		}
+
+		@Override
+		public Object getItem(int arg0) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int arg0) {
+			return 0;
+		}
+
 	}
 }

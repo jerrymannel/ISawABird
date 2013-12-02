@@ -4,19 +4,29 @@
         android:layout_height="match_parent"
         android:padding="5dp"
         android:background="@drawable/list_separator"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/mysightingsItem_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingBottom="8dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="5dp"
             android:text="@string/dummy"
-            android:textSize="20sp"
+            android:textSize="17sp"
             android:textColor="@color/color_black_333" />
+        
+        <TextView
+            android:id="@+id/mysightingsItem_scientific_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/dummy"
+            android:textSize="15sp"
+            android:textColor="@color/color_grey" />
 
     </LinearLayout>
