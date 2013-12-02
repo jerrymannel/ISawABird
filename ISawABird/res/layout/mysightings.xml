@@ -10,11 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:background="@color/color_50_transparent_white"
-        android:padding="10dp"
+        android:background="@drawable/title_gradient"
+        android:padding="20dp"
         android:text="@string/my_sightings"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/color_black_333" />
+        android:textColor="#F3FFE2" />
 
     <ListView
         android:id="@+id/mysightingsView"

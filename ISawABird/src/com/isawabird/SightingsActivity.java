@@ -24,6 +24,7 @@ import com.isawabird.utilities.UndoBarController.UndoListener;
 public class SightingsActivity extends Activity {
 
 	private ArrayList<String> myList;
+	private TextView titleTextView;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,6 +37,9 @@ public class SightingsActivity extends Activity {
 		ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
 
 		final ListView listview = (ListView) findViewById(R.id.mysightingsView);
+		titleTextView = (TextView) findViewById(R.id.mysightings_title);
+
+		titleTextView.setText(listName);
 
 		myList = new ArrayList<String>();
 		for (Sighting sighting : myBirdLists) {
@@ -60,20 +64,19 @@ public class SightingsActivity extends Activity {
 								@Override
 								public void action() {
 									DBHandler dh = DBHandler.getInstance(getApplicationContext());
-									dh.deleteSightingFromList(itemToRemove, listName);									
+									dh.deleteSightingFromList(itemToRemove, listName);
 								}
 							};
-							UndoBarController.show(SightingsActivity.this, itemToRemove + " is removed from the list",
-									new UndoListener() {
+							UndoBarController.show(SightingsActivity.this, itemToRemove + " is removed from the list", new UndoListener() {
 
-										@Override
-										public void onUndo(Parcelable token) {
-											listAdapter.insert(itemToRemove, position);
-											listAdapter.notifyDataSetChanged();
-										}
-									}, action);
+								@Override
+								public void onUndo(Parcelable token) {
+									listAdapter.insert(itemToRemove, position);
+									listAdapter.notifyDataSetChanged();
+								}
+							}, action);
 							listAdapter.remove(itemToRemove);
-							
+
 						}
 						listAdapter.notifyDataSetChanged();
 					}
@@ -95,16 +98,14 @@ public class SightingsActivity extends Activity {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View rowView = convertView;
 
-			if(rowView == null){
+			if (rowView == null) {
 				LayoutInflater inflater = getLayoutInflater();
 				rowView = inflater.inflate(R.layout.mysightings_row, parent, false);
 			}
 
-			TextView textView1 = (TextView) rowView.findViewById(R.id.mysightingsItem_name);
-			TextView textView2 = (TextView) rowView.findViewById(R.id.mysightingsItem_close);
-
-			textView1.setText(values.get(position));
-			textView2.setText(" ");
+			TextView textView = (TextView) rowView.findViewById(R.id.mysightingsItem_name);
+			textView.setText(values.get(position));
+			textView.setTypeface(Utils.getOpenSansLightTypeface(SightingsActivity.this));
 
 			return rowView;
 		}

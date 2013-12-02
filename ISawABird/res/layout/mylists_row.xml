@@ -3,7 +3,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
-        android:background="#333333"
+        android:background="@drawable/list_separator"
         android:orientation="horizontal" >
 
         <TextView
@@ -12,12 +12,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingBottom="8dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="10dp"
             android:paddingRight="5dp"
             android:paddingTop="5dp"
             android:text="@string/dummy"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_white" />
+            android:textSize="25sp"
+            android:textColor="@color/color_dark_gray" />
 
         <RadioButton
             android:id="@+id/radioButton_currList"

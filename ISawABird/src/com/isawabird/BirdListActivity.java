@@ -57,7 +57,7 @@ public class BirdListActivity extends Activity {
 				mAddNewButton.setVisibility(View.INVISIBLE);
 			}
 		});
-		
+
 		final InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mNewListCancelButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -101,43 +101,44 @@ public class BirdListActivity extends Activity {
 			}
 		});
 
-		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mBirdListView, new SwipeDismissListViewTouchListener.DismissCallbacks() {
-			@Override
-			public boolean canDismiss(int position) {
-				return true;
-			}
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(mBirdListView,
+				new SwipeDismissListViewTouchListener.DismissCallbacks() {
+					@Override
+					public boolean canDismiss(int position) {
+						return true;
+					}
 
-			@Override
-			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-				for (final int position : reverseSortedPositions) {
-					final BirdList listToRemove = mListAdapter.birdLists.get(position);
-					final String listNameToRemove = listToRemove.getListName();
+					@Override
+					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+						for (final int position : reverseSortedPositions) {
+							final BirdList listToRemove = mListAdapter.birdLists.get(position);
+							final String listNameToRemove = listToRemove.getListName();
 
-					PostUndoAction action = new PostUndoAction() {
-						@Override
-						public void action() {
-							DBHandler.getInstance(getApplicationContext()).deleteList(listNameToRemove);
+							PostUndoAction action = new PostUndoAction() {
+								@Override
+								public void action() {
+									DBHandler.getInstance(getApplicationContext()).deleteList(listNameToRemove);
+								}
+							};
+							UndoBarController.show(BirdListActivity.this, listNameToRemove + " removed from the list", new UndoListener() {
+
+								@Override
+								public void onUndo(Parcelable token) {
+									mListAdapter.birdLists.add(position, listToRemove);
+									mListAdapter.notifyDataSetChanged();
+									// TODO Handle case when data has been uploaded to
+									// parse and when it has not been uploaded to parse.
+								}
+							}, action);
+							mListAdapter.birdLists.remove(position);
 						}
-					};
-					UndoBarController.show(BirdListActivity.this, listNameToRemove + " removed from the list", new UndoListener() {
-
-						@Override
-						public void onUndo(Parcelable token) {
-							mListAdapter.birdLists.add(position, listToRemove);
-							mListAdapter.notifyDataSetChanged();
-							// TODO Handle case when data has been uploaded to
-							// parse and when it has not been uploaded to parse.
-						}
-					}, action);
-					mListAdapter.birdLists.remove(position);
-				}
-				mListAdapter.notifyDataSetChanged();
-			}
-		});
+						mListAdapter.notifyDataSetChanged();
+					}
+				});
 		mBirdListView.setOnTouchListener(touchListener);
 		mBirdListView.setOnScrollListener(touchListener.makeScrollListener());
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -145,10 +146,10 @@ public class BirdListActivity extends Activity {
 	}
 
 	public class ListAdapter extends ArrayAdapter<BirdList> {
-		
+
 		private TextView mListNameText;
 		private RadioButton mRadioButton;
-		
+
 		public ArrayList<BirdList> birdLists;
 		private int checkedRowPosition;
 
@@ -159,7 +160,8 @@ public class BirdListActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			if(birdLists == null) return 0;
+			if (birdLists == null)
+				return 0;
 			return birdLists.size();
 		}
 
@@ -168,12 +170,13 @@ public class BirdListActivity extends Activity {
 
 			View rowView = convertView;
 
-			if(rowView == null){
+			if (rowView == null) {
 				LayoutInflater inflater = getLayoutInflater();
 				rowView = inflater.inflate(R.layout.mylists_row, parent, false);
 			}
 
 			mListNameText = (TextView) rowView.findViewById(R.id.mylistsItem_name);
+			mListNameText.setTypeface(Utils.getOpenSansLightTypeface(BirdListActivity.this));
 			mRadioButton = (RadioButton) rowView.findViewById(R.id.radioButton_currList);
 
 			mListNameText.setText(birdLists.get(position).getListName());
@@ -188,7 +191,8 @@ public class BirdListActivity extends Activity {
 			mRadioButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					Log.i(Consts.TAG, "Active Pos >>> " + position + ", previous checked: " + checkedRowPosition);
-					if (checkedRowPosition == position) return;
+					if (checkedRowPosition == position)
+						return;
 
 					View vMain = ((View) v.getParent());
 					View previousCheckedRow = ((ViewGroup) vMain.getParent()).getChildAt(checkedRowPosition);
@@ -215,7 +219,7 @@ public class BirdListActivity extends Activity {
 
 		protected void onPostExecute(ArrayList<BirdList> result) {
 
-			if(result == null || result.size() == 0) {
+			if (result == null || result.size() == 0) {
 				return;
 			}
 			Log.i(Consts.TAG, "List count: " + result.size());
