@@ -37,10 +37,10 @@ public class MainActivity extends Activity {
 	TextView currentListName;
 	TextView currentLocation;
 	TextView total_sightings_title;
-	Button btn_myLists;
 	Button btn_more;
 	Button btn_loginLogout;
 	Button btn_settings;
+	Button btn_help;
 	Button mSawBirdButton;
 	Typeface openSansLight;
 	Typeface openSansBold;
@@ -86,6 +86,7 @@ public class MainActivity extends Activity {
 				btn_more = (Button) findViewById(R.id.btn_more);
 				btn_loginLogout = (Button) findViewById(R.id.btn_loginOrOut);
 				btn_settings = (Button) findViewById(R.id.btn_settings);
+				btn_help = (Button) findViewById(R.id.btn_help);
 				helpOverlay = (ImageView) findViewById(R.id.help_overlay);
 
 				mSawBirdButton.setTypeface(tangerine);
@@ -96,6 +97,7 @@ public class MainActivity extends Activity {
 				btn_more.setTypeface(openSansLight);
 				btn_loginLogout.setTypeface(openSansLight);
 				btn_settings.setTypeface(openSansLight);
+				btn_help.setTypeface(openSansLight);
 
 				// move heavy work to asynctask
 				new InitCheckListAsyncTask().execute();
@@ -158,23 +160,37 @@ public class MainActivity extends Activity {
 					}
 				});
 
-				btn_myLists.setOnClickListener(new OnClickListener() {
-					public void onClick(View v) {
-						startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
-					}
-				});
-
 				btn_more.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
 						if (btn_more.getWidth() == btn_settings.getWidth()) {
 							btn_settings.setVisibility(View.INVISIBLE);
 							btn_loginLogout.setVisibility(View.INVISIBLE);
+							btn_help.setVisibility(View.INVISIBLE);
 							btn_more.setWidth(88);
 						} else {
 							btn_settings.setVisibility(View.VISIBLE);
 							btn_loginLogout.setVisibility(View.VISIBLE);
+							btn_help.setVisibility(View.VISIBLE);
 							btn_more.setWidth(btn_settings.getWidth());
 						}
+					}
+				});
+
+				btn_help.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						btn_settings.setVisibility(View.INVISIBLE);
+						btn_loginLogout.setVisibility(View.INVISIBLE);
+						btn_help.setVisibility(View.INVISIBLE);
+						btn_more.setWidth(88);
+						helpOverlay.setVisibility(View.VISIBLE);
+						helpOverlay.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View arg0) {
+								helpOverlay.setVisibility(View.INVISIBLE);
+							}
+						});
 					}
 				});
 
