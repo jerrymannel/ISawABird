@@ -76,6 +76,9 @@ public class BirdListActivity extends Activity {
 				BirdList list = new BirdList(mNewListNameText.getText().toString());
 				try {
 					DBHandler.getInstance(getApplicationContext()).addBirdList(list, true);
+					mListAdapter.mRadioButton.setChecked(true);
+					mListAdapter.birdLists.add(list);
+					mListAdapter.notifyDataSetChanged();
 				} catch (ISawABirdException ex) {
 					// TODO : Specify a proper error code if list already exists
 					Toast.makeText(getApplicationContext(), "List already exists. Specify a different name", Toast.LENGTH_SHORT);
