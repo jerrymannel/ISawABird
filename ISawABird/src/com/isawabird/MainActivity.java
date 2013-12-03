@@ -37,6 +37,7 @@ public class MainActivity extends Activity {
 	TextView currentListName;
 	TextView currentLocation;
 	TextView total_sightings_title;
+	Button btn_myLists;
 	Button btn_more;
 	Button btn_loginLogout;
 	Button btn_settings;
@@ -84,6 +85,7 @@ public class MainActivity extends Activity {
 				total_sightings_title = (TextView) findViewById(R.id.textView_total_text);
 				mTotalBirdCountText = (TextView) findViewById(R.id.textView_total);
 				btn_more = (Button) findViewById(R.id.btn_more);
+				btn_myLists = (Button) findViewById(R.id.btn_myLists);
 				btn_loginLogout = (Button) findViewById(R.id.btn_loginOrOut);
 				btn_settings = (Button) findViewById(R.id.btn_settings);
 				btn_help = (Button) findViewById(R.id.btn_help);
@@ -157,6 +159,12 @@ public class MainActivity extends Activity {
 					public void onClick(View v) {
 						Intent searchIntent = new Intent(getApplicationContext(), SearchActivity.class);
 						startActivityForResult(searchIntent, 7);
+					}
+				});
+
+				btn_myLists.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
 					}
 				});
 

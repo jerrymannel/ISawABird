@@ -70,6 +70,18 @@
         android:textColor="@color/color_grey" />
 
     <Button
+        android:id="@+id/btn_myLists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/button_bottom_selector"
+        android:drawableLeft="@drawable/list"
+        android:gravity="center"
+        android:textColor="@color/color_black_333"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
         android:id="@+id/btn_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
