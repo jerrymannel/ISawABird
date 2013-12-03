@@ -85,14 +85,14 @@ public class SearchActivity extends Activity {
 				final String species = (String) parent.getItemAtPosition(position);
 
 				// Jerry: Return to main intend after adding a bird
-				Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+				//Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
+				Intent mainIntent = getIntent();
 				mainIntent.putExtra(Consts.SPECIES_NAME, species);
 				setResult(14, mainIntent);
 				finish();
 			}
 
 		});
-
 	}
 
 	public static Context getContext() {

@@ -356,30 +356,34 @@ public class DBHandler extends SQLiteOpenHelper {
 		Log.i(Consts.TAG, "We have " + sightings.size() + " sightings to sync");
 		return sightings;
 	}
+	
+	public void deleteList(long listId) {
+		
+		if(!db.isOpen()) db = getWritableDatabase();
+
+		/* Do not actually delete. Just mark isMarkedDelete = 1(true) */
+		ContentValues values = new ContentValues();
+		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1); 
+		db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.SIGHTING_LIST_ID + "=" + listId , null); 
+
+		/* Next delete the list from the LIST table */ 
+		db.update(DBConsts.TABLE_LIST, values, DBConsts.ID + "=" + listId, null);
+
+		if (listId == Utils.getCurrentListID()){
+			Utils.setCurrentList("", -1);
+		}
+	}
+
 
 	public void deleteList(String listName){
 		
 		try{
 			long listId = getListIDByName(listName);
-			
-			if(!db.isOpen()) db = getWritableDatabase();
-			
-			/* Do not actually delete. Just mark isMarkedDelete = 1(true) */
-			ContentValues values = new ContentValues();
-			values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1); 
-			db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.SIGHTING_LIST_ID + "=" + listId , null); 
-			
-			/* Next delete the list from the LIST table */ 
-			db.update(DBConsts.TABLE_LIST, values, DBConsts.ID + "=" + listId, null);
-			
-			if (listId == Utils.getCurrentListID()){
-				Utils.setCurrentList("", -1);
-			}
+			deleteList(listId);
 		}catch(ISawABirdException ex){
 			// TODO Handle properly
 			ex.printStackTrace(); 
 		}
-		
 	}
 	
 	public void deleteSighting(long sightingId) {
@@ -464,6 +468,22 @@ public class DBHandler extends SQLiteOpenHelper {
 		return false;
 	}
 	
+	public boolean setParseFlag(String tableName, long id, String flag, int flagValue) {
+		
+		if(!db.isOpen()) db = getWritableDatabase();
+
+		try{
+			ContentValues values = new ContentValues(); 
+			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, (flagValue == 0)?0:1);
+
+			return (1 == db.update(tableName, values, DBConsts.ID + "=" + id, null));
+		}catch(Exception ex){
+			//TODO : Handle exception
+			ex.printStackTrace();
+		}
+		return false;		
+	}
+
 	public boolean deleteLocally(String tableName, long id){ 
 		if(!db.isOpen()) db = getWritableDatabase();
 		

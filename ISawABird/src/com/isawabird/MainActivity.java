@@ -63,7 +63,8 @@ public class MainActivity extends Activity {
 		tangerine = Typeface.createFromAsset(getAssets(), "fonts/Tangerine_Bold.ttf");
 
 		try {
-			// TODO: hide action bar before switching to login screen
+			// hide action bar
+			getActionBar().hide();
 			Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
 			Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
 			ParseUtils.updateCurrentLocation();

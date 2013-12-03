@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,89 +16,38 @@ import android.widget.TextView;
 
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
-import com.isawabird.utilities.PostUndoAction;
-import com.isawabird.utilities.SwipeDismissListViewTouchListener;
-import com.isawabird.utilities.UndoBarController;
-import com.isawabird.utilities.UndoBarController.UndoListener;
 
 public class SightingsActivity extends Activity {
 
-	private ArrayList<String> commonNameList;
-	private ArrayList<String> scientificNameList;
-	private TextView titleTextView;
-
+	private SightingListAdapter mSightingListAdapter;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mysightings);
 
+		final ListView listview = (ListView) findViewById(R.id.mysightingsView);
+
 		Bundle b = getIntent().getExtras();
 		final String listName = b.getString("listName");
 
-		DBHandler mydbh = DBHandler.getInstance(getApplicationContext());
-		final ArrayList<Sighting> myBirdLists = mydbh.getSightingsByListName(listName, ParseUtils.getCurrentUsername());
-
-		final ListView listview = (ListView) findViewById(R.id.mysightingsView);
-		titleTextView = (TextView) findViewById(R.id.mysightings_title);
-
-		titleTextView.setText(listName);
-
-		commonNameList = new ArrayList<String>();
-		scientificNameList = new ArrayList<String>();
-		for (Sighting sighting : myBirdLists) {
-			Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
-			commonNameList.add(sighting.getSpecies().getCommonName());
-			scientificNameList.add(sighting.getSpecies().getScientificName());
+		if(listName != null) {
+			getActionBar().setTitle(listName);
 		}
-		final MyListAdapter listAdapter = new MyListAdapter(this, commonNameList, scientificNameList);
-		listview.setAdapter(listAdapter);
 
-		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listview,
-				new SwipeDismissListViewTouchListener.DismissCallbacks() {
-					@Override
-					public boolean canDismiss(int position) {
-						return true;
-					}
+		new QuerySightingsAsyncTask().execute(listName, ParseUtils.getCurrentUsername());
 
-					@Override
-					public void onDismiss(ListView listView, int[] reverseSortedPositions) {
-						for (final int position : reverseSortedPositions) {
-							final String commonName = commonNameList.get(position);
-							final String scientificName = scientificNameList.get(position);
-							PostUndoAction action = new PostUndoAction() {
-								@Override
-								public void action() {
-									DBHandler dh = DBHandler.getInstance(getApplicationContext());
-									dh.deleteSightingFromList(myBirdLists.get(position).getSpecies().getFullName(), listName);
-								}
-							};
-							UndoBarController.show(SightingsActivity.this, commonNameList.get(position) + " is removed from the list",
-									new UndoListener() {
+		mSightingListAdapter = new SightingListAdapter(this, null, null);
+		listview.setAdapter(mSightingListAdapter);
 
-										@Override
-										public void onUndo(Parcelable token) {
-											// listAdapter.insert(position);
-											commonNameList.add(position, commonName);
-											scientificNameList.add(position, scientificName);
-											listAdapter.notifyDataSetChanged();
-										}
-									}, action);
-							commonNameList.remove(position);
-							scientificNameList.remove(position);
-						}
-						listAdapter.notifyDataSetChanged();
-					}
-				});
-		listview.setOnTouchListener(touchListener);
-		listview.setOnScrollListener(touchListener.makeScrollListener());
+		//TODO: implement multiple selection based delete
 	}
 
-	private class MyListAdapter extends BaseAdapter {
-		private final Context context;
-		private final ArrayList<String> commonNameList;
-		private final ArrayList<String> scientificNameList;
+	private class SightingListAdapter extends BaseAdapter {
+		public ArrayList<String> commonNameList;
+		public ArrayList<String> scientificNameList;
 
-		public MyListAdapter(Context context, ArrayList<String> commonNameList, ArrayList<String> scientificNameList) {
-			this.context = context;
+		public SightingListAdapter(Context context,
+				ArrayList<String> commonNameList, ArrayList<String> scientificNameList) {
 			this.commonNameList = commonNameList;
 			this.scientificNameList = scientificNameList;
 		}
@@ -123,18 +72,49 @@ public class SightingsActivity extends Activity {
 
 		@Override
 		public int getCount() {
-			return this.commonNameList.size();
+			if(commonNameList == null) return 0;
+			return commonNameList.size();
 		}
 
 		@Override
-		public Object getItem(int arg0) {
+		public Object getItem(int position) {
 			return null;
 		}
 
 		@Override
-		public long getItemId(int arg0) {
+		public long getItemId(int position) {
 			return 0;
 		}
+	}
 
+	private class QuerySightingsAsyncTask extends AsyncTask<String, Void, ArrayList<Sighting>> {
+
+		protected ArrayList<Sighting> doInBackground(String... params) {
+			if(params == null || params.length != 2) 
+				return null;
+
+			DBHandler dh = DBHandler.getInstance(getApplicationContext());
+			return dh.getSightingsByListName(params[0], params[1]);
+		}
+
+		protected void onPostExecute(ArrayList<Sighting> result) {
+
+			if (result == null || result.size() == 0) {
+				return;
+			}
+
+			Log.i(Consts.TAG, "Sightings count: " + result.size());
+			
+			mSightingListAdapter.commonNameList = new ArrayList<String>();
+			mSightingListAdapter.scientificNameList = new ArrayList<String>();
+
+			for (Sighting sighting : result) {
+				Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
+				mSightingListAdapter.commonNameList.add(sighting.getSpecies().getCommonName());
+				mSightingListAdapter.scientificNameList.add(sighting.getSpecies().getScientificName());
+			}
+
+			mSightingListAdapter.notifyDataSetChanged();
+		}
 	}
 }

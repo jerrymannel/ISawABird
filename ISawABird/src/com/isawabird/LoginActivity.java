@@ -44,8 +44,6 @@ public class LoginActivity extends Activity {
 	private Button mGoogleButton;
 	private Button mFacebookButton;
 
-	private static LoginActivity loginActivity ; 
-
 	Typeface openSansLight;
 	Typeface openSansBold;
 	Typeface openSansBoldItalic;
@@ -56,7 +54,9 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-		loginActivity = this ;
+
+		// hide action bar before switching to login screen
+		getActionBar().hide();
 
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
@@ -217,12 +217,12 @@ public class LoginActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
-				ParseTwitterUtils.logIn(LoginActivity.getLoginActivity(), new LogInCallback() {
+				ParseTwitterUtils.logIn(getApplicationContext(), new LogInCallback() {
 
 					@Override
 					public void done(ParseUser user, ParseException ex) {
 						if (user == null){
-							Toast.makeText(LoginActivity.getLoginActivity(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show(); 
+							Toast.makeText(getApplicationContext(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show(); 
 						}else{
 							Utils.setCurrentUsername(user.getUsername()); 
 							showHome(); 
@@ -232,10 +232,6 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
-
-	public static LoginActivity getLoginActivity(){
-		return loginActivity;		
-	}	
 
 	private void showHome() {
 		Log.i(Consts.TAG, "TO HOME");
