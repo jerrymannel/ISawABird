@@ -133,6 +133,11 @@ public class BirdListActivity extends Activity {
 									// parse and when it has not been uploaded to parse.
 								}
 							}, action);
+							if (mListAdapter.birdLists.get(position).getId() == Utils.getCurrentListID()
+									&& mListAdapter.birdLists.size() > 1) {
+								Utils.setCurrentList(mListAdapter.birdLists.get(0).getListName(), mListAdapter.birdLists.get(0).getId());
+								mListAdapter.notifyDataSetChanged();
+							}
 							mListAdapter.birdLists.remove(position);
 						}
 						mListAdapter.notifyDataSetChanged();
