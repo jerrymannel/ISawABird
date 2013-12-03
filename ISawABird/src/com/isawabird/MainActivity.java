@@ -83,7 +83,6 @@ public class MainActivity extends Activity {
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 				total_sightings_title = (TextView) findViewById(R.id.textView_total_text);
 				mTotalBirdCountText = (TextView) findViewById(R.id.textView_total);
-				btn_myLists = (Button) findViewById(R.id.btn_myLists);
 				btn_more = (Button) findViewById(R.id.btn_more);
 				btn_loginLogout = (Button) findViewById(R.id.btn_loginOrOut);
 				btn_settings = (Button) findViewById(R.id.btn_settings);
@@ -94,7 +93,6 @@ public class MainActivity extends Activity {
 				mBirdCountText.setTypeface(openSansLight);
 				total_sightings_title.setTypeface(openSansLight);
 				mTotalBirdCountText.setTypeface(openSansLight);
-				btn_myLists.setTypeface(openSansLight);
 				btn_more.setTypeface(openSansLight);
 				btn_loginLogout.setTypeface(openSansLight);
 				btn_settings.setTypeface(openSansLight);
@@ -110,6 +108,48 @@ public class MainActivity extends Activity {
 				ParseInstallation.getCurrentInstallation().saveInBackground();
 
 				showHelpOverlay();
+
+				mBirdCountText.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Bundle b = new Bundle();
+						b.putString("listName", Utils.getCurrentListName());
+
+						Intent mySightingIntent = new Intent(getApplicationContext(), SightingsActivity.class);
+						mySightingIntent.putExtras(b);
+						startActivity(mySightingIntent);
+					}
+				});
+
+				currentListName.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Bundle b = new Bundle();
+						b.putString("listName", Utils.getCurrentListName());
+
+						Intent mySightingIntent = new Intent(getApplicationContext(), SightingsActivity.class);
+						mySightingIntent.putExtras(b);
+						startActivity(mySightingIntent);
+					}
+				});
+
+				total_sightings_title.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
+					}
+				});
+
+				mTotalBirdCountText.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
+					}
+				});
 
 				mSawBirdButton.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
@@ -160,6 +200,10 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		new UpdateBirdCountAsyncTask().execute();
+	}
+
+	public void showBirdList(View view) {
+		startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
 	}
 
 	private void showHelpOverlay() {
@@ -264,10 +308,10 @@ public class MainActivity extends Activity {
 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			try {
-				if(Utils.getCurrentListID() == -1) {
+				if (Utils.getCurrentListID() == -1) {
 					// create one based on todays date
 					BirdList list = new BirdList(new SimpleDateFormat("dd MMM yyyy").format(new Date()));
-					if(dh.addBirdList(list, true) == -1) {
+					if (dh.addBirdList(list, true) == -1) {
 						return false;
 					}
 				}
@@ -289,17 +333,18 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				SyncUtils.triggerRefresh();
 				new UpdateBirdCountAsyncTask().execute();
-			} 
+			}
 		}
 	}
 
 	private class DeleteSightingAsyncTask extends AsyncTask<Void, String, Boolean> {
 
 		protected Boolean doInBackground(Void... params) {
-			if(undoSightingId == -1) return false;
+			if (undoSightingId == -1)
+				return false;
 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			dh.deleteSighting(undoSightingId);
@@ -313,10 +358,10 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Boolean result) {
-			if(result) {
+			if (result) {
 				SyncUtils.triggerRefresh();
 				new UpdateBirdCountAsyncTask().execute();
-			} 
+			}
 		}
 	}
 }
