@@ -31,6 +31,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/textView_total_text"
+        android:gravity="right"
         android:text="@string/defaultText"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#1695A3"
