@@ -33,13 +33,10 @@
         </activity>
         <activity android:name=".LoginActivity" >
         </activity>
-        <activity android:name=".SearchActivity" ></activity>
-        <activity android:name=".DeveloperSettings" >
-        </activity>
-        <activity android:name=".BirdListActivity" >
-        </activity>
-        <activity android:name=".SightingsActivity" >
-        </activity>
+        <activity android:name=".SearchActivity" />
+        <activity android:name=".DeveloperSettings" />
+        <activity android:name=".BirdListActivity" />
+        <activity android:name=".SightingsActivity" />
 
         <!-- <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
 
