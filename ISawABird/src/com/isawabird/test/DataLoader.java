@@ -10,7 +10,6 @@ import android.util.Log;
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
 import com.isawabird.Sighting;
-import com.isawabird.Species;
 import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;

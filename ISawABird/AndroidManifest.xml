@@ -14,9 +14,9 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -31,13 +31,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".SearchActivity"></activity>
-        <activity android:name=".DeveloperSettings"></activity>
-        <activity android:name=".BirdListActivity"></activity>
-        <activity android:name=".SightingsActivity"></activity>
-        
-<!--         <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
+        <activity android:name=".LoginActivity" >
+        </activity>
+        <activity android:name=".SearchActivity" >
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name=".DeveloperSettings" >
+        </activity>
+        <activity android:name=".BirdListActivity" >
+        </activity>
+        <activity android:name=".SightingsActivity" >
+        </activity>
+
+        <!-- <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
 
         <uses-library android:name="android.test.runner" />
 
@@ -69,14 +77,15 @@
             android:name="com.isawabird.parse.extra.StubProvider"
             android:authorities="com.isawabird.parse"
             android:syncable="true" />
-        
+
         <service android:name="com.parse.PushService" />
-		<receiver android:name="com.parse.ParseBroadcastReceiver">
-  		<intent-filter>
-    		<action android:name="android.intent.action.BOOT_COMPLETED" />
-    		<action android:name="android.intent.action.USER_PRESENT" />
-  		</intent-filter>
-		</receiver>
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

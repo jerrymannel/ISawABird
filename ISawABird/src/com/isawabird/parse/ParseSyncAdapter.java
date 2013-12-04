@@ -2,8 +2,6 @@ package com.isawabird.parse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.prefs.Preferences;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -20,10 +18,7 @@ import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.SyncResult;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -153,7 +148,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				} else {
 					// if not delete, then it is marked for upload
 					body = new JSONObject();
-					body.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().getFullName());
+					body.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().fullName);
 					body.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
 					body.put(DBConsts.SIGHTING_DATE, sighting.getDate().getTime());
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());

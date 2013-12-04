@@ -353,7 +353,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onProgressUpdate(String... values) {
-			Toast.makeText(SearchActivity.getContext(), values[0], Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), values[0], Toast.LENGTH_SHORT).show();
 		}
 
 		@Override
@@ -378,7 +378,7 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected void onProgressUpdate(String... values) {
-			Toast.makeText(SearchActivity.getContext(), values[0], Toast.LENGTH_SHORT).show();
+			Toast.makeText(getApplicationContext(), values[0], Toast.LENGTH_SHORT).show();
 		}
 
 		@Override

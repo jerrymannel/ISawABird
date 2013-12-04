@@ -72,7 +72,7 @@ public class Utils {
 		Iterator<Species> iter = searchList.iterator();
 		while (iter.hasNext()) {
 			Species temp = iter.next();
-			if (unpunctuate(temp.getFullName()).indexOf(unpunctuate(searchTerm)) != -1) {
+			if (unpunctuate(temp.fullName).indexOf(unpunctuate(searchTerm)) != -1) {
 				// Log.d(Consts.TAG, "Adding " + temp + " to search results.");
 				returnVal.add(temp);
 			}

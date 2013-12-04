@@ -16,8 +16,6 @@
 
 package com.isawabird.parse.extra;
 
-import com.isawabird.Consts;
-
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
@@ -28,6 +26,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+
+import com.isawabird.Consts;
 
 public class GenericAccountService extends Service {
     private Authenticator mAuthenticator;

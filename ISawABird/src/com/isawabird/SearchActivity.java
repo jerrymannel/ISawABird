@@ -35,7 +35,6 @@ public class SearchActivity extends Activity {
 	private SectionListAdapter sectionAdapter;
 	private SectionListView listView;
 
-	private static SearchActivity searchAct;
 	EditText search;
 
 	Typeface openSansLight;
@@ -56,7 +55,7 @@ public class SearchActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
-		searchAct = this;
+		getActionBar().hide();
 
 		openSansLight = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Light.ttf");
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
@@ -70,9 +69,7 @@ public class SearchActivity extends Activity {
 
 		search.setTypeface(arvo);
 
-		// TODO: load species in bg if it uses db
 		species = Utils.getAllSpecies();
-		// adaptor for section
 		arrayAdapter = new StandardArrayAdapter(species);
 		sectionAdapter = new SectionListAdapter(this.getLayoutInflater(), arrayAdapter);
 		listView.setAdapter(sectionAdapter);
@@ -93,10 +90,6 @@ public class SearchActivity extends Activity {
 			}
 
 		});
-	}
-
-	public static Context getContext() {
-		return searchAct.getApplicationContext();
 	}
 
 	private class Indextouch implements OnTouchListener {
@@ -122,12 +115,10 @@ public class SearchActivity extends Activity {
 
 	private class StandardArrayAdapter extends BaseAdapter implements Filterable {
 
-		private final ArrayList<String> items = new ArrayList<String>();
+		private final ArrayList<Species> items;
 
 		public StandardArrayAdapter(ArrayList<Species> args) {
-			for (Species species : args) {
-				items.add(species.getFullName());
-			}
+			this.items = args;
 		}
 
 		@Override
@@ -139,13 +130,14 @@ public class SearchActivity extends Activity {
 			}
 			TextView textView = (TextView) view.findViewById(R.id.row_title);
 			if (textView != null) {
-				textView.setText(items.get(position));
+				textView.setText(items.get(position).fullName);
 				textView.setTypeface(arvo);
 			}
 			return view;
 		}
 
 		public int getCount() {
+			if(items == null) return 0;
 			return items.size();
 		}
 
@@ -155,6 +147,7 @@ public class SearchActivity extends Activity {
 		}
 
 		public Object getItem(int position) {
+			if(items == null) return null;
 			return items.get(position);
 		}
 
@@ -233,9 +226,10 @@ public class SearchActivity extends Activity {
 		int index = 0;
 		sideIndex.removeAllViews();
 		sideIndexList.clear();
+
 		for (int i = 0; i < species.size(); i++) {
 			Object[] temp = new Object[2];
-			latter_temp = (species.get(i).getFullName()).substring(0, 1).toUpperCase();
+			latter_temp = (species.get(i).fullName).substring(0, 1).toUpperCase();
 			if (!latter_temp.equals(latter)) {
 				// latter with its array index
 				latter = latter_temp;

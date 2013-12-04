@@ -109,9 +109,9 @@ public class SightingsActivity extends Activity {
 			mSightingListAdapter.scientificNameList = new ArrayList<String>();
 
 			for (Sighting sighting : result) {
-				Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
-				mSightingListAdapter.commonNameList.add(sighting.getSpecies().getCommonName());
-				mSightingListAdapter.scientificNameList.add(sighting.getSpecies().getScientificName());
+				Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().fullName);
+				mSightingListAdapter.commonNameList.add(sighting.getSpecies().commonName);
+				mSightingListAdapter.scientificNameList.add(sighting.getSpecies().scientificName);
 			}
 
 			mSightingListAdapter.notifyDataSetChanged();

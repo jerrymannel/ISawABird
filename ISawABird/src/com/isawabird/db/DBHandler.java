@@ -1,7 +1,7 @@
 package com.isawabird.db;
 
-import java.util.Date;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -116,12 +116,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		
 		long result = -1;
-		if(!isSightingExist(sighting.getSpecies().getFullName(), listId, username)) {
+		if(!isSightingExist(sighting.getSpecies().fullName, listId, username)) {
 			try {
-				Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().getFullName());
+				Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().fullName);
 
 				ContentValues values = new ContentValues();
-				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().getFullName());
+				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().fullName);
 				values.put(DBConsts.SIGHTING_LIST_ID, listId);
 				values.put(DBConsts.SIGHTING_DATE, sighting.getDate().getTime());
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());

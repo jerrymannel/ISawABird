@@ -2,10 +2,10 @@ package com.isawabird;
 
 public class Species {
 
-	private String commonName ; 
-	private String scientificName;
-	private String fullName; 
-	private String unpunctuatedName; 
+	public String commonName ; 
+	public String scientificName;
+	public String fullName; 
+	public String unpunctuatedName; 
 	
 	public Species(String fullName){
 		this.fullName = fullName;
@@ -35,22 +35,6 @@ public class Species {
 		/* Get the unpuntuated name */
 		unpunctuatedName = Utils.unpunctuate(fullName);
 		
-	}
-	
-	public String getCommonName(){
-		return commonName;
-	}
-	
-	public String getScientificName(){
-		return scientificName;
-	}
-	
-	public String getUnpunctuatedName(){
-		return unpunctuatedName;
-	}
-	
-	public String getFullName(){
-		return fullName;
 	}
 	
 	@Override
