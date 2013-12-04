@@ -79,7 +79,10 @@ public class SearchActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Species species = (Species) parent.getItemAtPosition(position);
+				Object obj;
+				if(!((obj = parent.getItemAtPosition(position)) instanceof Species)) return;
+				
+				Species species = (Species) obj;
 
 				// Jerry: Return to main intend after adding a bird
 				//Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
