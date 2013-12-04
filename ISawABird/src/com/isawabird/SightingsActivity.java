@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,7 +67,7 @@ public class SightingsActivity extends Activity {
 			commonView.setTypeface(Utils.getOpenSansLightTypeface(SightingsActivity.this));
 			scientificView.setText(this.scientificNameList.get(position));
 			scientificView.setTypeface(Utils.getOpenSansLightTypeface(SightingsActivity.this));
-
+			scientificView.setTypeface(null, Typeface.ITALIC);
 			return rowView;
 		}
 
