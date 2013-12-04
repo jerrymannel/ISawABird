@@ -73,22 +73,21 @@ public class SearchActivity extends Activity {
 		arrayAdapter = new StandardArrayAdapter(species);
 		sectionAdapter = new SectionListAdapter(this.getLayoutInflater(), arrayAdapter);
 		listView.setAdapter(sectionAdapter);
-		PoplulateSideview();
+		//PoplulateSideview();
 
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				final String species = (String) parent.getItemAtPosition(position);
+				Species species = (Species) parent.getItemAtPosition(position);
 
 				// Jerry: Return to main intend after adding a bird
 				//Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
 				Intent mainIntent = getIntent();
-				mainIntent.putExtra(Consts.SPECIES_NAME, species);
+				mainIntent.putExtra(Consts.SPECIES_NAME, species.fullName);
 				setResult(14, mainIntent);
 				finish();
 			}
-
 		});
 	}
 
@@ -115,7 +114,8 @@ public class SearchActivity extends Activity {
 
 	private class StandardArrayAdapter extends BaseAdapter implements Filterable {
 
-		private final ArrayList<Species> items;
+		private ArrayList<Species> items;
+		private SpeciesFilter speciesFilter;
 
 		public StandardArrayAdapter(ArrayList<Species> args) {
 			this.items = args;
@@ -142,8 +142,10 @@ public class SearchActivity extends Activity {
 		}
 
 		public Filter getFilter() {
-			Filter listfilter = new SpeciesFilter();
-			return listfilter;
+			if(speciesFilter == null) {
+				speciesFilter = new SpeciesFilter();
+			}
+			return speciesFilter;
 		}
 
 		public Object getItem(int position) {
@@ -158,13 +160,14 @@ public class SearchActivity extends Activity {
 
 	public class SpeciesFilter extends Filter {
 
+		private FilterResults result = new FilterResults();
+
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
 			// NOTE: this function is *always* called from a background thread,
-			// and
-			// not the UI thread.
+			// and not the UI thread.
 			constraint = search.getText().toString();
-			FilterResults result = new FilterResults();
+
 			if (constraint != null && constraint.toString().length() > 0) {
 				// do not show side index while filter results
 				runOnUiThread(new Runnable() {
@@ -194,11 +197,10 @@ public class SearchActivity extends Activity {
 			return result;
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
-			@SuppressWarnings("unchecked")
-			ArrayList<Species> filtered = (ArrayList<Species>) results.values;
-			arrayAdapter = new StandardArrayAdapter(filtered);
+			arrayAdapter.items = (ArrayList<Species>) results.values;
 			sectionAdapter = new SectionListAdapter(getLayoutInflater(), arrayAdapter);
 			listView.setAdapter(sectionAdapter);
 		}
@@ -261,8 +263,9 @@ public class SearchActivity extends Activity {
 
 	private TextWatcher filterTextWatcher = new TextWatcher() {
 
-		public void afterTextChanged(Editable s) {
-			SearchActivity.arrayAdapter.getFilter().filter(s.toString());
+		public void afterTextChanged(Editable searchText) {
+			if(searchText.toString().length() < 2) return;
+			SearchActivity.arrayAdapter.getFilter().filter(searchText.toString());
 		}
 
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {
