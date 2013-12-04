@@ -33,11 +33,7 @@
         </activity>
         <activity android:name=".LoginActivity" >
         </activity>
-        <activity android:name=".SearchActivity" >
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-        </activity>
+        <activity android:name=".SearchActivity" ></activity>
         <activity android:name=".DeveloperSettings" >
         </activity>
         <activity android:name=".BirdListActivity" >
