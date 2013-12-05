@@ -77,7 +77,6 @@ public class MainActivity extends Activity {
 				// exit this activity
 				finish();
 			} else {
-				Log.i(Consts.TAG, DBConsts.QUERY_SIGHTINGS_BY_LISTNAME);
 
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);

@@ -39,7 +39,9 @@
             android:inputType="textEmailAddress"
             android:paddingBottom="5dp"
             android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null" >
+            <requestFocus />
+        </EditText>
 
         <EditText
             android:id="@+id/text_pass"
@@ -55,8 +57,6 @@
             android:inputType="textPassword"
             android:textColor="@color/color_black_333"
             android:textCursorDrawable="@null" >
-
-            <requestFocus />
         </EditText>
 
         <EditText
@@ -83,8 +83,8 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/button_login_selector"
             android:gravity="center_vertical|center_horizontal"
+            android:onClick="login"
             android:text="@string/login" />
-
     </LinearLayout>
 
     <Button
@@ -95,6 +95,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/button_login_selector"
         android:gravity="center_vertical|center_horizontal"
+        android:onClick="signup"
         android:text="@string/signup"
         android:visibility="gone" />
 
@@ -114,8 +115,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="15dp"
-        android:textColor="@color/color_50_transparent_black"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/color_50_transparent_black" />
 
     <LinearLayout
         android:layout_width="183dp"
@@ -130,6 +131,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/button_fb_login_selector"
             android:drawableLeft="@drawable/twitter32"
+            android:onClick="loginTwitter"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_white"
             android:textColorLink="@color/color_white"
@@ -142,6 +144,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/button_gplus_login_selector"
             android:drawableLeft="@drawable/gplus"
+            android:onClick="loginGoogle"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_white"
             android:textSize="14sp" />
@@ -152,10 +155,10 @@
             android:layout_height="50dp"
             android:background="@drawable/button_fb_login_selector"
             android:drawableLeft="@drawable/fb"
+            android:onClick="loginFacebook"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_white"
             android:textSize="14sp" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -180,7 +183,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="0.50"
+            android:clickable="true"
             android:gravity="right"
+            android:onClick="showSignup"
             android:text="@string/signup"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_black_333"
@@ -192,7 +197,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_weight="0.50"
+            android:clickable="true"
             android:gravity="right"
+            android:onClick="showLogin"
             android:text="@string/login"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_black_333"

@@ -269,6 +269,9 @@ public class BirdListActivity extends Activity {
 				Toast.makeText(getBaseContext(), "Added new list :: " + mNewListNameText.getText(), Toast.LENGTH_SHORT).show();
 				mNewListNameText.setText("");
 				mNewListView.setVisibility(View.GONE);
+				if(mListAdapter.birdLists == null) {
+					mListAdapter.birdLists = new ArrayList<BirdList>();
+				}
 				mListAdapter.birdLists.add(0, result);
 				mListAdapter.notifyDataSetChanged();
 			}

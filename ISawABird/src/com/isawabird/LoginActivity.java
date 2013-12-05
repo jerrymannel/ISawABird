@@ -40,10 +40,6 @@ public class LoginActivity extends Activity {
 	private EditText mPassText;
 	private EditText mPassConfirmText;
 
-	private Button mTwitterButton;
-	private Button mGoogleButton;
-	private Button mFacebookButton;
-
 	Typeface openSansLight;
 	Typeface openSansBold;
 	Typeface openSansBoldItalic;
@@ -78,10 +74,6 @@ public class LoginActivity extends Activity {
 		mPassText = (EditText) findViewById(R.id.text_pass);
 		mPassConfirmText = (EditText) findViewById(R.id.text_confirm);
 
-		mTwitterButton = (Button) findViewById(R.id.btn_login_with_twitter);
-		mGoogleButton = (Button) findViewById(R.id.btn_login_with_google);
-		mFacebookButton = (Button) findViewById(R.id.btn_login_with_facebook);
-
 		tv_title.setTypeface(sonsie);
 		tv_forgot.setTypeface(openSansLight);
 		tv_or.setTypeface(openSansBold);
@@ -94,141 +86,146 @@ public class LoginActivity extends Activity {
 		mPassText.setTypeface(openSansLight);
 		mPassConfirmText.setTypeface(openSansLight);
 
-		mLoginButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				try {
-					String user = mLoginButton.getText().toString();
-					String pass = mPassText.getText().toString();
-					ParseUser.logInInBackground(user, pass, new LogInCallback() {
-						public void done(ParseUser user, ParseException e) {
-							if(user == null) {
-								Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
-							} else {
-								showHome();
-							}
-						}
-					});
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
-					e.printStackTrace();					
-				}
-			}
-		});
-
-		mSignupButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-				// network not available
-				if(!Utils.isNetworkAvailable(getApplicationContext())) {
-					Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
-					return;
-				}
-
-				final String email = mUsernameText.getText().toString();
-				final String pass = mPassText.getText().toString();
-				final String passConfirm = mPassConfirmText.getText().toString();
-
-				if(!pass.equals(passConfirm)) {
-					Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
-					return;
-				}
-
-				ParseQuery<ParseUser> query = ParseUser.getQuery();
-				query.whereEqualTo("username", email);
-				// TODO: add busy indicator
-				query.findInBackground(new FindCallback<ParseUser>() {
-					public void done(List<ParseUser> objects, ParseException e) {
-						if (e == null) {
-							if(objects != null && objects.size() > 0) {
-								Toast.makeText(getApplicationContext(), "User with email '" + email + "' already exists", Toast.LENGTH_SHORT).show();
-								return;
-							} else {
-								ParseUser user = new ParseUser();
-								user.setUsername(email);
-								user.setPassword(pass);
-								user.setEmail(email);
-
-								user.signUpInBackground(new SignUpCallback() {
-									@Override
-									public void done(ParseException e) {
-										// TODO Auto-generated method stub
-										if (e != null) {
-											Toast.makeText(getApplicationContext(), "Not able to signup. Please try again later", Toast.LENGTH_SHORT).show();
-										} else {
-											Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
-											ParseUser.logInInBackground(email, pass, new LogInCallback() {
-												@Override
-												public void done(ParseUser user,
-														ParseException e) {
-													if(user == null) {
-														Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
-													} else {
-														showHome();
-													}
-												}
-											});
-										}
-									}
-								});
-							}
-						} else {
-							Toast.makeText(getApplicationContext(), "Not able to signup. Please try again later", Toast.LENGTH_SHORT).show();
-						}
-					}
-				});
-			}
-		});
-
 		mSkipButton.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				showHome();
 			}
 		});
+	}
 
-		mShowSignupButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mShowSignupButton.setVisibility(View.GONE);
-				mLoginButton.setVisibility(View.GONE);
-				mShowLoginButton.setVisibility(View.VISIBLE);
-				mPassConfirmText.setVisibility(View.VISIBLE);
-				mSignupButton.setVisibility(View.VISIBLE);
-			}
-		});
+	public void showLogin(View view) {
+		mShowLoginButton.setVisibility(View.GONE);
+		mSignupButton.setVisibility(View.GONE);
+		mPassConfirmText.setVisibility(View.GONE);
+		mShowSignupButton.setVisibility(View.VISIBLE);
+		mLoginButton.setVisibility(View.VISIBLE);
+	}
 
-		mShowLoginButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				mShowLoginButton.setVisibility(View.GONE);
-				mSignupButton.setVisibility(View.GONE);
-				mPassConfirmText.setVisibility(View.GONE);
-				mShowSignupButton.setVisibility(View.VISIBLE);
-				mLoginButton.setVisibility(View.VISIBLE);
-			}
-		});
+	public void showSignup(View view) {
+		mShowSignupButton.setVisibility(View.GONE);
+		mLoginButton.setVisibility(View.GONE);
+		mShowLoginButton.setVisibility(View.VISIBLE);
+		mPassConfirmText.setVisibility(View.VISIBLE);
+		mSignupButton.setVisibility(View.VISIBLE);
+	}
 
-		mTwitterButton.setOnClickListener(new OnClickListener() {
+	public void login(View view) {
 
-			@Override
-			public void onClick(View v) {
-				ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
-				ParseTwitterUtils.logIn(getApplicationContext(), new LogInCallback() {
-
-					@Override
-					public void done(ParseUser user, ParseException ex) {
-						if (user == null){
-							Toast.makeText(getApplicationContext(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show(); 
-						}else{
-							Utils.setCurrentUsername(user.getUsername()); 
-							showHome(); 
-						}
+		try {
+			String user = mLoginButton.getText().toString();
+			String pass = mPassText.getText().toString();
+			ParseUser.logInInBackground(user, pass, new LogInCallback() {
+				public void done(ParseUser user, ParseException e) {
+					if(user == null) {
+						Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
+					} else {
+						showHome();
 					}
-				});
+				}
+			});
+		} catch (Exception e) {
+			Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
+			e.printStackTrace();					
+		}
+	}
+
+	public void loginTwitter(View view) {
+		// network not available
+		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
+		ParseTwitterUtils.logIn(getApplicationContext(), new LogInCallback() {
+
+			@Override
+			public void done(ParseUser user, ParseException ex) {
+				if (user == null){
+					Toast.makeText(getApplicationContext(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show(); 
+				}else{
+					Utils.setCurrentUsername(user.getUsername()); 
+					showHome(); 
+				}
+			}
+		});
+	}
+
+	public void loginFacebook(View view) {
+		// network not available
+		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			return;
+		}
+	}
+
+	public void loginGoogle(View view) {
+		// network not available
+		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			return;
+		}
+	}
+
+	public void signup(View view) {
+
+		// network not available
+		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		final String email = mUsernameText.getText().toString();
+		final String pass = mPassText.getText().toString();
+		final String passConfirm = mPassConfirmText.getText().toString();
+
+		if(!pass.equals(passConfirm)) {
+			Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
+		query.whereEqualTo("username", email);
+		// TODO: add busy indicator
+		query.findInBackground(new FindCallback<ParseUser>() {
+			public void done(List<ParseUser> objects, ParseException e) {
+				if (e == null) {
+					if(objects != null && objects.size() > 0) {
+						Toast.makeText(getApplicationContext(), "User with email '" + email + "' already exists", Toast.LENGTH_SHORT).show();
+						return;
+					} else {
+						ParseUser user = new ParseUser();
+						user.setUsername(email);
+						user.setPassword(pass);
+						user.setEmail(email);
+
+						user.signUpInBackground(new SignUpCallback() {
+							@Override
+							public void done(ParseException e) {
+								// TODO Auto-generated method stub
+								if (e != null) {
+									Toast.makeText(getApplicationContext(), "Not able to signup. Please try again later", Toast.LENGTH_SHORT).show();
+								} else {
+									Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
+									ParseUser.logInInBackground(email, pass, new LogInCallback() {
+										@Override
+										public void done(ParseUser user,
+												ParseException e) {
+											if(user == null) {
+												Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
+											} else {
+												showHome();
+											}
+										}
+									});
+								}
+							}
+						});
+					}
+				} else {
+					Toast.makeText(getApplicationContext(), "Not able to signup. Please try again later", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
