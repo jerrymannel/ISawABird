@@ -4,4 +4,8 @@
           android:icon="@drawable/ic_menu_close_clear_cancel"
           android:title="@string/delete_lists"
           android:showAsAction="ifRoom" />
+          
+	<item android:id="@+id/action_set_default"
+          android:title="@string/set_default"
+          android:showAsAction="always" />
 </menu>

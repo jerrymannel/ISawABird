@@ -3,12 +3,15 @@ package com.isawabird;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,8 +20,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -40,9 +43,10 @@ public class BirdListActivity extends Activity {
 	private ListView mBirdListView;
 	private ListAdapter mListAdapter;
 
-	private long undoListId = -1;
-	private int checkedRowPosition;
-	
+	private int deleteBirdListPosition;
+	private int checkedBirdListPosition;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mylists);
@@ -66,66 +70,18 @@ public class BirdListActivity extends Activity {
 		mNewListSaveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-				// dh.addBirdList(mNewListNameText.getText(), true);
-				BirdList list = new BirdList(mNewListNameText.getText().toString());
+				String listName = mNewListNameText.getText().toString();
+				if(listName.isEmpty()) {
+					Toast.makeText(BirdListActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				BirdList list = new BirdList(listName);
 				new AddBirdListAsyncTask().execute(list);
 			}
 		});
 
 		mListAdapter = new ListAdapter(this, null);
 		mBirdListView.setAdapter(mListAdapter);
-		mBirdListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		mBirdListView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
-
-			private int count = 0;
-			@Override
-			public void onItemCheckedStateChanged(ActionMode mode, int position,
-					long id, boolean checked) {
-				// Here you can do something when items are selected/de-selected,
-				// such as update the title in the CAB
-				if(checked) {
-					++count;
-				} else {
-					--count;
-				}
-				mode.setTitle(count + " selected " + checked);
-			}
-
-			@Override
-			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-				// Respond to clicks on the actions in the CAB
-				switch (item.getItemId()) {
-				case R.id.action_delete_list:
-					//deleteSelectedItems();
-					mode.finish(); // Action picked, so close the CAB
-					return true;
-				default:
-					return false;
-				}
-			}
-
-			@Override
-			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-				// Inflate the menu for the CAB
-				MenuInflater inflater = mode.getMenuInflater();
-				inflater.inflate(R.menu.list_context_menu, menu);
-				return true;
-			}
-
-			@Override
-			public void onDestroyActionMode(ActionMode mode) {
-				// Here you can make any necessary updates to the activity when
-				// the CAB is removed. By default, selected items are deselected/unchecked.
-			}
-
-			@Override
-			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				// Here you can perform updates to the CAB due to
-				// an invalidate() request
-				return false;
-			}
-		});
-		
 		mBirdListView.setOnItemClickListener(new OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -138,6 +94,51 @@ public class BirdListActivity extends Activity {
 				startActivity(mySightingIntent);
 			}
 		});
+		registerForContextMenu(mBirdListView);
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.list_context_menu, menu);
+	}
+
+	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which){
+			case DialogInterface.BUTTON_POSITIVE:
+				if(deleteBirdListPosition == -1) return;
+				new DeleteListAsyncTask().execute(deleteBirdListPosition);
+				break;
+
+			case DialogInterface.BUTTON_NEGATIVE:
+				deleteBirdListPosition = -1;
+				break;
+			}
+		}
+	};
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		switch (item.getItemId()) {
+		case R.id.action_delete_list:
+			deleteBirdListPosition  = info.position;
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+			.setNegativeButton("No", dialogClickListener).show();
+			return true;
+		case R.id.action_set_default:
+			BirdList list = mListAdapter.birdLists.get(info.position);
+			Utils.setCurrentList(list.getListName(), list.getId());
+			return true;
+		default:
+			return super.onContextItemSelected(item);
+		}
 	}
 
 	@Override
@@ -166,14 +167,6 @@ public class BirdListActivity extends Activity {
 		super.onResume();
 		new QueryBirdListAsyncTask().execute();
 	}
-
-	/*@Override
-	public void onBackPressed() {
-		if(undoListId != -1) {
-			new DeleteListAsyncTask().execute(undoListId);
-		}	    
-		super.onBackPressed();
-	}*/
 
 	public class ListAdapter extends ArrayAdapter<BirdList> {
 
@@ -212,24 +205,24 @@ public class BirdListActivity extends Activity {
 
 			if (birdLists.get(position).getId() == Utils.getCurrentListID()) {
 				mRadioButton.setChecked(true);
-				checkedRowPosition = position;
+				checkedBirdListPosition = position;
 			} else {
 				mRadioButton.setChecked(false);
 			}
 
 			mRadioButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					Log.i(Consts.TAG, "Active Pos >>> " + position + ", previous checked: " + checkedRowPosition);
-					if (checkedRowPosition == position)
+					Log.i(Consts.TAG, "Active Pos >>> " + position + ", previous checked: " + checkedBirdListPosition);
+					if (checkedBirdListPosition == position)
 						return;
 
 					View vMain = ((View) v.getParent());
-					View previousCheckedRow = ((ViewGroup) vMain.getParent()).getChildAt(checkedRowPosition);
+					View previousCheckedRow = ((ViewGroup) vMain.getParent()).getChildAt(checkedBirdListPosition);
 					RadioButton previousCheckedRadio = (RadioButton) previousCheckedRow.findViewById(R.id.radioButton_currList);
 					previousCheckedRadio.setChecked(false);
 
-					checkedRowPosition = position;
-					BirdList newList = birdLists.get(checkedRowPosition);
+					checkedBirdListPosition = position;
+					BirdList newList = birdLists.get(checkedBirdListPosition);
 					Utils.setCurrentList(newList.getListName(), newList.getId());
 				}
 			});
@@ -298,21 +291,31 @@ public class BirdListActivity extends Activity {
 		}
 	}
 
-	private class DeleteListAsyncTask extends AsyncTask<Long, String, Long> {
+	private class DeleteListAsyncTask extends AsyncTask<Integer, String, Integer> {
 
-		protected Long doInBackground(Long... params) {
-			if(params[0] == -1) return -1L;
+		protected Integer doInBackground(Integer... params) {
+			if(params[0] == -1) return -1;
 
+			BirdList list = mListAdapter.birdLists.get(params[0]);
+			if(list == null) return -1;
+			
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
-			dh.deleteList(params[0]);
+			dh.deleteList(list.getId());
 			return params[0];
 		}
 
 		@Override
-		protected void onPostExecute(Long result) {
-			if(result != -1 && result == undoListId) {
+		protected void onPostExecute(Integer position) {
+			int pos = position;
+			if(position != -1) {
+				mListAdapter.birdLists.remove(pos);
+				if(checkedBirdListPosition == position && mListAdapter.birdLists.size() > 0) {
+					BirdList list = mListAdapter.birdLists.get(0);
+					Utils.setCurrentList(list.getListName(), list.getId());
+				}
+				mListAdapter.notifyDataSetChanged();
+				deleteBirdListPosition = -1;
 				SyncUtils.triggerRefresh();
-				undoListId = -1;
 			}
 		}
 	}

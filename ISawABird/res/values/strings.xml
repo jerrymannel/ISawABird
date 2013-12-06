@@ -38,7 +38,8 @@
     <string name="newlist">Enter list name &#8230;</string>
     <string name="currentlist">Select the active list</string>
      <string name="add_list">Add list</string>
-    <string name="delete_lists">Delete lists</string>
+    <string name="delete_lists">Delete list</string>
+    <string name="set_default">Set as default</string>
 
     <color name="color_dark_gray">#292929</color>
     <color name="color_grey">#999</color>
