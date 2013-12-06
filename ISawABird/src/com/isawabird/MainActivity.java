@@ -253,19 +253,6 @@ public class MainActivity extends Activity {
 			final String speciesName = extras.getString(Consts.SPECIES_NAME);
 			new AddSightingAsyncTask().execute(speciesName);
 
-			PostUndoAction action = new PostUndoAction() {
-				@Override
-				public void action() {
-					undoSightingId = -1;
-				}
-			};
-
-			UndoBarController.show(this, speciesName + " added successfully to list", new UndoListener() {
-				@Override
-				public void onUndo(Parcelable token) {
-					new DeleteSightingAsyncTask().execute();
-				}
-			}, action);
 		}
 	}
 
@@ -328,9 +315,8 @@ public class MainActivity extends Activity {
 	}
 
 	private class AddSightingAsyncTask extends AsyncTask<String, String, Boolean> {
-
+		private String speciesName = "" ; 
 		protected Boolean doInBackground(String... params) {
-
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			try {
 				if (Utils.getCurrentListID() == -1) {
@@ -340,8 +326,9 @@ public class MainActivity extends Activity {
 						return false;
 					}
 				}
+				speciesName = params[0]; 
 				undoSightingId = dh.addSightingToCurrentList(params[0]);
-				SyncUtils.triggerRefresh();
+				
 			} catch (ISawABirdException e) {
 				Log.e(Consts.TAG, e.getMessage());
 				if (e.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
@@ -360,6 +347,19 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
+				PostUndoAction action = new PostUndoAction() {
+					@Override
+					public void action() {
+						undoSightingId = -1;
+					}
+				};
+
+				UndoBarController.show(MainActivity.this, speciesName + " added successfully to list", new UndoListener() {
+					@Override
+					public void onUndo(Parcelable token) {
+						new DeleteSightingAsyncTask().execute();
+					}
+				}, action);
 				SyncUtils.triggerRefresh();
 				new UpdateBirdCountAsyncTask().execute();
 			}
