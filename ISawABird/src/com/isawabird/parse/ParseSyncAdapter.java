@@ -26,6 +26,7 @@ import android.util.Log;
 
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
+import com.isawabird.ISawABirdException;
 import com.isawabird.Sighting;
 import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
@@ -169,7 +170,14 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 					body.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());
 					// TODO: Add list name instead of list id
-					body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListId());
+					//body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListId());
+					try{
+						BirdList list = dh.getBirdListById(sighting.getListId());
+						body.put(DBConsts.SIGHTING_LIST_ID, list.getParseObjectID());
+					}catch(ISawABirdException ex){
+						// TODO Handle exception 
+						ex.printStackTrace(); 
+					}
 
 					if (sighting.getParseObjectID() == null) {
 						// CREATE

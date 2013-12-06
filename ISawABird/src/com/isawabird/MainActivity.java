@@ -341,6 +341,7 @@ public class MainActivity extends Activity {
 					}
 				}
 				undoSightingId = dh.addSightingToCurrentList(params[0]);
+				SyncUtils.triggerRefresh();
 			} catch (ISawABirdException e) {
 				Log.e(Consts.TAG, e.getMessage());
 				if (e.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {

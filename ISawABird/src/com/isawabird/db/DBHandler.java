@@ -132,6 +132,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.PARSE_IS_DELETE_MARKED, DBConsts.FALSE);
 
 				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
+				// TODO Remove later
 				dumpTable(DBConsts.TABLE_SIGHTING);
 
 			} catch(SQLiteException ex) {
@@ -239,6 +240,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
+	
+	
 	public long getBirdCountByListId(long listId) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -271,6 +274,30 @@ public class DBHandler extends SQLiteOpenHelper {
 		
 		return list;
 	}
+	
+	public BirdList getBirdListById(long listId) throws ISawABirdException {
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		dumpTable(DBConsts.TABLE_LIST);
+		Log.i("", "List ID is " + listId);
+		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_ID, new String [] { String.valueOf(listId) });
+		if (result.getCount() == 0){
+			return null; 
+		}
+		result.moveToNext();
+		BirdList list = new BirdList(result.getString(result.getColumnIndex(DBConsts.LIST_NAME)));
+		list.setId(result.getLong(result.getColumnIndex(DBConsts.ID)));
+		list.setDate( new Date(result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000));
+		//Log.i(Consts.TAG, "Getting list date as " +   (result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000)); 
+		list.setNotes(result.getString(result.getColumnIndex(DBConsts.LIST_NOTES))); 
+		list.setUsername(result.getString(result.getColumnIndex(DBConsts.LIST_USER))); 
+		list.setMarkedForDelete((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED))) == 1);
+		list.setMarkedForUpload((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED))) == 1);
+		list.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
+		
+		return list;
+	}
+	
 	
 	public long getTotalSpeciesCount(){
 		if(!db.isOpen()) db = getWritableDatabase();
@@ -353,7 +380,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_NOTES)));
 			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
 			// TODO : Add list name instead of list ID 
-			temp.setListName(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LIST_ID))); 
+			temp.setListId(result.getLong(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LIST_ID))); 
 			temp.setLatitude(result.getDouble(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LATITUDE)));
 			temp.setLongitude(result.getDouble(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LONGITUDE)));
 			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));

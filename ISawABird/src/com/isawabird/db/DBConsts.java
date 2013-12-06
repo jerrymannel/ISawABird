@@ -96,6 +96,10 @@ public class DBConsts {
 			"SELECT * FROM " + TABLE_LIST + " WHERE " + 
 			LIST_NAME + " = ? AND " + LIST_USER + " = ? " ; 
 
+	public static final String QUERY_GET_LIST_BY_ID = 
+			"SELECT * FROM " + TABLE_LIST + " WHERE " + 
+			ID + " = ? ";
+	
 	public static final String QUERY_IS_SIGHTINGS_EXIST = 
 			"SELECT " + SIGHTING_LIST_ID + ", " + SIGHTING_SPECIES +
 			" FROM " + TABLE_SIGHTING  +  
