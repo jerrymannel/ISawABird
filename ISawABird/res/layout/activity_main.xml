@@ -65,12 +65,11 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/text_mode"
         android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/textView_currentList"
         android:paddingLeft="10dp"
         android:text="@string/zero"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/color_grey"
-        android:textSize="50sp" />
+        android:textSize="50sp"
+        android:textColor="@color/color_grey" />
 
     <Button
         android:id="@+id/btn_myLists"
