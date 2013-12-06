@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView_currentList"
-        android:layout_alignRight="@+id/textView_currentList"
+        android:layout_alignParentRight="true"
         android:paddingRight="20dp"
         android:text="@string/zero"
         android:textSize="50sp"
