@@ -28,6 +28,7 @@ import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 import com.parse.PushService;
 
 public class MainActivity extends Activity {

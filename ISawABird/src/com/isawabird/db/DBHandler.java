@@ -86,7 +86,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		while(result.moveToNext()){
 			Sighting s = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
 			s.setId(result.getLong(result.getColumnIndexOrThrow(DBConsts.ID)));
-			s.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))));
+			s.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE) ) * 1000));
 			s.setListName(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			s.setLatitude(result.getFloat(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LATITUDE)));
 			s.setLongitude(result.getFloat(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LONGITUDE)));
@@ -123,7 +123,8 @@ public class DBHandler extends SQLiteOpenHelper {
 				ContentValues values = new ContentValues();
 				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().fullName);
 				values.put(DBConsts.SIGHTING_LIST_ID, listId);
-				values.put(DBConsts.SIGHTING_DATE, sighting.getDate().getTime());
+				Log.i(Consts.TAG, "Sighting date is " + (int)(sighting.getDate().getTime()/1000));
+				values.put(DBConsts.SIGHTING_DATE, (int)(sighting.getDate().getTime()/1000));
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
 				values.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
@@ -131,6 +132,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.PARSE_IS_DELETE_MARKED, DBConsts.FALSE);
 
 				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
+				dumpTable(DBConsts.TABLE_SIGHTING);
 
 			} catch(SQLiteException ex) {
 				throw new ISawABirdException(ex.getMessage());
@@ -146,6 +148,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	//TODO: do we really need this method?
 	public long addSightingToCurrentList(String species) throws ISawABirdException{
 		Sighting sighting = new Sighting(new Species(species));
+		sighting.setDate(new Date());
 		try{
 			if (Utils.getCurrentListID() == -1){
 				throw new ISawABirdException(ISawABirdException.ERR_NO_CURRENT_LIST);
@@ -211,7 +214,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.put(DBConsts.LIST_NAME, birdList.getListName()); 
 		values.put(DBConsts.LIST_USER, birdList.getUsername());
-		values.put(DBConsts.LIST_DATE, birdList.getDate().getTime());
+		values.put(DBConsts.LIST_DATE, (int)(birdList.getDate().getTime()/1000));
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
 		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
 		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 0);
@@ -231,6 +234,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		} catch(SQLiteException ex) {
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
 		}
+		dumpTable(DBConsts.TABLE_LIST);
+		
 		return result;
 	}
 
@@ -256,7 +261,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		result.moveToNext();
 		BirdList list = new BirdList(listName);
 		list.setId(result.getLong(result.getColumnIndex(DBConsts.ID)));
-		list.setDate( new Date(result.getLong(result.getColumnIndex(DBConsts.LIST_DATE))));
+		list.setDate( new Date(result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000));
+		Log.i(Consts.TAG, "Getting list date as " +   (result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000)); 
 		list.setNotes(result.getString(result.getColumnIndex(DBConsts.LIST_NOTES))); 
 		list.setUsername(result.getString(result.getColumnIndex(DBConsts.LIST_USER))); 
 		list.setMarkedForDelete((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED))) == 1);
@@ -291,7 +297,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			Log.v(Consts.TAG, "Found list " + result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
-			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.LIST_DATE))));
+			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.LIST_DATE) ) * 1000));
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NOTES)));
 			temp.setUsername(username);
 			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
@@ -314,7 +320,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
-			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.LIST_DATE))));
+			temp.setDate(new Date(result.getLong(result.getColumnIndexOrThrow(DBConsts.LIST_DATE) ) * 1000));
+			Log.i(Consts.TAG, "List :: Date read from DB is " + temp.getDate().toString());
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NOTES)));
 			temp.setUsername(username);
 			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
@@ -340,7 +347,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		while(result.moveToNext()) {
 			Sighting temp = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
-			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))));
+			temp.setDate(new Date(result.getLong(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))  * 1000 ));
+			Log.i(Consts.TAG, "Sighting::Date read from DB is " + temp.getDate().toString());
+			
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_NOTES)));
 			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
 			// TODO : Add list name instead of list ID 

@@ -1,7 +1,9 @@
 package com.isawabird.parse;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -102,7 +104,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.LIST_NAME, birdList.getListName());
 					body.put(DBConsts.LIST_USER, birdList.getUsername());
 					body.put(DBConsts.LIST_NOTES, birdList.getNotes());
-					body.put(DBConsts.LIST_DATE, birdList.getDate());
+					body.put(DBConsts.LIST_DATE, getDateInParseFormat(birdList.getDate()));
 
 					if (birdList.getParseObjectID() == null) {
 						// CREATE
@@ -126,6 +128,19 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 	}
 
+	private JSONObject getDateInParseFormat(Date date){
+		JSONObject dateObj = new JSONObject();
+		try{
+			SimpleDateFormat dateformat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); 
+			
+			dateObj.put("__type", "Date");
+			dateObj.put("iso", dateformat.format(date));
+		}catch(JSONException ex){
+			return null; 
+		}
+		return dateObj; 
+	}
+	
 	private void syncSightings() {
 		try {
 			// get bird list to sync create/update/delete
@@ -150,7 +165,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body = new JSONObject();
 					body.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().fullName);
 					body.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
-					body.put(DBConsts.SIGHTING_DATE, sighting.getDate().getTime());
+					body.put(DBConsts.SIGHTING_DATE, getDateInParseFormat(sighting.getDate()));
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 					body.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());
 					// TODO: Add list name instead of list id

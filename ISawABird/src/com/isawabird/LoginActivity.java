@@ -115,6 +115,11 @@ public class LoginActivity extends Activity {
 		try {
 			String user = mLoginButton.getText().toString();
 			String pass = mPassText.getText().toString();
+//			Log.i(Consts.TAG, "Logging in...");
+//			ParseUser.logIn("sriniketana", "test123");
+//			Log.i(Consts.TAG, "Logged in");
+//			showHome();
+			
 			ParseUser.logInInBackground(user, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
 					if(user == null) {
