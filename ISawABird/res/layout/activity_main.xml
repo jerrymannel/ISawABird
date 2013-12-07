@@ -122,7 +122,8 @@
         android:text="@string/settings"
         android:visibility="invisible"
         android:textColor="@color/color_black_333"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:onClick="showSettings"/>
     
     <Button
         android:id="@+id/btn_help"

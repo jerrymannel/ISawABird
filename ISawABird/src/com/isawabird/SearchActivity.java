@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -171,7 +172,7 @@ public class SearchActivity extends Activity {
 			// and not the UI thread.
 			constraint = search.getText().toString();
 
-			if (constraint != null && constraint.toString().length() > 0) {
+			if (constraint != null && constraint.toString().length() > 3) {
 				// do not show side index while filter results
 				runOnUiThread(new Runnable() {
 					@Override
@@ -179,11 +180,12 @@ public class SearchActivity extends Activity {
 						((LinearLayout) findViewById(R.id.list_index)).setVisibility(View.INVISIBLE);
 					}
 				});
-
+				Log.i(Consts.TAG, "Searching from subset of size " + ((speciesSubset == null) ? 0 : speciesSubset.size())) ;
 				ArrayList<Species> searchResult = Utils.search(constraint.toString(), speciesSubset);
 
 				result.count = searchResult.size();
 				result.values = searchResult;
+				speciesSubset = searchResult; 
 			} else {
 				speciesSubset.clear();
 				runOnUiThread(new Runnable() {

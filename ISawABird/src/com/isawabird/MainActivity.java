@@ -10,6 +10,8 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -221,6 +223,10 @@ public class MainActivity extends Activity {
 	public void showBirdList(View view) {
 		startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
 	}
+	
+	public void showSettings(View v){
+		startActivity(new Intent(getApplicationContext(), DeveloperSettings.class));
+	}
 
 	private void showHelpOverlay() {
 		if (Utils.isFirstTime()) {
@@ -304,8 +310,10 @@ public class MainActivity extends Activity {
 		protected Long doInBackground(Void... params) {
 			try {
 				/* Initialize the checklists */
-				Log.i(Consts.TAG, "Starting checklist init...");
-				Utils.initializeChecklist(getApplicationContext(), Utils.getChecklistName());
+				String checklistName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+						.getString("masterChecklist", "India"); 
+				Log.i(Consts.TAG, "Starting checklist init for " + checklistName);
+				Utils.initializeChecklist(getApplicationContext(), checklistName);
 				
 				SyncUtils.createSyncAccount(getApplicationContext());
 				SyncUtils.triggerRefresh();
