@@ -68,11 +68,12 @@ public class Utils {
 			return returnVal;
 		}
 		ArrayList<Species> searchList = (subset == null || subset.size() == 0) ? allSpecies : subset;
+		String unpunctuatedSearch = unpunctuate(searchTerm); 
 
 		Iterator<Species> iter = searchList.iterator();
 		while (iter.hasNext()) {
 			Species temp = iter.next();
-			if (unpunctuate(temp.fullName).indexOf(unpunctuate(searchTerm)) != -1) {
+			if (temp.unpunctuatedName.indexOf(unpunctuatedSearch) != -1) {
 				// Log.d(Consts.TAG, "Adding " + temp + " to search results.");
 				returnVal.add(temp);
 			}

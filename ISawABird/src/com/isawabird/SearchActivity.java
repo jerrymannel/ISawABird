@@ -172,7 +172,7 @@ public class SearchActivity extends Activity {
 			// and not the UI thread.
 			constraint = search.getText().toString();
 
-			if (constraint != null && constraint.toString().length() > 3) {
+			if (constraint != null && constraint.toString().length() >= 3) {
 				// do not show side index while filter results
 				runOnUiThread(new Runnable() {
 					@Override
