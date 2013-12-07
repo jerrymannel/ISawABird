@@ -10,7 +10,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -102,6 +101,8 @@ public class MainActivity extends Activity {
 				btn_settings.setTypeface(openSansLight);
 				btn_help.setTypeface(openSansLight);
 
+				new UpdateBirdCountAsyncTask().execute();
+				
 				// move heavy work to asynctask
 				new InitAsyncTask().execute();
 
@@ -312,8 +313,9 @@ public class MainActivity extends Activity {
 				/* Initialize the checklists */
 				String checklistName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
 						.getString("masterChecklist", "India"); 
-				Log.i(Consts.TAG, "Starting checklist init for " + checklistName);
+				Log.i(Consts.TAG, "Starting checklist init for " + checklistName + " at " + new Date().toString());
 				Utils.initializeChecklist(getApplicationContext(), checklistName);
+				Log.i(Consts.TAG, "Initializing checklist complete at " + new Date().toString());
 				
 				SyncUtils.createSyncAccount(getApplicationContext());
 				SyncUtils.triggerRefresh();

@@ -28,13 +28,12 @@ public class Utils {
 		if (!checklist.equals(Utils.getChecklistName()) || allSpecies.size() == 0) {
 			/* Load the checklist only if (a) the default checklist has changed (b) It has not been initialized */
 			try {
-				Log.i(Consts.TAG, "Initializing checklist for " + checklist);
 				DataInputStream fis = new DataInputStream((InputStream) context.getAssets().open("checklists/" + checklist));
 				String fileText = "";
 				allSpecies = new ArrayList<Species>();
-				ArrayList<String> speciesList = new ArrayList<String>(1000);
+				//ArrayList<String> speciesList = new ArrayList<String>(1000);
 				while ((fileText = fis.readLine()) != null) {
-					speciesList.add(fileText);
+					//speciesList.add(fileText);
 					allSpecies.add(new Species(fileText));
 				}
 				Log.d(Consts.TAG, allSpecies.size() + " species added to checklist");
