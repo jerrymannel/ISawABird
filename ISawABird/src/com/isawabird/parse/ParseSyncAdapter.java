@@ -173,7 +173,14 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					//body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListId());
 					try{
 						BirdList list = dh.getBirdListById(sighting.getListId());
-						body.put(DBConsts.SIGHTING_LIST_ID, list.getParseObjectID());
+						if(list != null){
+							body.put(DBConsts.SIGHTING_LIST_ID, list.getParseObjectID());
+						}else{
+							/* Zombie sighting 
+							 * Ideally ,we shouldn't get into this situation. 
+							 */
+							body.put(DBConsts.SIGHTING_LIST_ID, ""); 
+						}
 					}catch(ISawABirdException ex){
 						// TODO Handle exception 
 						ex.printStackTrace(); 
