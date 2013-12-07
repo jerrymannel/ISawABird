@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- Search, should appear as action button -->
+    <item android:id="@+id/action_delete_list"
+          android:icon="@drawable/ic_menu_close_clear_cancel"
+          android:title="@string/delete_sighting"
+          android:showAsAction="ifRoom" />
+</menu>
