@@ -293,11 +293,16 @@ public class MainActivity extends Activity {
 	 */
 	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
 
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			GPSLocation g = new GPSLocation();
+			g.getLocation(getApplicationContext());
+		}
+		
+		
 		protected Long doInBackground(Void... params) {
 			try {
-				GPSLocation g = new GPSLocation();
-				g.getLocation(getApplicationContext());
-
 				/* Initialize the checklists */
 				Log.i(Consts.TAG, "Starting checklist init...");
 				Utils.initializeChecklist(getApplicationContext(), Utils.getChecklistName());
