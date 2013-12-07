@@ -18,7 +18,7 @@ import com.parse.ParseUser;
 public class ParseUtils {
 
 	private static ParseUser currentUser = null;  
-	private static ParseGeoPoint location = new ParseGeoPoint(0, 0);
+	public  static ParseGeoPoint location = new ParseGeoPoint(0, 0);
 
 	public static void login(String username, String password) throws ParseException, ISawABirdException{
 		try{
@@ -64,27 +64,27 @@ public class ParseUtils {
 		return location;
 	}
 
-	public static void updateCurrentLocation(){
-		Criteria criteria = new Criteria();
-		criteria.setPowerRequirement(Criteria.POWER_LOW);
-		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-		criteria.setAltitudeRequired(false);
-		criteria.setBearingRequired(false);
-		criteria.setCostAllowed(true);
-		Log.i(Consts.TAG, "Fetching location...");
-		ParseGeoPoint.getCurrentLocationInBackground(120000, new LocationCallback() {
-
-			@Override
-			public void done(ParseGeoPoint point, ParseException ex) {
-				if (ex == null){
-					location = point ;
-					Log.i(Consts.TAG,"Location acquired " + point.getLatitude());
-				}else{
-					ex.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void updateCurrentLocation(){
+//		Criteria criteria = new Criteria();
+//		criteria.setPowerRequirement(Criteria.POWER_LOW);
+//		criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+//		criteria.setAltitudeRequired(false);
+//		criteria.setBearingRequired(false);
+//		criteria.setCostAllowed(true);
+//		Log.i(Consts.TAG, "Fetching location...");
+//		ParseGeoPoint.getCurrentLocationInBackground(120000, new LocationCallback() {
+//
+//			@Override
+//			public void done(ParseGeoPoint point, ParseException ex) {
+//				if (ex == null){
+//					location = point ;
+//					Log.i(Consts.TAG,"Location acquired " + point.getLatitude());
+//				}else{
+//					ex.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	public static boolean isLoggedIn() {
 		return ParseUser.getCurrentUser() != null;

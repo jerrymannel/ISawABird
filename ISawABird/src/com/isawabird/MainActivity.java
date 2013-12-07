@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
@@ -27,8 +26,8 @@ import com.isawabird.utilities.PostUndoAction;
 import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
+import com.parse.ParseAnalytics;
 import com.parse.ParseInstallation;
-import com.parse.ParseUser;
 import com.parse.PushService;
 
 public class MainActivity extends Activity {
@@ -68,11 +67,10 @@ public class MainActivity extends Activity {
 			getActionBar().hide();
 			Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
 			Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
-			ParseUtils.updateCurrentLocation();
-
+			
 			PushService.setDefaultPushCallback(this, MainActivity.class);
 			ParseInstallation.getCurrentInstallation().saveInBackground();
-			// ParseAnalytics.trackAppOpened(getIntent());
+			ParseAnalytics.trackAppOpened(getIntent());
 			if (Utils.isFirstTime()) {
 				login();
 				// exit this activity
@@ -103,14 +101,7 @@ public class MainActivity extends Activity {
 				btn_help.setTypeface(openSansLight);
 
 				// move heavy work to asynctask
-				new InitCheckListAsyncTask().execute();
-
-				ParseUtils.updateCurrentLocation();
-
-				/* Set up the sync service */
-				SyncUtils.createSyncAccount(this);
-				SyncUtils.triggerRefresh();
-				ParseInstallation.getCurrentInstallation().saveInBackground();
+				new InitAsyncTask().execute();
 
 				showHelpOverlay();
 
@@ -297,14 +288,20 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	private class InitCheckListAsyncTask extends AsyncTask<Void, Void, Long> {
+	/* Performs initialization tasks such as initializing checklist and 
+	 * fetching GPS location
+	 */
+	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
 
 		protected Long doInBackground(Void... params) {
-
-			/* Initialize the checklists */
-			Log.i(Consts.TAG, "Starting checklist init...");
 			try {
+				GPSLocation g = new GPSLocation();
+				g.getLocation(getApplicationContext());
+
+				/* Initialize the checklists */
+				Log.i(Consts.TAG, "Starting checklist init...");
 				Utils.initializeChecklist(getApplicationContext(), Utils.getChecklistName());
+				
 				SyncUtils.createSyncAccount(getApplicationContext());
 				SyncUtils.triggerRefresh();
 			} catch (Exception e) {
