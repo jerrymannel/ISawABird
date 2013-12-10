@@ -143,7 +143,7 @@ public class LoginActivity extends Activity {
 		}
 
 		ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
-		ParseTwitterUtils.logIn(getApplicationContext(), new LogInCallback() {
+		ParseTwitterUtils.logIn(this, new LogInCallback() {
 
 			@Override
 			public void done(ParseUser user, ParseException ex) {
