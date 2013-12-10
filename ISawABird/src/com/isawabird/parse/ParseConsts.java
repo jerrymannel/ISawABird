@@ -13,5 +13,7 @@ public class ParseConsts {
 	
 	public static final String TWITTER_CONSUMER_KEY = "VM8OpBmJSdS9UinFQos7LQ";
 	public static final String TWITTER_CONSUMER_SECRET = "KsA7l8EWIhpG20YghMBxswvlHCUs6Ii2RXWDbZA";
+	
+	public static final String FACEBOOK_APP_ID = "198861263634066";
 
 }

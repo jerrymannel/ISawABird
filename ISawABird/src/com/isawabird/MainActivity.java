@@ -28,6 +28,7 @@ import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
 
@@ -258,7 +259,8 @@ public class MainActivity extends Activity {
 			Bundle extras = data.getExtras();
 			final String speciesName = extras.getString(Consts.SPECIES_NAME);
 			new AddSightingAsyncTask().execute(speciesName);
-
+		}else{
+			  
 		}
 	}
 
