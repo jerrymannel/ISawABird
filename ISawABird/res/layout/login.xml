@@ -1,29 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_white"
-    android:orientation="vertical" >
+    android:background="@color/color_white" >
 
     <TextView
         android:id="@+id/textView_title"
         android:layout_width="wrap_content"
-        android:layout_height="123dp"
-        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:drawableLeft="@drawable/ic_launcher"
-        android:gravity="center_vertical"
         android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/color_black_333"
         android:textSize="50sp" />
 
     <LinearLayout
-        android:layout_width="288dp"
-        android:layout_height="180dp"
-        android:layout_gravity="center"
+        android:id="@+id/layout_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_forgot_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/login_form_backgroud"
         android:orientation="vertical"
-        android:padding="10dp" >
+        android:paddingBottom="15dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp" >
 
         <EditText
             android:id="@+id/text_email"
@@ -39,9 +43,7 @@
             android:inputType="textEmailAddress"
             android:paddingBottom="5dp"
             android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" >
-            <requestFocus />
-        </EditText>
+            android:textCursorDrawable="@null" />
 
         <EditText
             android:id="@+id/text_pass"
@@ -56,8 +58,7 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" >
-        </EditText>
+            android:textCursorDrawable="@null" />
 
         <EditText
             android:id="@+id/text_confirm"
@@ -85,44 +86,38 @@
             android:gravity="center_vertical|center_horizontal"
             android:onClick="login"
             android:text="@string/login" />
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_signup"
-        android:layout_width="220dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_login_selector"
-        android:gravity="center_vertical|center_horizontal"
-        android:onClick="signup"
-        android:text="@string/signup"
-        android:visibility="gone" />
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_login_selector"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="signup"
+            android:text="@string/signup"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/btn_forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
+        android:layout_above="@+id/layout_social"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
         android:text="@string/forgot_password"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/color_grey" />
 
-    <TextView
-        android:id="@+id/textView_or"
+    <LinearLayout
+        android:id="@+id/layout_social"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="15dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_50_transparent_black" />
-
-    <LinearLayout
-        android:layout_width="183dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="5dp" >
+        android:layout_above="@+id/btn_skip"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp" >
 
         <Button
             android:id="@+id/btn_login_with_twitter"
@@ -161,50 +156,48 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp" >
+    <TextView
+        android:id="@+id/btn_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:padding="10dp"
+        android:text="@string/skip"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_black_333"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/btn_skip"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="0.50"
-            android:text="@string/skip"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_black_333"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/btn_showsignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:onClick="showSignup"
+        android:padding="10dp"
+        android:text="@string/signup"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_black_333"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/btn_showsignup"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="0.50"
-            android:clickable="true"
-            android:gravity="right"
-            android:onClick="showSignup"
-            android:text="@string/signup"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_black_333"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/btn_showlogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:clickable="true"
+        android:onClick="showLogin"
+        android:padding="10dp"
+        android:text="@string/login"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/color_black_333"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/btn_showlogin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="0.50"
-            android:clickable="true"
-            android:gravity="right"
-            android:onClick="showLogin"
-            android:text="@string/login"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/color_black_333"
-            android:textStyle="bold"
-            android:visibility="gone" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

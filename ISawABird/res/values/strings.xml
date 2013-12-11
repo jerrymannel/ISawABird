@@ -13,8 +13,8 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="description_short">I saw a bird</string>
     <string name="login">Login</string>
-    <string name="skip"><u>Skip</u></string>
-    <string name="signup"><u>Sign up</u></string>
+    <string name="skip">Skip</string>
+    <string name="signup">Sign up</string>
     <string name="current_list">Current List: </string>
     <string name="defaultText">Default</string>
     <string name="my_list">My Lists</string>

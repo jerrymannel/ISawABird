@@ -28,7 +28,6 @@ public class LoginActivity extends Activity {
 
 	private TextView tv_title;
 	private TextView tv_forgot;
-	private TextView tv_or;
 
 	private Button mLoginButton;
 	private TextView mSignupButton;
@@ -62,7 +61,6 @@ public class LoginActivity extends Activity {
 
 		tv_title = (TextView)findViewById(R.id.textView_title);
 		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
-		tv_or = (TextView) findViewById(R.id.textView_or);
 
 		mLoginButton = (Button) findViewById(R.id.btn_login);
 		mSignupButton = (TextView) findViewById(R.id.btn_signup);
@@ -77,7 +75,6 @@ public class LoginActivity extends Activity {
 
 		tv_title.setTypeface(sonsie);
 		tv_forgot.setTypeface(openSansLight);
-		tv_or.setTypeface(openSansBold);
 
 		mLoginButton.setTypeface(openSansBold);
 		mSignupButton.setTypeface(openSansBold);
@@ -99,6 +96,7 @@ public class LoginActivity extends Activity {
 		mShowLoginButton.setVisibility(View.GONE);
 		mSignupButton.setVisibility(View.GONE);
 		mPassConfirmText.setVisibility(View.GONE);
+		tv_forgot.setVisibility(View.VISIBLE);
 		mShowSignupButton.setVisibility(View.VISIBLE);
 		mLoginButton.setVisibility(View.VISIBLE);
 	}
@@ -106,6 +104,7 @@ public class LoginActivity extends Activity {
 	public void showSignup(View view) {
 		mShowSignupButton.setVisibility(View.GONE);
 		mLoginButton.setVisibility(View.GONE);
+		tv_forgot.setVisibility(View.GONE);
 		mShowLoginButton.setVisibility(View.VISIBLE);
 		mPassConfirmText.setVisibility(View.VISIBLE);
 		mSignupButton.setVisibility(View.VISIBLE);
@@ -116,10 +115,10 @@ public class LoginActivity extends Activity {
 		try {
 			String user = mUsernameText.getText().toString();
 			String pass = mPassText.getText().toString();
-//			Log.i(Consts.TAG, "Logging in...");
-//			ParseUser.logIn("sriniketana", "test123");
-//			Log.i(Consts.TAG, "Logged in");
-//			showHome();
+			//			Log.i(Consts.TAG, "Logging in...");
+			//			ParseUser.logIn("sriniketana", "test123");
+			//			Log.i(Consts.TAG, "Logged in");
+			//			showHome();
 			Log.i(Consts.TAG, "User/pwd = " + user + ":" + pass);
 			ParseUser.logInInBackground(user, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
@@ -164,18 +163,18 @@ public class LoginActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+
 		ParseFacebookUtils.initialize(ParseConsts.FACEBOOK_APP_ID); 
 		ParseFacebookUtils.logIn(this, new LogInCallback() {
-			
+
 			@Override
 			public void done(ParseUser user, ParseException err) {
-				 if (user == null) {
-				      Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show(); 
-				    } else {
-				    	Utils.setCurrentUsername(user.getUsername());
-				    	showHome();
-				    }
+				if (user == null) {
+					Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show(); 
+				} else {
+					Utils.setCurrentUsername(user.getUsername());
+					showHome();
+				}
 			}
 		});
 	}
@@ -187,8 +186,8 @@ public class LoginActivity extends Activity {
 		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
 		showHome();
 	}
-	
-	
+
+
 	public void loginGoogle(View view) {
 		// network not available
 		if(!Utils.isNetworkAvailable(getApplicationContext())) {
