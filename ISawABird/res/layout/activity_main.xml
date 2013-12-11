@@ -132,7 +132,7 @@
         android:layout_alignRight="@+id/btn_loginOrOut"
         android:layout_below="@+id/btn_settings"
         android:background="@drawable/button_bottom_selector"
-        android:drawableRight="@android:drawable/ic_menu_preferences"
+        android:drawableRight="@android:drawable/ic_menu_help"
         android:text="@string/help"
         android:visibility="invisible"
         android:textColor="@color/color_black_333"
