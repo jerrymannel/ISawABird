@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -45,6 +46,7 @@ public class BirdListActivity extends Activity {
 
 	private int deleteBirdListPosition;
 	private int checkedBirdListPosition;
+	private InputMethodManager keyboardManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +59,10 @@ public class BirdListActivity extends Activity {
 		mNewListNameText = (EditText) findViewById(R.id.editText_new_list_name);
 		mNewListView = (View) findViewById(R.id.layout_new_list);
 
-		final InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		keyboardManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mNewListCancelButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+				keyboardManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				mNewListNameText.setText("");
 				mNewListView.setVisibility(View.GONE);
 			}
@@ -69,7 +71,7 @@ public class BirdListActivity extends Activity {
 		// TODO: Read more fields from user to create a new list
 		mNewListSaveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				keyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+				keyboardManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				String listName = mNewListNameText.getText().toString();
 				if(listName.isEmpty()) {
 					Toast.makeText(BirdListActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
@@ -155,7 +157,9 @@ public class BirdListActivity extends Activity {
 		case R.id.action_add_list:
 			// show 'add new list' view
 			mNewListView.setVisibility(View.VISIBLE);
-			mNewListNameText.requestFocus();
+			if(mNewListNameText.requestFocus()) {
+				keyboardManager.showSoftInput(mNewListNameText, 0);
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -298,7 +302,7 @@ public class BirdListActivity extends Activity {
 
 			BirdList list = mListAdapter.birdLists.get(params[0]);
 			if(list == null) return -1;
-			
+
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			dh.deleteList(list.getId());
 			return params[0];
