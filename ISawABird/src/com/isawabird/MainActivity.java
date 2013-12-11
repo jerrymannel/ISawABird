@@ -28,6 +28,7 @@ import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseInstallation;
 import com.parse.PushService;
 
@@ -104,8 +105,16 @@ public class MainActivity extends Activity {
 				new UpdateBirdCountAsyncTask().execute();
 				
 				// move heavy work to asynctask
-				new InitAsyncTask().execute();
+				new InitChecklistAsyncTask(getApplicationContext()).execute();
+				
+				/* Get FGPS location */
+				GPSLocation g = new GPSLocation();
+				g.getLocation(getApplicationContext());
 
+				/* Try to sync if needed */ 
+				SyncUtils.createSyncAccount(getApplicationContext());
+				SyncUtils.triggerRefresh();
+				
 				showHelpOverlay();
 
 				mBirdCountText.setOnClickListener(new OnClickListener() {
@@ -250,7 +259,8 @@ public class MainActivity extends Activity {
 			Bundle extras = data.getExtras();
 			final String speciesName = extras.getString(Consts.SPECIES_NAME);
 			new AddSightingAsyncTask().execute(speciesName);
-
+		}else{
+			  
 		}
 	}
 
@@ -292,37 +302,6 @@ public class MainActivity extends Activity {
 			mTotalBirdCountText.setText(String.valueOf(totalBirdCount));
 			if (Utils.getCurrentListName() != "")
 				currentListName.setText(Utils.getCurrentListName());
-		}
-	}
-
-	/* Performs initialization tasks such as initializing checklist and 
-	 * fetching GPS location
-	 */
-	private class InitAsyncTask extends AsyncTask<Void, Void, Long> {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			GPSLocation g = new GPSLocation();
-			g.getLocation(getApplicationContext());
-		}
-		
-		
-		protected Long doInBackground(Void... params) {
-			try {
-				/* Initialize the checklists */
-				String checklistName = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
-						.getString("masterChecklist", "India"); 
-				Log.i(Consts.TAG, "Starting checklist init for " + checklistName + " at " + new Date().toString());
-				Utils.initializeChecklist(getApplicationContext(), checklistName);
-				Log.i(Consts.TAG, "Initializing checklist complete at " + new Date().toString());
-				
-				SyncUtils.createSyncAccount(getApplicationContext());
-				SyncUtils.triggerRefresh();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return -1L;
 		}
 	}
 

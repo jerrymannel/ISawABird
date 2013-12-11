@@ -2,6 +2,7 @@ package com.isawabird;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -46,7 +47,13 @@ public class DeveloperSettings extends PreferenceActivity implements SharedPrefe
 		if (key.equals("masterChecklist")){
 			masterChecklist.setSummary(sharedPrefs.getString("masterChecklist"	, "India"));
 		}
-		
+		try{
+			InitChecklistAsyncTask asyncTask = new InitChecklistAsyncTask(getApplicationContext()); 
+			asyncTask.execute(); 
+		}catch(Exception ex){
+			// TODO Handle exception 
+			ex.printStackTrace();
+		}
 	}
 
 }

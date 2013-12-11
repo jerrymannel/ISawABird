@@ -18,6 +18,7 @@ import com.isawabird.parse.ParseConsts;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseQuery;
 import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
@@ -143,7 +144,7 @@ public class LoginActivity extends Activity {
 		}
 
 		ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
-		ParseTwitterUtils.logIn(getApplicationContext(), new LogInCallback() {
+		ParseTwitterUtils.logIn(this, new LogInCallback() {
 
 			@Override
 			public void done(ParseUser user, ParseException ex) {
@@ -163,8 +164,31 @@ public class LoginActivity extends Activity {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		
+		ParseFacebookUtils.initialize(ParseConsts.FACEBOOK_APP_ID); 
+		ParseFacebookUtils.logIn(this, new LogInCallback() {
+			
+			@Override
+			public void done(ParseUser user, ParseException err) {
+				 if (user == null) {
+				      Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show(); 
+				    } else {
+				    	Utils.setCurrentUsername(user.getUsername());
+				    	showHome();
+				    }
+			}
+		});
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+		showHome();
+	}
+	
+	
 	public void loginGoogle(View view) {
 		// network not available
 		if(!Utils.isNetworkAvailable(getApplicationContext())) {
