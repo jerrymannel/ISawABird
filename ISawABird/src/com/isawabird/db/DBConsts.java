@@ -36,6 +36,22 @@ public class DBConsts {
 			PARSE_IS_UPLOAD_REQUIRED 	+ " INTEGER DEFAULT 0 NOT NULL," + 
 			PARSE_IS_DELETE_MARKED		+ " INTEGER DEFAULT 0 NOT NULL" + 
 			")";
+	
+	public static final String TABLE_FEEDBACK = "feedback"; 
+	public static final String FEEDBACK_USER = "user";
+	public static final String FEEDBACK_TEXT = "feedback";
+	public static final String FEEDBACK_DATE = "date";
+	
+	
+	public static final String CREATE_FEEDBACK = "CREATE TABLE " + TABLE_FEEDBACK +
+			"(" +
+			ID 							+ " INTEGER PRIMARY KEY AUTOINCREMENT," +
+			FEEDBACK_USER 				+ " TEXT," + 
+			FEEDBACK_DATE				+ " INTEGER," +
+			FEEDBACK_TEXT 				+ " TEXT NOT NULL," +
+			PARSE_OBJECT_ID    			+ " TEXT," + 
+			PARSE_IS_UPLOAD_REQUIRED 	+ " INTEGER DEFAULT 1 NOT NULL" +   
+			")";
 
 	public static final String TABLE_SIGHTING = "sighting";
 	public static final String SIGHTING_SPECIES = "species";
@@ -123,6 +139,14 @@ public class DBConsts {
 			" FROM " + TABLE_LIST + 
 			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
 			" OR " + PARSE_IS_DELETE_MARKED + "=1";
+	
+	public static final String QUERY_FEEDBACK_SYNC = 
+			"SELECT " + ID + ", " + FEEDBACK_DATE + ", " + FEEDBACK_USER +
+			", " + FEEDBACK_TEXT + 
+			", " + PARSE_OBJECT_ID + 
+			" FROM " + TABLE_FEEDBACK + 
+			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1";
+	
 	
 	public static final String QUERY_SIGHTINGS_SYNC = 
 			"SELECT " + ID + ", " + SIGHTING_DATE + ", " + SIGHTING_SPECIES +

@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
@@ -103,6 +104,10 @@ public class MainActivity extends Activity {
 				btn_help.setTypeface(openSansLight);
 
 				new UpdateBirdCountAsyncTask().execute();
+				
+				// TODO : Remove later 
+				DBHandler dh = DBHandler.getInstance(getApplicationContext());
+				dh.addFeedback("Man this is the best app in the world. Best thing since sliced bread"); 
 				
 				// move heavy work to asynctask
 				new InitChecklistAsyncTask(getApplicationContext()).execute();

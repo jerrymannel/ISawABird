@@ -128,19 +128,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			ex.printStackTrace();
 		}
 	}
-
-	private JSONObject getDateInParseFormat(Date date){
-		JSONObject dateObj = new JSONObject();
-		try{
-			SimpleDateFormat dateformat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); 
-			
-			dateObj.put("__type", "Date");
-			dateObj.put("iso", dateformat.format(date));
-		}catch(JSONException ex){
-			return null; 
-		}
-		return dateObj; 
-	}
 	
 	private void syncSightings() {
 		try {
@@ -208,6 +195,45 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		}
 	}
 
+
+	private void syncFeedback() {
+		try {
+			// get bird list to sync create/update/delete
+			JSONArray feedbackToSync = dh.getFeedbackToSync();
+			Log.i(Consts.TAG, feedbackToSync.toString());
+			Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
+			JSONObject body = null;
+			for (int i = 0 ; i < feedbackToSync.length() ; i ++) {
+				Log.i(Consts.TAG, "Adding a feedback to sync ");
+				// if not delete, then it is marked for upload
+				body = new JSONObject();
+				body.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername());
+				body.put(DBConsts.FEEDBACK_DATE, getDateInParseFormat(new Date()));
+				body.put(DBConsts.FEEDBACK_TEXT	, feedbackToSync.getJSONObject(i).getString("feedbackText")); // TODO Externalize
+				addCreateRequest(DBConsts.TABLE_FEEDBACK, body);
+				postEntries.add((long)feedbackToSync.getJSONObject(i).getInt("feedbackId")); // TODO Externalize
+			}
+		} catch (JSONException ex) {
+			Log.e(Consts.TAG, ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
+
+
+	
+	private JSONObject getDateInParseFormat(Date date){
+		JSONObject dateObj = new JSONObject();
+		try{
+			SimpleDateFormat dateformat = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"); 
+			
+			dateObj.put("__type", "Date");
+			dateObj.put("iso", dateformat.format(date));
+		}catch(JSONException ex){
+			return null; 
+		}
+		return dateObj; 
+	}
+
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 		Log.w(Consts.TAG, "IN onPerformSync");
@@ -220,6 +246,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
 				syncBirdLists();
 				syncSightings();
+				syncFeedback();
 				if (requestArray.length() > 0) {
 					JSONObject batchRequest = buildRequest(requestArray);
 					JSONArray respArray = postRequest(batchRequest);
@@ -244,7 +271,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 									// delete invalid rows for DELETE requests
 									dh.deleteLocally(table, postEntries.get(i));
 								}
-								//dh.dumpTable(table);
+								// TODO Remove later 
+								dh.dumpTable(table);
 							} else {
 								// TODO : Handle failure
 							}

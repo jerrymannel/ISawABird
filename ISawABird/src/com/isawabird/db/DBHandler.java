@@ -3,6 +3,9 @@ package com.isawabird.db;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -55,6 +58,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			db.beginTransaction();
 			db.execSQL(DBConsts.CREATE_LIST);
 			db.execSQL(DBConsts.CREATE_SIGHTING);
+			db.execSQL(DBConsts.CREATE_FEEDBACK);
 			db.setTransactionSuccessful();
 		} catch (Exception e) {
 			Log.e(Consts.TAG, "exception: " + e.getMessage());
@@ -362,7 +366,34 @@ public class DBHandler extends SQLiteOpenHelper {
 		return birdList;
 	}
 
-	public ArrayList<Sighting> getSightingsToSync(String username) {
+	public JSONArray getFeedbackToSync() {
+
+		if(!db.isOpen()) db = getWritableDatabase();
+
+		Cursor result = db.rawQuery(DBConsts.QUERY_FEEDBACK_SYNC, null);
+
+		if(result.getColumnCount() <= 0) return null;
+		Log.i(Consts.TAG, "We have " + result.getCount() + " feedbacks to sync"); 
+		JSONArray feedbackList = new JSONArray();
+
+		while(result.moveToNext()) {
+			try{
+				JSONObject feedbackObj = new JSONObject();
+				feedbackObj.put("feedbackText", result.getString(result.getColumnIndex(DBConsts.FEEDBACK_TEXT))) ; 
+				feedbackObj.put("feedbackId", result.getInt(result.getColumnIndex(DBConsts.ID)));
+				feedbackList.put(feedbackObj);
+			}catch(Exception ex){
+				// TODO Handle exception 
+				ex.printStackTrace();
+			}
+		}
+		
+		return feedbackList;
+	}
+
+
+
+public ArrayList<Sighting> getSightingsToSync(String username) {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -520,6 +551,17 @@ public class DBHandler extends SQLiteOpenHelper {
 		return false;		
 	}
 
+	public void addFeedback(String feedback){
+		if(!db.isOpen()) db = getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername()); 
+		values.put(DBConsts.FEEDBACK_TEXT, feedback);
+		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
+		db.insertOrThrow(DBConsts.TABLE_FEEDBACK, null, values);
+		dumpTable(DBConsts.TABLE_FEEDBACK);
+	}
+	
 	public boolean deleteLocally(String tableName, long id){ 
 		if(!db.isOpen()) db = getWritableDatabase();
 		
