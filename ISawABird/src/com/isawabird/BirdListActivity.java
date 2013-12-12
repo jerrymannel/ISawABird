@@ -158,6 +158,8 @@ public class BirdListActivity extends Activity {
 			activeImageView.setVisibility(View.INVISIBLE);
 			currentImageView.setVisibility(View.VISIBLE);
 			
+			checkedBirdListPosition = info.position;
+			
 			return true;
 		default:
 			return super.onContextItemSelected(item);

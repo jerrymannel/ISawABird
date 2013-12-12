@@ -38,6 +38,7 @@
         <activity android:name=".DeveloperSettings" />
         <activity android:name=".BirdListActivity" />
         <activity android:name=".SightingsActivity" />
+        <activity android:name=".FeedbackActivity" />
 
         <!-- <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
 
