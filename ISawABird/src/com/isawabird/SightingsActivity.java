@@ -43,7 +43,7 @@ public class SightingsActivity extends Activity {
 		final String listName = b.getString("listName");
 
 		if(listName != null) {
-			getActionBar().setTitle(listName);
+			getActionBar().setTitle("Birds under list " + listName);
 		}
 
 		new QuerySightingsAsyncTask().execute(listName, ParseUtils.getCurrentUsername());
