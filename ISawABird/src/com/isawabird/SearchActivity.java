@@ -88,7 +88,7 @@ public class SearchActivity extends Activity {
 				// Jerry: Return to main intend after adding a bird
 				//Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
 				Intent mainIntent = getIntent();
-				mainIntent.putExtra(Consts.SPECIES_NAME, species.fullName);
+				mainIntent.putExtra(Consts.SPECIES_NAME, species.getFullName());
 				setResult(14, mainIntent);
 				finish();
 			}
@@ -134,7 +134,7 @@ public class SearchActivity extends Activity {
 			}
 			TextView textView = (TextView) view.findViewById(R.id.row_title);
 			if (textView != null) {
-				textView.setText(items.get(position).fullName);
+				textView.setText(items.get(position).getFullName());
 				textView.setTypeface(arvo);
 			}
 			return view;
@@ -236,7 +236,7 @@ public class SearchActivity extends Activity {
 
 		for (int i = 0; i < species.size(); i++) {
 			Object[] temp = new Object[2];
-			latter_temp = (species.get(i).fullName).substring(0, 1).toUpperCase();
+			latter_temp = (species.get(i).getFullName()).substring(0, 1).toUpperCase();
 			if (!latter_temp.equals(latter)) {
 				// latter with its array index
 				latter = latter_temp;

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
+import com.isawabird.Species.TYPE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -29,12 +31,10 @@ public class Utils {
 			/* Load the checklist only if (a) the default checklist has changed (b) It has not been initialized */
 			try {
 				DataInputStream fis = new DataInputStream((InputStream) context.getAssets().open("checklists/" + checklist));
-				String fileText = "";
+				String csv = "";
 				allSpecies = new ArrayList<Species>();
-				//ArrayList<String> speciesList = new ArrayList<String>(1000);
-				while ((fileText = fis.readLine()) != null) {
-					//speciesList.add(fileText);
-					allSpecies.add(new Species(fileText));
+				while ((csv = fis.readLine()) != null) {
+					allSpecies.add(new Species(csv, TYPE.IS_CSV));
 				}
 				Log.d(Consts.TAG, allSpecies.size() + " species added to checklist");
 				checklistLoaded = true;

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class MainActivity extends Activity {
 	Button btn_loginLogout;
 	Button btn_settings;
 	Button btn_help;
+	LinearLayout mLayoutSettings;
 	Button mSawBirdButton;
 	Typeface openSansLight;
 	Typeface openSansBold;
@@ -67,7 +69,7 @@ public class MainActivity extends Activity {
 			getActionBar().hide();
 			Utils.prefs = getSharedPreferences(Consts.PREF, Context.MODE_PRIVATE);
 			Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
-			
+
 			PushService.setDefaultPushCallback(this, MainActivity.class);
 			ParseInstallation.getCurrentInstallation().saveInBackground();
 			ParseAnalytics.trackAppOpened(getIntent());
@@ -79,11 +81,12 @@ public class MainActivity extends Activity {
 
 				setContentView(R.layout.activity_main);
 				mSawBirdButton = (Button) findViewById(R.id.btn_isawabird);
-				mBirdCountText = (TextView) findViewById(R.id.text_mode);
+				mBirdCountText = (TextView) findViewById(R.id.textView_birdcount);
 				currentListName = (TextView) findViewById(R.id.textView_currentList);
 				total_sightings_title = (TextView) findViewById(R.id.textView_total_text);
 				mTotalBirdCountText = (TextView) findViewById(R.id.textView_total);
 				btn_more = (Button) findViewById(R.id.btn_more);
+				mLayoutSettings = (LinearLayout) findViewById(R.id.layout_settings);
 				btn_myLists = (Button) findViewById(R.id.btn_myLists);
 				btn_loginLogout = (Button) findViewById(R.id.btn_loginOrOut);
 				btn_settings = (Button) findViewById(R.id.btn_settings);
@@ -172,16 +175,10 @@ public class MainActivity extends Activity {
 
 				btn_more.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						if (btn_more.getWidth() == btn_settings.getWidth()) {
-							btn_settings.setVisibility(View.INVISIBLE);
-							btn_loginLogout.setVisibility(View.INVISIBLE);
-							btn_help.setVisibility(View.INVISIBLE);
-							btn_more.setWidth(88);
+						if (mLayoutSettings.getVisibility() == View.GONE) {
+							mLayoutSettings.setVisibility(View.VISIBLE);
 						} else {
-							btn_settings.setVisibility(View.VISIBLE);
-							btn_loginLogout.setVisibility(View.VISIBLE);
-							btn_help.setVisibility(View.VISIBLE);
-							btn_more.setWidth(btn_settings.getWidth());
+							mLayoutSettings.setVisibility(View.GONE);
 						}
 					}
 				});
@@ -225,6 +222,9 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		if(mLayoutSettings.getVisibility() != View.GONE) {
+			mLayoutSettings.setVisibility(View.GONE);
+		}
 		new UpdateBirdCountAsyncTask().execute();
 	}
 
@@ -298,8 +298,9 @@ public class MainActivity extends Activity {
 			Log.e(Consts.TAG, "Count: " + birdCount + ", total: " + totalBirdCount);
 			mBirdCountText.setText(String.valueOf(birdCount));
 			mTotalBirdCountText.setText(String.valueOf(totalBirdCount));
-			if (Utils.getCurrentListName() != "")
+			if (Utils.getCurrentListName().isEmpty()) {
 				currentListName.setText(Utils.getCurrentListName());
+			}
 		}
 	}
 

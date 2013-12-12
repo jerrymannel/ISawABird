@@ -172,7 +172,7 @@ public class SightingsActivity extends Activity {
 			mSightingListAdapter.idList = new ArrayList<Long>();
 
 			for (Sighting sighting : result) {
-				Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().fullName);
+				Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
 				Species species = sighting.getSpecies();
 				mSightingListAdapter.commonNameList.add(species.commonName);
 				mSightingListAdapter.scientificNameList.add(species.scientificName);

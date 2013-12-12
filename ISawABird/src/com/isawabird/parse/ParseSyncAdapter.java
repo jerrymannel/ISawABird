@@ -164,7 +164,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				} else {
 					// if not delete, then it is marked for upload
 					body = new JSONObject();
-					body.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().fullName);
+					body.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().getFullName());
 					body.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
 					body.put(DBConsts.SIGHTING_DATE, getDateInParseFormat(sighting.getDate()));
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
