@@ -2,14 +2,12 @@ package com.isawabird;
 
 import java.util.Date;
 
-import com.isawabird.parse.extra.SyncUtils;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class InitChecklistAsyncTask extends AsyncTask {
+public class InitChecklistAsyncTask extends AsyncTask<Void, Void, Void> {
 
 	Context context = null; 
 	public InitChecklistAsyncTask(Context context){
@@ -17,7 +15,7 @@ public class InitChecklistAsyncTask extends AsyncTask {
 	}
 	
 	@Override
-	protected Object doInBackground(Object... params) {
+	protected Void doInBackground(Void... params) {
 		try {
 			/* Initialize the checklists */
 			String checklistName = PreferenceManager.getDefaultSharedPreferences(context)
@@ -29,7 +27,7 @@ public class InitChecklistAsyncTask extends AsyncTask {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return -1L;
+		return null;
 	}
 
 }

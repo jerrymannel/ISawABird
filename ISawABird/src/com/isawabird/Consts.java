@@ -12,6 +12,8 @@ public abstract class Consts {
 	public static final String IS_FIRST_TIME = "IsFirstTime";
 	public static final String CHECKLIST = "Checklist";
 
+	public static final String CSV_DELIMITER = ",";
+	
 	// The authority for the sync adapter's content provider
 	public static final String AUTHORITY = "com.isawabird.parse";
 

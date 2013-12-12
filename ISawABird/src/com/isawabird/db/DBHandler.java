@@ -120,12 +120,12 @@ public class DBHandler extends SQLiteOpenHelper {
 		}
 		
 		long result = -1;
-		if(!isSightingExist(sighting.getSpecies().fullName, listId, username)) {
+		if(!isSightingExist(sighting.getSpecies().getFullName(), listId, username)) {
 			try {
-				Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().fullName);
+				Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().getFullName());
 
 				ContentValues values = new ContentValues();
-				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().fullName);
+				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().getFullName());
 				values.put(DBConsts.SIGHTING_LIST_ID, listId);
 				Log.i(Consts.TAG, "Sighting date is " + (int)(sighting.getDate().getTime()/1000));
 				values.put(DBConsts.SIGHTING_DATE, (int)(sighting.getDate().getTime()/1000));
@@ -257,7 +257,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return getBirdCountByListId(Utils.getCurrentListID());
 	}
 	
-	public BirdList getBirdListByName(String listName) throws ISawABirdException {
+	public BirdList getBirdListByName(String listName) {
 		if(!db.isOpen()) db = getWritableDatabase();
 		
 		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_NAME, new String [] { listName , ParseUtils.getCurrentUsername() });

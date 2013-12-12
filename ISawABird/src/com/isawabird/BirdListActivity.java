@@ -19,15 +19,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,24 +39,38 @@ public class BirdListActivity extends Activity {
 	private EditText mNewListNameText;
 	private TextView mNewListCancelButton;
 	private TextView mNewListSaveButton;
+	private TextView mListInfo;
 	private View mNewListView;
 	private ListView mBirdListView;
 	private ListAdapter mListAdapter;
+	private ViewGroup currRow;
+	private ViewGroup defaultRow;
+	private ImageView activeImageView;
+	private ImageView currentImageView;
 
 	private int deleteBirdListPosition;
 	private int checkedBirdListPosition;
 	private InputMethodManager keyboardManager;
+
+	private DBHandler dh;
+
+	private enum LIST_ACTION {ADD_LIST, RENAME_LIST};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mylists);
 
+		dh = DBHandler.getInstance(getApplicationContext());
+
 		mBirdListView = (ListView) findViewById(R.id.mylistView);
 		mNewListSaveButton = (TextView) findViewById(R.id.btn_new_list_save);
 		mNewListCancelButton = (TextView) findViewById(R.id.btn_new_list_cancel);
 		mNewListNameText = (EditText) findViewById(R.id.editText_new_list_name);
 		mNewListView = (View) findViewById(R.id.layout_new_list);
+
+		mListInfo = (TextView) findViewById(R.id.mylistview_info);
+		mListInfo.setTypeface(Utils.getOpenSansLightTypeface(BirdListActivity.this));
 
 		keyboardManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 		mNewListCancelButton.setOnClickListener(new OnClickListener() {
@@ -68,6 +81,7 @@ public class BirdListActivity extends Activity {
 			}
 		});
 
+		mNewListSaveButton.setTag(R.string.key_list_type, LIST_ACTION.ADD_LIST);
 		// TODO: Read more fields from user to create a new list
 		mNewListSaveButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -77,8 +91,20 @@ public class BirdListActivity extends Activity {
 					Toast.makeText(BirdListActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
 					return;
 				}
-				BirdList list = new BirdList(listName);
-				new AddBirdListAsyncTask().execute(list);
+
+				LIST_ACTION type = (LIST_ACTION) mNewListSaveButton.getTag(R.string.key_list_type);
+				
+				Log.e(Consts.TAG, "saving + " + type);
+				BirdList list;
+				if(LIST_ACTION.RENAME_LIST.equals(type)) {
+					int position = (Integer) mNewListSaveButton.getTag(R.string.key_list_position);
+					list = mListAdapter.birdLists.get(position);
+					list.setListName(listName);
+					new UpdateBirdListAsyncTask().execute(list);
+				} else {
+					list = new BirdList(listName);
+					new AddBirdListAsyncTask().execute(list);
+				}
 			}
 		});
 
@@ -134,9 +160,30 @@ public class BirdListActivity extends Activity {
 			builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
 			.setNegativeButton("No", dialogClickListener).show();
 			return true;
+		case R.id.action_rename_list:
+			mNewListSaveButton.setTag(R.string.key_list_type, LIST_ACTION.RENAME_LIST);
+			mNewListSaveButton.setTag(R.string.key_list_position, info.position);
+			mNewListNameText.setText(mListAdapter.birdLists.get(info.position).getListName());
+			if(mNewListNameText.requestFocus()) {
+				keyboardManager.showSoftInput(mNewListNameText, 0);
+			}
+			mNewListView.setVisibility(View.VISIBLE);
+			return true;
 		case R.id.action_set_default:
 			BirdList list = mListAdapter.birdLists.get(info.position);
 			Utils.setCurrentList(list.getListName(), list.getId());
+
+			currRow = (ViewGroup) mBirdListView.getChildAt(info.position);
+			defaultRow = (ViewGroup) mBirdListView.getChildAt(checkedBirdListPosition);;
+
+			activeImageView = (ImageView) defaultRow.getChildAt(1);
+			currentImageView = (ImageView) currRow.getChildAt(1);
+
+			activeImageView.setVisibility(View.INVISIBLE);
+			currentImageView.setVisibility(View.VISIBLE);
+
+			checkedBirdListPosition = info.position;
+
 			return true;
 		default:
 			return super.onContextItemSelected(item);
@@ -155,6 +202,7 @@ public class BirdListActivity extends Activity {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
 		case R.id.action_add_list:
+			mNewListSaveButton.setTag(R.string.key_list_type, LIST_ACTION.ADD_LIST);
 			// show 'add new list' view
 			mNewListView.setVisibility(View.VISIBLE);
 			if(mNewListNameText.requestFocus()) {
@@ -175,7 +223,8 @@ public class BirdListActivity extends Activity {
 	public class ListAdapter extends ArrayAdapter<BirdList> {
 
 		private TextView mListNameText;
-		private RadioButton mRadioButton;
+		private TextView mCountForEachList;
+		private ImageView mActiveImage;
 
 		public ArrayList<BirdList> birdLists;
 
@@ -203,33 +252,29 @@ public class BirdListActivity extends Activity {
 
 			mListNameText = (TextView) rowView.findViewById(R.id.mylistsItem_name);
 			mListNameText.setTypeface(Utils.getOpenSansLightTypeface(BirdListActivity.this));
-			mRadioButton = (RadioButton) rowView.findViewById(R.id.radioButton_currList);
 
-			mListNameText.setText(birdLists.get(position).getListName());
+			mCountForEachList = (TextView) rowView.findViewById(R.id.mylistsItem_count);
+			mCountForEachList.setTypeface(Utils.getOpenSansLightTypeface(BirdListActivity.this));
 
-			if (birdLists.get(position).getId() == Utils.getCurrentListID()) {
-				mRadioButton.setChecked(true);
-				checkedBirdListPosition = position;
-			} else {
-				mRadioButton.setChecked(false);
+			mActiveImage = (ImageView) rowView.findViewById(R.id.mylistItem_image);
+
+			String listName = birdLists.get(position).getListName();
+			mListNameText.setText(listName);
+			try{
+				mCountForEachList.setText("" + dh.getBirdCountByListId(dh.getListIDByName(listName)));
+			} catch (ISawABirdException e){
+				e.printStackTrace();
+				Log.i(Consts.TAG, "No list with " + listName + " found.");
+				Log.i(Consts.TAG, e.getMessage());
 			}
 
-			mRadioButton.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					Log.i(Consts.TAG, "Active Pos >>> " + position + ", previous checked: " + checkedBirdListPosition);
-					if (checkedBirdListPosition == position)
-						return;
+			if (birdLists.get(position).getId() == Utils.getCurrentListID()) {
+				checkedBirdListPosition = position;
+				mActiveImage.setVisibility(View.VISIBLE);
+			} else {
+				mActiveImage.setVisibility(View.INVISIBLE);
+			}
 
-					View vMain = ((View) v.getParent());
-					View previousCheckedRow = ((ViewGroup) vMain.getParent()).getChildAt(checkedBirdListPosition);
-					RadioButton previousCheckedRadio = (RadioButton) previousCheckedRow.findViewById(R.id.radioButton_currList);
-					previousCheckedRadio.setChecked(false);
-
-					checkedBirdListPosition = position;
-					BirdList newList = birdLists.get(checkedBirdListPosition);
-					Utils.setCurrentList(newList.getListName(), newList.getId());
-				}
-			});
 			return rowView;
 		}
 	}
@@ -270,6 +315,47 @@ public class BirdListActivity extends Activity {
 					mListAdapter.birdLists = new ArrayList<BirdList>();
 				}
 				mListAdapter.birdLists.add(0, result);
+				mListAdapter.notifyDataSetChanged();
+			}
+		}
+	}
+
+	private class UpdateBirdListAsyncTask extends AsyncTask<BirdList, String, BirdList> {
+
+		@Override
+		protected BirdList doInBackground(BirdList... params) {
+			if(params == null || params.length == 0) return null;
+			DBHandler dh = DBHandler.getInstance(getApplicationContext());
+
+			BirdList list = dh.getBirdListByName(params[0].getListName());
+			if(list != null) {
+				publishProgress("List already exists. Specify a different name");
+				return null;
+			}
+			dh.updateBirdList(params[0].getId(), params[0]);
+			return params[0];
+		}
+
+		@Override
+		protected void onProgressUpdate(String... values) {
+			Toast.makeText(getApplicationContext(), values[0], Toast.LENGTH_SHORT).show();
+		}
+
+		@Override
+		protected void onPostExecute(BirdList result) {
+			if(result != null) {
+				mNewListNameText.setText("");
+				mNewListView.setVisibility(View.GONE);
+				LIST_ACTION type = (LIST_ACTION) mNewListSaveButton.getTag(R.string.key_list_type);
+				if(LIST_ACTION.RENAME_LIST.equals(type)) {
+					int position = (Integer) mNewListSaveButton.getTag(R.string.key_list_position);
+					mListAdapter.birdLists.get(position).setListName(result.getListName());
+				} else {
+					if(mListAdapter.birdLists == null) {
+						mListAdapter.birdLists = new ArrayList<BirdList>();
+					}
+					mListAdapter.birdLists.add(0, result);
+				}
 				mListAdapter.notifyDataSetChanged();
 			}
 		}
