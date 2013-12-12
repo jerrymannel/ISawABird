@@ -48,7 +48,9 @@
         android:text="@string/zero"
         android:textSize="50sp"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="#1695A3"/>
+        android:textColor="#1695A3"
+        android:minWidth="100dp"
+        android:gravity="right"/>
     
     <TextView
         android:id="@+id/textView_total_text"
@@ -57,7 +59,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:textColor="@color/color_grey"
-        android:text="@string/total" />
+        android:text="@string/total" 
+        />
 
     <TextView
         android:id="@+id/textView_total"
@@ -69,7 +72,10 @@
         android:text="@string/zero"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="50sp"
-        android:textColor="@color/color_grey" />
+        android:textColor="@color/color_grey" 
+        android:minWidth="100dp"
+        android:gravity="left"
+        />
 
     <Button
         android:id="@+id/btn_myLists"
