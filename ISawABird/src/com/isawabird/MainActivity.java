@@ -295,7 +295,7 @@ public class MainActivity extends Activity {
 			Log.e(Consts.TAG, "Count: " + birdCount + ", total: " + totalBirdCount);
 			mBirdCountText.setText(String.valueOf(birdCount));
 			mTotalBirdCountText.setText(String.valueOf(totalBirdCount));
-			if (Utils.getCurrentListName().isEmpty()) {
+			if (!Utils.getCurrentListName().isEmpty()) {
 				currentListName.setText(Utils.getCurrentListName());
 			}
 		}
