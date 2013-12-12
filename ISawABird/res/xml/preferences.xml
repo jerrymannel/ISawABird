@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="Settings" >
 
-    <ListPreference
-        android:defaultValue="India"
-        android:entries="@array/checklists"
-        android:entryValues="@array/checklists"
-        android:key="masterChecklist"
-        android:title="Master Checklist" />
-
-    <PreferenceCategory>
+    <PreferenceCategory android:title="Bird List">
+        <ListPreference
+            android:defaultValue="India"
+            android:entries="@array/checklists"
+            android:entryValues="@array/checklists"
+            android:key="masterChecklist"
+            android:title="Master Checklist" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Miscellaneous">
         <Preference
             android:key="feedback"
             android:summary="Help us improve the application for you."

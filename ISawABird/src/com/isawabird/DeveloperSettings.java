@@ -44,6 +44,7 @@ public class DeveloperSettings extends PreferenceActivity implements SharedPrefe
 
 		about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
+				startActivity(new Intent(getApplicationContext(), AboutActivity.class));
 				return false;
 			}
 		});
@@ -66,6 +67,7 @@ public class DeveloperSettings extends PreferenceActivity implements SharedPrefe
 		prefs.registerOnSharedPreferenceChangeListener(this);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void onSharedPreferenceChanged(SharedPreferences sharedPrefs, String key) {
 		if (key.equals("masterChecklist")) {
 			masterChecklist.setSummary(sharedPrefs.getString("masterChecklist", "India"));

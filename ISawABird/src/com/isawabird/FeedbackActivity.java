@@ -15,7 +15,7 @@ public class FeedbackActivity extends Activity {
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.feedback);
+		setContentView(R.layout.activity_feedback);
 		
 		feedback_editText = (EditText) findViewById(R.id.feedback_editText);
 		feedback_button = (Button) findViewById(R.id.feedback_button);
