@@ -187,9 +187,7 @@ public class MainActivity extends Activity {
 
 					@Override
 					public void onClick(View v) {
-						btn_settings.setVisibility(View.INVISIBLE);
-						btn_loginLogout.setVisibility(View.INVISIBLE);
-						btn_help.setVisibility(View.INVISIBLE);
+						mLayoutSettings.setVisibility(View.GONE);
 						btn_more.setWidth(88);
 						helpOverlay.setVisibility(View.VISIBLE);
 						helpOverlay.setOnClickListener(new OnClickListener() {
@@ -203,8 +201,7 @@ public class MainActivity extends Activity {
 
 				btn_loginLogout.setOnClickListener(new OnClickListener() {
 					public void onClick(View v) {
-						btn_settings.setVisibility(View.INVISIBLE);
-						btn_loginLogout.setVisibility(View.INVISIBLE);
+						mLayoutSettings.setVisibility(View.GONE);
 						btn_more.setWidth(88);
 						startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 					}
@@ -232,7 +229,7 @@ public class MainActivity extends Activity {
 		startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
 	}
 	
-	public void showSettings(View v){
+	public void showSettings(View view){
 		startActivity(new Intent(getApplicationContext(), DeveloperSettings.class));
 	}
 

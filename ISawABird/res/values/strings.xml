@@ -38,10 +38,13 @@
     <string name="newlist">Enter list name &#8230;</string>
     <string name="listinfo">Log press a list for more options.</string>
      <string name="add_list">Add list</string>
-    <string name="delete_lists">Delete list</string>
+    <string name="delete_list">Delete list</string>
+    <string name="rename_list">Rename list</string>
     <string name="set_default">Set as default</string>
     <string name="delete_sighting">Delete Sighting</string>
     <string name="submitFeedback">Submit Feedback</string>
+    <string name="key_list_type">key1</string>
+    <string name="key_list_position">key2</string>
 
     <color name="color_dark_gray">#292929</color>
     <color name="color_grey">#999</color>

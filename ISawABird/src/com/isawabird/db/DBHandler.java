@@ -253,7 +253,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return getBirdCountByListId(Utils.getCurrentListID());
 	}
 	
-	public BirdList getBirdListByName(String listName) throws ISawABirdException {
+	public BirdList getBirdListByName(String listName) {
 		if(!db.isOpen()) db = getWritableDatabase();
 		
 		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_NAME, new String [] { listName , ParseUtils.getCurrentUsername() });
