@@ -6,46 +6,6 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical" >
 
-   <!-- <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/title_gradient"
-        android:padding="10dp" >
-
-        <TextView
-            android:id="@+id/mylists_title"
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.93"
-            android:gravity="center_vertical"
-            android:padding="10dp"
-            android:text="@string/my_list"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="#F3FFE2" />
-
-        <TextView
-            android:id="@+id/btn_add_new_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawableRight="@android:drawable/ic_menu_add"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="@string/currentlist"
-        android:textColor="#999"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="10dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" /> -->
-
     <LinearLayout
         android:id="@+id/layout_new_list"
         android:layout_width="match_parent"
@@ -83,6 +43,17 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
         
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/mylistview_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/listinfo"
+        android:layout_gravity="right|center_vertical"
+        android:padding="5dp"
+        android:textColor="@color/color_grey"
+        android:textStyle="italic"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ListView
         android:id="@+id/mylistView"

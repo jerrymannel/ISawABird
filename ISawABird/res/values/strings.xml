@@ -36,7 +36,7 @@
     <string name="undo">Undo</string>
     <string name="retry">Retry</string>
     <string name="newlist">Enter list name &#8230;</string>
-    <string name="currentlist">Select the active list</string>
+    <string name="listinfo">Tap and hold a list to make it active or to delete it.</string>
      <string name="add_list">Add list</string>
     <string name="delete_lists">Delete list</string>
     <string name="set_default">Set as default</string>
