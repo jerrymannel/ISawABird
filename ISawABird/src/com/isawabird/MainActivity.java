@@ -107,8 +107,8 @@ public class MainActivity extends Activity {
 				new UpdateBirdCountAsyncTask().execute();
 				
 				// TODO : Remove later 
-				DBHandler dh = DBHandler.getInstance(getApplicationContext());
-				dh.addFeedback("Man this is the best app in the world. Best thing since sliced bread"); 
+//				DBHandler dh = DBHandler.getInstance(getApplicationContext());
+//				dh.addFeedback("Man this is the best app in the world. Best thing since sliced bread"); 
 				
 				// move heavy work to asynctask
 				new InitChecklistAsyncTask(getApplicationContext()).execute();
