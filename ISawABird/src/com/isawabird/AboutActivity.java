@@ -28,7 +28,7 @@ public class AboutActivity extends Activity {
 		contactTextView = (TextView) findViewById(R.id.aboutTextView_contact);
 		contactTextView.setTypeface(Utils.getOpenSansLightTypeface(this));
 
-		namesTextView.setText("Srihari kulkarni\nJerry M Reghunath\nPradeep S Bhat\nChethan Kumar SN");
+		namesTextView.setText("Srihari Kulkarni\nJerry M Reghunath\nPradeep S Bhat\nChethan Kumar SN");
 
 		contactTextView.setText("Contact us at birdr@dhatu.com");
 	}
