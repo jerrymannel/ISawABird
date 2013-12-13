@@ -10,11 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:drawableLeft="@drawable/ic_launcher"
         android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/color_black_333"
-        android:textSize="50sp" />
+        android:textColor="@color/color_main_title"
+        android:textSize="150sp" />
 
     <LinearLayout
         android:id="@+id/layout_login"
@@ -107,9 +106,10 @@
         android:layout_above="@+id/layout_social"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
+        android:visibility="invisible"
         android:text="@string/forgot_password"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_grey" />
+        android:textColor="@color/color_white" />
 
     <LinearLayout
         android:id="@+id/layout_social"
@@ -140,6 +140,7 @@
             android:background="@drawable/button_gplus_login_selector"
             android:drawableLeft="@drawable/gplus"
             android:onClick="loginGoogle"
+            android:visibility="gone"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_white"
             android:textSize="14sp" />
@@ -165,7 +166,7 @@
         android:padding="10dp"
         android:text="@string/skip"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/color_black_333"
+        android:textColor="@color/color_white"
         android:textSize="20sp"
         android:textStyle="bold" />
 
@@ -180,7 +181,7 @@
         android:padding="10dp"
         android:text="@string/signup"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/color_black_333"
+        android:textColor="@color/color_white"
         android:textSize="20sp"
         android:textStyle="bold" />
 

@@ -45,6 +45,7 @@ public class LoginActivity extends Activity {
 	Typeface openSansBold;
 	Typeface openSansBoldItalic;
 	Typeface sonsie;
+	Typeface tangerine;
 
 
 	@Override
@@ -59,6 +60,7 @@ public class LoginActivity extends Activity {
 		openSansBold = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-Bold.ttf");
 		openSansBoldItalic = Typeface.createFromAsset(getAssets(), "fonts/OpenSans-BoldItalic.ttf");
 		sonsie = Typeface.createFromAsset(getAssets(), "fonts/SonsieOne-Regular.ttf");
+		tangerine = Typeface.createFromAsset(getAssets(), "fonts/Tangerine_Bold.ttf");
 
 		tv_title = (TextView)findViewById(R.id.textView_title);
 		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
@@ -74,7 +76,7 @@ public class LoginActivity extends Activity {
 		mPassText = (EditText) findViewById(R.id.text_pass);
 		mPassConfirmText = (EditText) findViewById(R.id.text_confirm);
 
-		tv_title.setTypeface(sonsie);
+		tv_title.setTypeface(tangerine);
 		tv_forgot.setTypeface(openSansLight);
 
 		mLoginButton.setTypeface(openSansBold);
