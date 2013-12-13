@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.parse.FindCallback;
 import com.parse.LogInCallback;
@@ -115,16 +116,25 @@ public class LoginActivity extends Activity {
 		try {
 			String user = mUsernameText.getText().toString();
 			String pass = mPassText.getText().toString();
-			//			Log.i(Consts.TAG, "Logging in...");
-			//			ParseUser.logIn("sriniketana", "test123");
-			//			Log.i(Consts.TAG, "Logged in");
-			//			showHome();
-			Log.i(Consts.TAG, "User/pwd = " + user + ":" + pass);
 			ParseUser.logInInBackground(user, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
 					if(user == null) {
 						Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
 					} else {
+						/* Bird Race specific code */ 
+						String city = user.getString(Consts.BIRDRACE_CITY); 
+						if (city != null){
+							Log.i(Consts.TAG, "Bird Race user "); 
+							/* Create a new list for BirdRace */
+							try{ 
+								DBHandler dh = DBHandler.getInstance(getApplicationContext());
+								BirdList birdRaceList = new BirdList(city + " BirdRace " + user.getInt(Consts.BIRDRACE_YEAR)); 
+								dh.addBirdList(birdRaceList, true);
+							}catch(ISawABirdException ex){
+								/* DO nothing. The list already exists */ 
+							}
+							
+						}
 						showHome();
 					}
 				}

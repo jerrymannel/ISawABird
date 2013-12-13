@@ -11,6 +11,8 @@ public abstract class Consts {
 	public static final String CURRENT_USER_ANONYMOUS = "DummyUser";
 	public static final String IS_FIRST_TIME = "IsFirstTime";
 	public static final String CHECKLIST = "Checklist";
+	public static final String BIRDRACE_CITY = "BirdRaceCity"; 
+	public static final String BIRDRACE_YEAR = "BirdRaceYear";
 
 	public static final String CSV_DELIMITER = ",";
 	
