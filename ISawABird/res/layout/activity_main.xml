@@ -45,6 +45,7 @@
         android:layout_alignParentRight="true"
         android:minWidth="100dp"
         android:text="@string/zero"
+        android:gravity="right"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="#1695A3"
         android:textSize="50sp" />
@@ -102,7 +103,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/btn_more"
-        android:background="#efefef"
+        android:background="@drawable/settings_menu_backgroud"
         android:orientation="vertical"
         android:visibility="gone" >
 
@@ -114,6 +115,7 @@
             android:background="@drawable/button_bottom_selector"
             android:drawableRight="@android:drawable/presence_offline"
             android:text="@string/login"
+            android:gravity="left|center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_black_333" />
 
@@ -125,6 +127,7 @@
             android:drawableRight="@android:drawable/ic_menu_preferences"
             android:onClick="showSettings"
             android:text="@string/settings"
+            android:gravity="left|center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_black_333" />
 
@@ -135,6 +138,7 @@
             android:background="@drawable/button_bottom_selector"
             android:drawableRight="@android:drawable/ic_menu_help"
             android:text="@string/help"
+            android:gravity="left|center_vertical"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/color_black_333" />
     </LinearLayout>
