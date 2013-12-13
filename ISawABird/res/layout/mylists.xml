@@ -51,7 +51,7 @@
         android:text="@string/listinfo"
         android:layout_gravity="right|center_vertical"
         android:padding="5dp"
-        android:textColor="@color/color_grey"
+        android:textColor="@color/color_black_333"
         android:textStyle="italic"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
