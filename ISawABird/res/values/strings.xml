@@ -67,5 +67,7 @@
         <item >World</item>
     </string-array>
     <string name="app_id">198861263634066</string>
+    <string name="versionNumber">v 1.0</string>
+    <string name="developedBy">Developed by</string>
 
 </resources>

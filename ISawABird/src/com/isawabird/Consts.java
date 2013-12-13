@@ -23,7 +23,7 @@ public abstract class Consts {
 	public static final String ACCOUNT_TYPE = "2by0.com";
 
 	// The account name
-	public static final String ACCOUNT = "parse_dummy_account";
+	public static final String ACCOUNT = "birdr";
 
 	public static final CharSequence LOGIN = "Login";
 	public static final CharSequence LOGOUT = "Logout";

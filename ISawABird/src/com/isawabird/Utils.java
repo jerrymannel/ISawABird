@@ -157,4 +157,7 @@ public class Utils {
 	public static Typeface getOpenSansLightTypeface(Activity activity) {
 		return Typeface.createFromAsset(activity.getAssets(), "fonts/OpenSans-Light.ttf");
 	}
+	public static Typeface getTangerineTypeface(AboutActivity activity) {
+		return Typeface.createFromAsset(activity.getAssets(), "fonts/Tangerine_Bold.ttf");
+	}
 }

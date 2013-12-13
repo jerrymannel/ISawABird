@@ -244,8 +244,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		return result;
 	}
 
-	
-	
 	public long getBirdCountByListId(long listId) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
