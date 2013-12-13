@@ -30,6 +30,6 @@ public class AboutActivity extends Activity {
 
 		namesTextView.setText("Srihari Kulkarni\nJerry Mannel\nPradeep S Bhat\nChethan Kumar SN");
 
-		contactTextView.setText("Contact us at birdr@dhatu.com");
+		contactTextView.setText("Contact us at birdr@dhaatu.com");
 	}
 }
