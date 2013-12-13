@@ -28,7 +28,7 @@ import com.parse.SignUpCallback;
 public class LoginActivity extends Activity {
 
 	private TextView tv_title;
-	private TextView tv_forgot;
+//	private TextView tv_forgot;
 
 	private Button mLoginButton;
 	private TextView mSignupButton;
@@ -63,7 +63,7 @@ public class LoginActivity extends Activity {
 		tangerine = Typeface.createFromAsset(getAssets(), "fonts/Tangerine_Bold.ttf");
 
 		tv_title = (TextView)findViewById(R.id.textView_title);
-		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
+//		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
 
 		mLoginButton = (Button) findViewById(R.id.btn_login);
 		mSignupButton = (TextView) findViewById(R.id.btn_signup);
@@ -77,7 +77,7 @@ public class LoginActivity extends Activity {
 		mPassConfirmText = (EditText) findViewById(R.id.text_confirm);
 
 		tv_title.setTypeface(tangerine);
-		tv_forgot.setTypeface(openSansLight);
+//		tv_forgot.setTypeface(openSansLight);
 
 		mLoginButton.setTypeface(openSansBold);
 		mSignupButton.setTypeface(openSansBold);
@@ -99,7 +99,7 @@ public class LoginActivity extends Activity {
 		mShowLoginButton.setVisibility(View.GONE);
 		mSignupButton.setVisibility(View.GONE);
 		mPassConfirmText.setVisibility(View.GONE);
-		tv_forgot.setVisibility(View.VISIBLE);
+//		tv_forgot.setVisibility(View.VISIBLE);
 		mShowSignupButton.setVisibility(View.VISIBLE);
 		mLoginButton.setVisibility(View.VISIBLE);
 	}
@@ -107,7 +107,7 @@ public class LoginActivity extends Activity {
 	public void showSignup(View view) {
 		mShowSignupButton.setVisibility(View.GONE);
 		mLoginButton.setVisibility(View.GONE);
-		tv_forgot.setVisibility(View.GONE);
+//		tv_forgot.setVisibility(View.GONE);
 		mShowLoginButton.setVisibility(View.VISIBLE);
 		mPassConfirmText.setVisibility(View.VISIBLE);
 		mSignupButton.setVisibility(View.VISIBLE);

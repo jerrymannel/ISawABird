@@ -15,101 +15,17 @@
         android:textColor="@color/color_main_title"
         android:textSize="150sp" />
 
-    <LinearLayout
-        android:id="@+id/layout_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_forgot_password"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/login_form_backgroud"
-        android:orientation="vertical"
-        android:paddingBottom="15dp"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp" >
-
-        <EditText
-            android:id="@+id/text_email"
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/textarea_normal"
-            android:ellipsize="start"
-            android:ems="8"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:paddingBottom="5dp"
-            android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" />
-
-        <EditText
-            android:id="@+id/text_pass"
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/textarea_normal"
-            android:ellipsize="start"
-            android:ems="8"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" />
-
-        <EditText
-            android:id="@+id/text_confirm"
-            android:layout_width="225dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/textarea_normal"
-            android:ellipsize="start"
-            android:ems="8"
-            android:hint="@string/confirm_password"
-            android:inputType="textPassword"
-            android:paddingBottom="5dp"
-            android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_login_selector"
-            android:gravity="center_vertical|center_horizontal"
-            android:onClick="login"
-            android:text="@string/login" />
-
-        <Button
-            android:id="@+id/btn_signup"
-            android:layout_width="220dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/button_login_selector"
-            android:gravity="center_vertical|center_horizontal"
-            android:onClick="signup"
-            android:text="@string/signup"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/btn_forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layout_social"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:visibility="invisible"
-        android:text="@string/forgot_password"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/color_white" />
+<!--     <TextView -->
+<!--         android:id="@+id/btn_forgot_password" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_above="@+id/layout_social" -->
+<!--         android:layout_centerHorizontal="true" -->
+<!--         android:layout_marginBottom="30dp" -->
+<!--         android:visibility="invisible" -->
+<!--         android:text="@string/forgot_password" -->
+<!--         android:textAppearance="?android:attr/textAppearanceSmall" -->
+<!--         android:textColor="@color/color_white" /> -->
 
     <LinearLayout
         android:id="@+id/layout_social"
@@ -200,5 +116,91 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/layout_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/login_form_backgroud"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp" >
+
+        <EditText
+            android:id="@+id/text_email"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textarea_normal"
+            android:ellipsize="start"
+            android:ems="8"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="5dp"
+            android:textColor="@color/color_black_333"
+            android:textCursorDrawable="@null" >
+
+            <requestFocus />
+        </EditText>
+
+        <EditText
+            android:id="@+id/text_pass"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/textarea_normal"
+            android:ellipsize="start"
+            android:ems="8"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textColor="@color/color_black_333"
+            android:textCursorDrawable="@null" />
+
+        <EditText
+            android:id="@+id/text_confirm"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/textarea_normal"
+            android:ellipsize="start"
+            android:ems="8"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"
+            android:paddingBottom="5dp"
+            android:textColor="@color/color_black_333"
+            android:textCursorDrawable="@null"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_login_selector"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="login"
+            android:text="@string/login" />
+
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_login_selector"
+            android:gravity="center_vertical|center_horizontal"
+            android:onClick="signup"
+            android:text="@string/signup"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </RelativeLayout>
