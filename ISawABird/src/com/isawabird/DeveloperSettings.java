@@ -78,13 +78,12 @@ public class DeveloperSettings extends PreferenceActivity implements SharedPrefe
 
 		version.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			public boolean onPreferenceClick(Preference preference) {
-				if (counter == 5) {
-					counter = 1;
-					showToast("Chirp! Chirp!");
-					player.start();
-				} else {
-					showToast("Tap count :: " + counter);
-					counter++;
+				switch (counter){
+				case 1 : showToast("Don't touch me... "); counter++; break;
+				case 2 : showToast("I'm telling you, don't touch me... "); counter++; break;
+				case 3 : showToast("Stop it!!!"); counter++; break;
+				case 4 : showToast("Touch me one more time!"); counter++; break;
+				case 5 : showToast("Chirp! Chirp!"); player.start(); counter=1; break;
 				}
 				return false;
 			}
@@ -117,7 +116,7 @@ public class DeveloperSettings extends PreferenceActivity implements SharedPrefe
 			public void run() {
 				prefToast.cancel();
 			}
-		}, 500);
+		}, 2000);
 	}
 
 }
