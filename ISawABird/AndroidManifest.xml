@@ -20,11 +20,13 @@
 
     <application
         android:name="com.isawabird.ISawABirdApplication"
+        android:screenOrientation="portrait"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
             android:name="com.isawabird.MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,14 +34,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" >
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="com.isawabird.SearchActivity" />
-        <activity android:name="com.isawabird.DeveloperSettings" />
-        <activity android:name="com.isawabird.BirdListActivity" />
-        <activity android:name="com.isawabird.SightingsActivity" />
-        <activity android:name="com.isawabird.FeedbackActivity" />
-        <activity android:name="com.isawabird.AboutActivity" />
+        <activity android:name="com.isawabird.SearchActivity" 
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.isawabird.DeveloperSettings" 
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.isawabird.BirdListActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.isawabird.SightingsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.isawabird.FeedbackActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="com.isawabird.AboutActivity"
+            android:screenOrientation="portrait" />
 
         <!-- <activity android:name="com.isawabird.SectionListView" android:label="@string/searchActivity"></activity> -->
 
