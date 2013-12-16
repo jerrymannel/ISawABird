@@ -180,7 +180,13 @@ public class LoginActivity extends Activity {
 			@Override
 			public void done(ParseUser user, ParseException ex) {
 				if (user == null) {
-					Toast.makeText(getApplicationContext(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+					String errMsg ; 
+					if (ex == null){
+						errMsg = "Sorry, but looks like you cancelled the Twitter login";
+					}else {
+						errMsg = "Unable to login using Twitter " + ex.getMessage(); 
+					}
+					Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
 				} else {
 					Utils.setCurrentUsername(user.getUsername());
 					showHome();
