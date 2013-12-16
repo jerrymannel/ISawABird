@@ -1,6 +1,8 @@
 package com.isawabird;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,7 +56,9 @@ public class BirdListActivity extends Activity {
 
 	private DBHandler dh;
 
-	private enum LIST_ACTION {ADD_LIST, RENAME_LIST};
+	private enum LIST_ACTION {
+		ADD_LIST, RENAME_LIST
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,16 +91,16 @@ public class BirdListActivity extends Activity {
 			public void onClick(View v) {
 				keyboardManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 				String listName = mNewListNameText.getText().toString();
-				if(listName.isEmpty()) {
+				if (listName.isEmpty()) {
 					Toast.makeText(BirdListActivity.this, "Name cannot be empty", Toast.LENGTH_SHORT).show();
 					return;
 				}
 
 				LIST_ACTION type = (LIST_ACTION) mNewListSaveButton.getTag(R.string.key_list_type);
-				
+
 				Log.e(Consts.TAG, "saving + " + type);
 				BirdList list;
-				if(LIST_ACTION.RENAME_LIST.equals(type)) {
+				if (LIST_ACTION.RENAME_LIST.equals(type)) {
 					int position = (Integer) mNewListSaveButton.getTag(R.string.key_list_position);
 					list = mListAdapter.birdLists.get(position);
 					list.setListName(listName);
@@ -126,8 +130,7 @@ public class BirdListActivity extends Activity {
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		MenuInflater inflater = getMenuInflater();
@@ -137,9 +140,10 @@ public class BirdListActivity extends Activity {
 	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			switch (which){
+			switch (which) {
 			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteBirdListPosition == -1) return;
+				if (deleteBirdListPosition == -1)
+					return;
 				new DeleteListAsyncTask().execute(deleteBirdListPosition);
 				break;
 
@@ -155,16 +159,16 @@ public class BirdListActivity extends Activity {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		switch (item.getItemId()) {
 		case R.id.action_delete_list:
-			deleteBirdListPosition  = info.position;
+			deleteBirdListPosition = info.position;
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-			.setNegativeButton("No", dialogClickListener).show();
+			builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener)
+					.show();
 			return true;
 		case R.id.action_rename_list:
 			mNewListSaveButton.setTag(R.string.key_list_type, LIST_ACTION.RENAME_LIST);
 			mNewListSaveButton.setTag(R.string.key_list_position, info.position);
 			mNewListNameText.setText(mListAdapter.birdLists.get(info.position).getListName());
-			if(mNewListNameText.requestFocus()) {
+			if (mNewListNameText.requestFocus()) {
 				keyboardManager.showSoftInput(mNewListNameText, 0);
 			}
 			mNewListView.setVisibility(View.VISIBLE);
@@ -174,7 +178,8 @@ public class BirdListActivity extends Activity {
 			Utils.setCurrentList(list.getListName(), list.getId());
 
 			currRow = (ViewGroup) mBirdListView.getChildAt(info.position);
-			defaultRow = (ViewGroup) mBirdListView.getChildAt(checkedBirdListPosition);;
+			defaultRow = (ViewGroup) mBirdListView.getChildAt(checkedBirdListPosition);
+			;
 
 			activeImageView = (ImageView) defaultRow.getChildAt(1);
 			currentImageView = (ImageView) currRow.getChildAt(1);
@@ -205,7 +210,7 @@ public class BirdListActivity extends Activity {
 			mNewListSaveButton.setTag(R.string.key_list_type, LIST_ACTION.ADD_LIST);
 			// show 'add new list' view
 			mNewListView.setVisibility(View.VISIBLE);
-			if(mNewListNameText.requestFocus()) {
+			if (mNewListNameText.requestFocus()) {
 				keyboardManager.showSoftInput(mNewListNameText, 0);
 			}
 			return true;
@@ -260,9 +265,9 @@ public class BirdListActivity extends Activity {
 
 			String listName = birdLists.get(position).getListName();
 			mListNameText.setText(listName);
-			try{
+			try {
 				mCountForEachList.setText("" + dh.getBirdCountByListId(dh.getListIDByName(listName)));
-			} catch (ISawABirdException e){
+			} catch (ISawABirdException e) {
 				e.printStackTrace();
 				Log.i(Consts.TAG, "No list with " + listName + " found.");
 				Log.i(Consts.TAG, e.getMessage());
@@ -283,18 +288,20 @@ public class BirdListActivity extends Activity {
 
 		@Override
 		protected BirdList doInBackground(BirdList... params) {
-			if(params == null || params.length == 0) return null;
+			if (params == null || params.length == 0)
+				return null;
 
 			long result = -1;
 			try {
 				result = DBHandler.getInstance(getApplicationContext()).addBirdList(params[0], true);
 			} catch (ISawABirdException e) {
 				e.printStackTrace();
-				if(e.getErrorCode() == ISawABirdException.ERR_LIST_ALREADY_EXISTS) {
+				if (e.getErrorCode() == ISawABirdException.ERR_LIST_ALREADY_EXISTS) {
 					publishProgress("List already exists. Specify a different name");
 				}
 			}
-			if(result == -1) return null;
+			if (result == -1)
+				return null;
 
 			params[0].setId(result);
 			return params[0];
@@ -307,11 +314,11 @@ public class BirdListActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(BirdList result) {
-			if(result != null) {
+			if (result != null) {
 				Toast.makeText(getBaseContext(), "Added new list :: " + mNewListNameText.getText(), Toast.LENGTH_SHORT).show();
 				mNewListNameText.setText("");
 				mNewListView.setVisibility(View.GONE);
-				if(mListAdapter.birdLists == null) {
+				if (mListAdapter.birdLists == null) {
 					mListAdapter.birdLists = new ArrayList<BirdList>();
 				}
 				mListAdapter.birdLists.add(0, result);
@@ -324,11 +331,12 @@ public class BirdListActivity extends Activity {
 
 		@Override
 		protected BirdList doInBackground(BirdList... params) {
-			if(params == null || params.length == 0) return null;
+			if (params == null || params.length == 0)
+				return null;
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 
 			BirdList list = dh.getBirdListByName(params[0].getListName());
-			if(list != null) {
+			if (list != null) {
 				publishProgress("List already exists. Specify a different name");
 				return null;
 			}
@@ -343,15 +351,15 @@ public class BirdListActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(BirdList result) {
-			if(result != null) {
+			if (result != null) {
 				mNewListNameText.setText("");
 				mNewListView.setVisibility(View.GONE);
 				LIST_ACTION type = (LIST_ACTION) mNewListSaveButton.getTag(R.string.key_list_type);
-				if(LIST_ACTION.RENAME_LIST.equals(type)) {
+				if (LIST_ACTION.RENAME_LIST.equals(type)) {
 					int position = (Integer) mNewListSaveButton.getTag(R.string.key_list_position);
 					mListAdapter.birdLists.get(position).setListName(result.getListName());
 				} else {
-					if(mListAdapter.birdLists == null) {
+					if (mListAdapter.birdLists == null) {
 						mListAdapter.birdLists = new ArrayList<BirdList>();
 					}
 					mListAdapter.birdLists.add(0, result);
@@ -384,10 +392,12 @@ public class BirdListActivity extends Activity {
 	private class DeleteListAsyncTask extends AsyncTask<Integer, String, Integer> {
 
 		protected Integer doInBackground(Integer... params) {
-			if(params[0] == -1) return -1;
+			if (params[0] == -1)
+				return -1;
 
 			BirdList list = mListAdapter.birdLists.get(params[0]);
-			if(list == null) return -1;
+			if (list == null)
+				return -1;
 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			dh.deleteList(list.getId());
@@ -397,15 +407,31 @@ public class BirdListActivity extends Activity {
 		@Override
 		protected void onPostExecute(Integer position) {
 			int pos = position;
-			if(position != -1) {
+			if (position != -1) {
 				mListAdapter.birdLists.remove(pos);
-				if(checkedBirdListPosition == position && mListAdapter.birdLists.size() > 0) {
+				if (checkedBirdListPosition == position && mListAdapter.birdLists.size() > 0) {
 					BirdList list = mListAdapter.birdLists.get(0);
 					Utils.setCurrentList(list.getListName(), list.getId());
 				}
 				mListAdapter.notifyDataSetChanged();
 				deleteBirdListPosition = -1;
 				SyncUtils.triggerRefresh();
+			}
+			if (mListAdapter.birdLists.size() == 0) {
+				DBHandler dh = DBHandler.getInstance(getApplicationContext());
+				try {
+					if (Utils.getCurrentListID() == -1) {
+						// create one based on todays date
+						BirdList list = new BirdList(new SimpleDateFormat("dd MMM yyyy").format(new Date()));
+						dh.addBirdList(list, true);
+						mListAdapter.birdLists.add(0, list);
+						Utils.setCurrentList(list.getListName(), list.getId());
+						mListAdapter.notifyDataSetChanged();
+						SyncUtils.triggerRefresh();
+					}
+				} catch (ISawABirdException e) {
+					Log.e(Consts.TAG, e.getMessage());
+				}
 			}
 		}
 	}
