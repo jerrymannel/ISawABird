@@ -15,7 +15,12 @@
                 android:right="5dp"
                 android:top="5dp" />
 
-            <solid android:color="#80333745" />
+            <!-- <solid android:color="#80333745" /> -->
+            <gradient 
+                android:startColor="#D53E0F"
+                android:centerColor="#C5351B"
+                android:endColor="#811C12"
+                android:angle="270"/>
             <corners android:radius="2dp"/>
         </shape>
     </item>

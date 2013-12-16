@@ -28,7 +28,7 @@ import com.parse.SignUpCallback;
 public class LoginActivity extends Activity {
 
 	private TextView tv_title;
-//	private TextView tv_forgot;
+	// private TextView tv_forgot;
 
 	private Button mLoginButton;
 	private TextView mSignupButton;
@@ -47,7 +47,6 @@ public class LoginActivity extends Activity {
 	Typeface sonsie;
 	Typeface tangerine;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,8 +61,8 @@ public class LoginActivity extends Activity {
 		sonsie = Typeface.createFromAsset(getAssets(), "fonts/SonsieOne-Regular.ttf");
 		tangerine = Typeface.createFromAsset(getAssets(), "fonts/Tangerine_Bold.ttf");
 
-		tv_title = (TextView)findViewById(R.id.textView_title);
-//		tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
+		tv_title = (TextView) findViewById(R.id.textView_title);
+		// tv_forgot = (TextView) findViewById(R.id.btn_forgot_password);
 
 		mLoginButton = (Button) findViewById(R.id.btn_login);
 		mSignupButton = (TextView) findViewById(R.id.btn_signup);
@@ -77,11 +76,13 @@ public class LoginActivity extends Activity {
 		mPassConfirmText = (EditText) findViewById(R.id.text_confirm);
 
 		tv_title.setTypeface(tangerine);
-//		tv_forgot.setTypeface(openSansLight);
+		// tv_forgot.setTypeface(openSansLight);
 
-		mLoginButton.setTypeface(openSansBold);
-		mSignupButton.setTypeface(openSansBold);
-		mSkipButton.setTypeface(openSansBold);
+		mLoginButton.setTypeface(openSansLight);
+		mSignupButton.setTypeface(openSansLight);
+		mSkipButton.setTypeface(openSansLight);
+		mShowSignupButton.setTypeface(openSansLight);
+		mShowLoginButton.setTypeface(openSansLight);
 
 		mUsernameText.setTypeface(openSansLight);
 		mPassText.setTypeface(openSansLight);
@@ -99,7 +100,7 @@ public class LoginActivity extends Activity {
 		mShowLoginButton.setVisibility(View.GONE);
 		mSignupButton.setVisibility(View.GONE);
 		mPassConfirmText.setVisibility(View.GONE);
-//		tv_forgot.setVisibility(View.VISIBLE);
+		// tv_forgot.setVisibility(View.VISIBLE);
 		mShowSignupButton.setVisibility(View.VISIBLE);
 		mLoginButton.setVisibility(View.VISIBLE);
 	}
@@ -107,7 +108,7 @@ public class LoginActivity extends Activity {
 	public void showSignup(View view) {
 		mShowSignupButton.setVisibility(View.GONE);
 		mLoginButton.setVisibility(View.GONE);
-//		tv_forgot.setVisibility(View.GONE);
+		// tv_forgot.setVisibility(View.GONE);
 		mShowLoginButton.setVisibility(View.VISIBLE);
 		mPassConfirmText.setVisibility(View.VISIBLE);
 		mSignupButton.setVisibility(View.VISIBLE);
@@ -120,22 +121,22 @@ public class LoginActivity extends Activity {
 			String pass = mPassText.getText().toString();
 			ParseUser.logInInBackground(user, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
-					if(user == null) {
+					if (user == null) {
 						Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
 					} else {
-						/* Bird Race specific code */ 
-						String city = user.getString(Consts.BIRDRACE_CITY); 
-						if (city != null){
-							Log.i(Consts.TAG, "Bird Race user "); 
+						/* Bird Race specific code */
+						String city = user.getString(Consts.BIRDRACE_CITY);
+						if (city != null) {
+							Log.i(Consts.TAG, "Bird Race user ");
 							/* Create a new list for BirdRace */
-							try{ 
+							try {
 								DBHandler dh = DBHandler.getInstance(getApplicationContext());
-								BirdList birdRaceList = new BirdList(city + " BirdRace " + user.getInt(Consts.BIRDRACE_YEAR)); 
+								BirdList birdRaceList = new BirdList(city + " BirdRace " + user.getInt(Consts.BIRDRACE_YEAR));
 								dh.addBirdList(birdRaceList, true);
-							}catch(ISawABirdException ex){
-								/* DO nothing. The list already exists */ 
+							} catch (ISawABirdException ex) {
+								/* DO nothing. The list already exists */
 							}
-							
+
 						}
 						showHome();
 					}
@@ -143,27 +144,27 @@ public class LoginActivity extends Activity {
 			});
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
-			e.printStackTrace();					
+			e.printStackTrace();
 		}
 	}
 
 	public void loginTwitter(View view) {
 		// network not available
-		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET); 
+		ParseTwitterUtils.initialize(ParseConsts.TWITTER_CONSUMER_KEY, ParseConsts.TWITTER_CONSUMER_SECRET);
 		ParseTwitterUtils.logIn(this, new LogInCallback() {
 
 			@Override
 			public void done(ParseUser user, ParseException ex) {
-				if (user == null){
-					Toast.makeText(getApplicationContext(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show(); 
-				}else{
-					Utils.setCurrentUsername(user.getUsername()); 
-					showHome(); 
+				if (user == null) {
+					Toast.makeText(getApplicationContext(), "Unable to login using Twitter " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+				} else {
+					Utils.setCurrentUsername(user.getUsername());
+					showHome();
 				}
 			}
 		});
@@ -171,18 +172,18 @@ public class LoginActivity extends Activity {
 
 	public void loginFacebook(View view) {
 		// network not available
-		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		ParseFacebookUtils.initialize(ParseConsts.FACEBOOK_APP_ID); 
+		ParseFacebookUtils.initialize(ParseConsts.FACEBOOK_APP_ID);
 		ParseFacebookUtils.logIn(this, new LogInCallback() {
 
 			@Override
 			public void done(ParseUser user, ParseException err) {
 				if (user == null) {
-					Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show(); 
+					Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show();
 				} else {
 					Utils.setCurrentUsername(user.getUsername());
 					showHome();
@@ -199,10 +200,9 @@ public class LoginActivity extends Activity {
 		showHome();
 	}
 
-
 	public void loginGoogle(View view) {
 		// network not available
-		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -211,7 +211,7 @@ public class LoginActivity extends Activity {
 	public void signup(View view) {
 
 		// network not available
-		if(!Utils.isNetworkAvailable(getApplicationContext())) {
+		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -220,7 +220,7 @@ public class LoginActivity extends Activity {
 		final String pass = mPassText.getText().toString();
 		final String passConfirm = mPassConfirmText.getText().toString();
 
-		if(!pass.equals(passConfirm)) {
+		if (!pass.equals(passConfirm)) {
 			Toast.makeText(getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -231,8 +231,9 @@ public class LoginActivity extends Activity {
 		query.findInBackground(new FindCallback<ParseUser>() {
 			public void done(List<ParseUser> objects, ParseException e) {
 				if (e == null) {
-					if(objects != null && objects.size() > 0) {
-						Toast.makeText(getApplicationContext(), "User with email '" + email + "' already exists", Toast.LENGTH_SHORT).show();
+					if (objects != null && objects.size() > 0) {
+						Toast.makeText(getApplicationContext(), "User with email '" + email + "' already exists", Toast.LENGTH_SHORT)
+								.show();
 						return;
 					} else {
 						ParseUser user = new ParseUser();
@@ -245,15 +246,16 @@ public class LoginActivity extends Activity {
 							public void done(ParseException e) {
 								// TODO Auto-generated method stub
 								if (e != null) {
-									Toast.makeText(getApplicationContext(), "Not able to signup. Please try again later", Toast.LENGTH_SHORT).show();
+									Toast.makeText(getApplicationContext(), "Not able to signup. Please try again later",
+											Toast.LENGTH_SHORT).show();
 								} else {
 									Toast.makeText(getApplicationContext(), "Successfully signed up", Toast.LENGTH_SHORT).show();
 									ParseUser.logInInBackground(email, pass, new LogInCallback() {
 										@Override
-										public void done(ParseUser user,
-												ParseException e) {
-											if(user == null) {
-												Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
+										public void done(ParseUser user, ParseException e) {
+											if (user == null) {
+												Toast.makeText(getApplicationContext(), "Not able to login. Please try again later",
+														Toast.LENGTH_SHORT).show();
 											} else {
 												showHome();
 											}
@@ -275,9 +277,8 @@ public class LoginActivity extends Activity {
 		Utils.setFirstTime(false);
 		Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
 		// FLAG_ACTIVITY_CLEAR_TOP is required if we are coming from settings by clicking on 'Login'
-		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); 
+		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(homeIntent);
 		finish();
 	}
 }
-	
