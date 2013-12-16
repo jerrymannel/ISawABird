@@ -423,9 +423,10 @@ public class BirdListActivity extends Activity {
 					if (Utils.getCurrentListID() == -1) {
 						// create one based on todays date
 						BirdList list = new BirdList(new SimpleDateFormat("dd MMM yyyy").format(new Date()));
-						dh.addBirdList(list, true);
-						mListAdapter.birdLists.add(0, list);
+						long result = dh.addBirdList(list, true);
+						list.setId(result);
 						Utils.setCurrentList(list.getListName(), list.getId());
+						mListAdapter.birdLists.add(0, list);
 						mListAdapter.notifyDataSetChanged();
 						SyncUtils.triggerRefresh();
 					}
