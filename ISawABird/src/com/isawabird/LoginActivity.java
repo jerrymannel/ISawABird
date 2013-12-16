@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -94,6 +95,24 @@ public class LoginActivity extends Activity {
 				showHome();
 			}
 		});
+	}
+
+	long lastPress;
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - lastPress > 5000) {
+				Toast.makeText(getBaseContext(), "Press Back again to exit.", Toast.LENGTH_SHORT).show();
+				lastPress = currentTime;
+			} else {
+				moveTaskToBack(true);
+				return true;
+			}
+			return false;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	public void showLogin(View view) {

@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
@@ -105,22 +104,22 @@ public class MainActivity extends Activity {
 				btn_help.setTypeface(openSansLight);
 
 				new UpdateBirdCountAsyncTask().execute();
-				
-				// TODO : Remove later 
-//				DBHandler dh = DBHandler.getInstance(getApplicationContext());
-//				dh.addFeedback("Man this is the best app in the world. Best thing since sliced bread"); 
-				
+
+				// TODO : Remove later
+				// DBHandler dh = DBHandler.getInstance(getApplicationContext());
+				// dh.addFeedback("Man this is the best app in the world. Best thing since sliced bread");
+
 				// move heavy work to asynctask
 				new InitChecklistAsyncTask(getApplicationContext()).execute();
-				
+
 				/* Get FGPS location */
 				GPSLocation g = new GPSLocation();
 				g.getLocation(getApplicationContext());
 
-				/* Try to sync if needed */ 
+				/* Try to sync if needed */
 				SyncUtils.createSyncAccount(getApplicationContext());
 				SyncUtils.triggerRefresh();
-				
+
 				showHelpOverlay();
 
 				mBirdCountText.setOnClickListener(new OnClickListener() {
@@ -224,7 +223,7 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(mLayoutSettings.getVisibility() != View.GONE) {
+		if (mLayoutSettings.getVisibility() != View.GONE) {
 			mLayoutSettings.setVisibility(View.GONE);
 		}
 		new UpdateBirdCountAsyncTask().execute();
@@ -233,8 +232,8 @@ public class MainActivity extends Activity {
 	public void showBirdList(View view) {
 		startActivity(new Intent(getApplicationContext(), BirdListActivity.class));
 	}
-	
-	public void showSettings(View view){
+
+	public void showSettings(View view) {
 		startActivity(new Intent(getApplicationContext(), DeveloperSettings.class));
 	}
 
@@ -259,8 +258,8 @@ public class MainActivity extends Activity {
 			Bundle extras = data.getExtras();
 			final String speciesName = extras.getString(Consts.SPECIES_NAME);
 			new AddSightingAsyncTask().execute(speciesName);
-		}else{
-			  
+		} else {
+
 		}
 	}
 
@@ -307,7 +306,8 @@ public class MainActivity extends Activity {
 	}
 
 	private class AddSightingAsyncTask extends AsyncTask<String, String, Boolean> {
-		private String speciesName = "" ; 
+		private String speciesName = "";
+
 		protected Boolean doInBackground(String... params) {
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			try {
@@ -318,9 +318,9 @@ public class MainActivity extends Activity {
 						return false;
 					}
 				}
-				speciesName = params[0]; 
+				speciesName = params[0];
 				undoSightingId = dh.addSightingToCurrentList(params[0]);
-				
+
 			} catch (ISawABirdException e) {
 				Log.e(Consts.TAG, e.getMessage());
 				if (e.getErrorCode() == ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS) {
