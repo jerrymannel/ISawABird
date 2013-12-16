@@ -29,6 +29,7 @@ import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
 import com.parse.ParseInstallation;
+import com.parse.ParseUser;
 import com.parse.PushService;
 
 public class MainActivity extends Activity {
@@ -207,6 +208,7 @@ public class MainActivity extends Activity {
 					public void onClick(View v) {
 						mLayoutSettings.setVisibility(View.GONE);
 						btn_more.setWidth(88);
+						ParseUser.logOut(); 
 						startActivity(new Intent(getApplicationContext(), LoginActivity.class));
 					}
 				});
