@@ -112,7 +112,7 @@
         android:padding="10dp"
         android:text="@string/login"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/color_black_333"
+        android:textColor="@color/color_white"
         android:textSize="20sp"
         android:textStyle="bold"
         android:visibility="gone" />
