@@ -8,7 +8,7 @@
     <string name="mode_online">Online</string>
     <string name="mode_offline">Offline</string>
     <string name="loc_undef">Unable to get location &#8230;</string>
-    <string name="email">Email</string>
+    <string name="email">Email/Username</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="description_short">I saw a bird</string>

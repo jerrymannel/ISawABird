@@ -24,6 +24,7 @@ import com.parse.ParseFacebookUtils;
 import com.parse.ParseQuery;
 import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
+import com.parse.PushService;
 import com.parse.SignUpCallback;
 
 public class LoginActivity extends Activity {
@@ -155,7 +156,9 @@ public class LoginActivity extends Activity {
 							} catch (ISawABirdException ex) {
 								/* DO nothing. The list already exists */
 							}
-
+							PushService.subscribe(getApplicationContext(), "BirdRace", MainActivity.class );
+							PushService.subscribe(getApplicationContext(), city, MainActivity.class );
+							PushService.subscribe(getApplicationContext(), "Y" + String.valueOf(user.getInt(Consts.BIRDRACE_YEAR)), MainActivity.class );
 						}
 						showHome();
 					}
