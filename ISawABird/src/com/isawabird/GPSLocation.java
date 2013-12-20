@@ -1,9 +1,5 @@
 package com.isawabird;
 
-import com.isawabird.parse.ParseUtils;
-import com.parse.ParseGeoPoint;
-
-import android.app.PendingIntent;
 import android.content.Context;
 import android.location.Criteria;
 import android.location.Location;
@@ -11,6 +7,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.isawabird.parse.ParseUtils;
+import com.parse.ParseGeoPoint;
 
 public class GPSLocation implements LocationListener {
 

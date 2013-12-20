@@ -70,8 +70,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+		if(oldVersion == 1 && newVersion >= 2)
+			upgrade1To2(db);
+	}
 
+	private void upgrade1To2(SQLiteDatabase db) {
+		db.execSQL("ALTER TABLE " + DBConsts.TABLE_SIGHTING + " ADD COLUMN " + DBConsts.SIGHTING_IS_HEARD_ONLY + " INTEGER DEFAULT 0");
 	}
 
 	/* Get all sightings for a given list */
@@ -94,8 +98,8 @@ public class DBHandler extends SQLiteOpenHelper {
 			s.setListName(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			s.setLatitude(result.getFloat(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LATITUDE)));
 			s.setLongitude(result.getFloat(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LONGITUDE)));
-			s.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
-
+			s.setHeardOnly(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_IS_HEARD_ONLY)) == 1);
+			s.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));			
 			sightings.add(s);
 		}
 
@@ -118,7 +122,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		if (listId == -1){
 			throw new ISawABirdException(ISawABirdException.ERR_NO_CURRENT_LIST);
 		}
-		
+
 		long result = -1;
 		if(!isSightingExist(sighting.getSpecies().getFullName(), listId, username)) {
 			try {
@@ -132,6 +136,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
 				values.put(DBConsts.SIGHTING_NOTES, sighting.getNotes());
+				values.put(DBConsts.SIGHTING_IS_HEARD_ONLY, (sighting.isHeardOnly())?1:0);
 				values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, DBConsts.TRUE);
 				values.put(DBConsts.PARSE_IS_DELETE_MARKED, DBConsts.FALSE);
 
@@ -174,10 +179,10 @@ public class DBHandler extends SQLiteOpenHelper {
 		Log.i(Consts.TAG, "isSightingExist: " + result.getCount());
 		return (result.getCount() != 0);
 	}
-	
+
 	public int updateBirdList(long listId, BirdList birdList) {
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(DBConsts.LIST_NAME, birdList.getListName()); 
 		values.put(DBConsts.LIST_USER, birdList.getUsername());
@@ -185,7 +190,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
 		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, (birdList.isMarkedForUpload())?1:0);
 		values.put(DBConsts.PARSE_IS_DELETE_MARKED, (birdList.isMarkedForDelete())?1:0); 
-		
+
 		return db.update(DBConsts.TABLE_LIST, values, DBConsts.ID + "=?", new String[]{Long.toString(birdList.getId())});
 	}
 
@@ -193,7 +198,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	public long  addBirdList(BirdList birdList, boolean setCurrentList) throws ISawABirdException{
 		Log.i(Consts.TAG, " >> addBirdList"); 
 		if(!db.isOpen()) db = getWritableDatabase();
-				
+
 		BirdList oldBirdList = getBirdListByName(birdList.getListName());
 		if(oldBirdList != null) {
 			// old bird list with this name already exists
@@ -206,7 +211,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				//TODO: handle below case - instead of setting it null, we should update parseObjectId after every update sync
 				oldBirdList.setParseObjectID(null);
 				updateBirdList(oldId, oldBirdList);
-				
+
 				if (setCurrentList){
 					Utils.setCurrentList(birdList.getListName(), oldId);
 				}
@@ -223,7 +228,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.LIST_NOTES, birdList.getNotes());
 		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
 		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 0);
-		
+
 		long result = -1;
 		try{
 			result = db.insertOrThrow(DBConsts.TABLE_LIST, null, values);
@@ -232,7 +237,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				Log.e(Consts.TAG, "Error occurred");
 				return result; 
 			}
-			
+
 			if (setCurrentList){
 				Utils.setCurrentList(birdList.getListName(), result);
 			}
@@ -240,7 +245,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
 		}
 		dumpTable(DBConsts.TABLE_LIST);
-		
+
 		return result;
 	}
 
@@ -254,15 +259,15 @@ public class DBHandler extends SQLiteOpenHelper {
 	public long getBirdCountForCurrentList() {
 		return getBirdCountByListId(Utils.getCurrentListID());
 	}
-	
+
 	public BirdList getBirdListByName(String listName) {
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_NAME, new String [] { listName , ParseUtils.getCurrentUsername() });
 		if (result.getCount() == 0){
 			return null; 
 		}
-		
+
 		result.moveToNext();
 		BirdList list = new BirdList(listName);
 		list.setId(result.getLong(result.getColumnIndex(DBConsts.ID)));
@@ -273,13 +278,13 @@ public class DBHandler extends SQLiteOpenHelper {
 		list.setMarkedForDelete((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED))) == 1);
 		list.setMarkedForUpload((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED))) == 1);
 		list.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
-		
+
 		return list;
 	}
-	
+
 	public BirdList getBirdListById(long listId) throws ISawABirdException {
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		dumpTable(DBConsts.TABLE_LIST);
 		Log.i("", "List ID is " + listId);
 		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_ID, new String [] { String.valueOf(listId) });
@@ -296,20 +301,20 @@ public class DBHandler extends SQLiteOpenHelper {
 		list.setMarkedForDelete((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED))) == 1);
 		list.setMarkedForUpload((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED))) == 1);
 		list.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
-		
+
 		return list;
 	}
-	
-	
+
+
 	public long getTotalSpeciesCount(){
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		Cursor result = db.rawQuery(DBConsts.QUERY_TOTAL_SPECIES_COUNT, null);
 		result.moveToNext();
 		Log.i(Consts.TAG, "Returning count of " + result.getLong(0));
 		return result.getLong(0); 
 	}
-	
+
 	/* Get the lists for the current user */
 	public ArrayList<BirdList> getBirdLists(String username){
 
@@ -359,7 +364,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
 			birdList.add(temp);
 		}
-		
+
 		Log.i(Consts.TAG, "We have " + birdList.size() + " lists to sync");
 		return birdList;
 	}
@@ -385,13 +390,13 @@ public class DBHandler extends SQLiteOpenHelper {
 				ex.printStackTrace();
 			}
 		}
-		
+
 		return feedbackList;
 	}
 
 
 
-public ArrayList<Sighting> getSightingsToSync(String username) {
+	public ArrayList<Sighting> getSightingsToSync(String username) {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -405,25 +410,27 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 			Sighting temp = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
 			temp.setDate(new Date(result.getLong(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))  * 1000 ));
 			Log.i(Consts.TAG, "Sighting::Date read from DB is " + temp.getDate().toString());
-			
+
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_NOTES)));
 			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
 			// TODO : Add list name instead of list ID 
 			temp.setListId(result.getLong(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LIST_ID))); 
 			temp.setLatitude(result.getDouble(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LATITUDE)));
 			temp.setLongitude(result.getDouble(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LONGITUDE)));
+			temp.setHeardOnly(result.getInt(result.getColumnIndexOrThrow(DBConsts.SIGHTING_IS_HEARD_ONLY)) == 1);
 			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
 			temp.setMarkedForDelete(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED)) == 1);
 			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
+			temp.setListParseObjectId(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LIST_PARSE_OBJECT_ID)));
 			sightings.add(temp);
 		}
-		
+
 		Log.i(Consts.TAG, "We have " + sightings.size() + " sightings to sync");
 		return sightings;
 	}
-	
+
 	public void deleteList(long listId) {
-		
+
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		/* Do not actually delete. Just mark isMarkedDelete = 1(true) */
@@ -441,7 +448,7 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 
 
 	public void deleteList(String listName){
-		
+
 		try{
 			long listId = getListIDByName(listName);
 			deleteList(listId);
@@ -450,16 +457,16 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 			ex.printStackTrace(); 
 		}
 	}
-	
+
 	public void deleteSighting(long sightingId) {
-		
+
 		if(!db.isOpen()) db = getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1);
 		db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.ID + "=?", 
 				new String[] {Long.toString(sightingId)});
 	}
-	
+
 	public void deleteSightingFromCurrentList(String species){
 		if(!db.isOpen()) db = getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -467,27 +474,27 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 		db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.QUERY_DELETE_SIGHTING, 
 				new String[] {species, String.valueOf(Utils.getCurrentListID()) });
 	}
-	
+
 	public void deleteSightingFromList(String species, String listName ){
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		try{
 			long listId = getListIDByName(listName);
-			
+
 			ContentValues values = new ContentValues();
 			values.put(DBConsts.PARSE_IS_DELETE_MARKED, 1);
 			db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.QUERY_DELETE_SIGHTING, 
 					new String[] {species, String.valueOf(listId) });
-			
+
 		}catch(ISawABirdException ex){
 			// TODO : Handle properly. No list by the name is found 
 			ex.printStackTrace(); 
 		}
 	}
-	
+
 	public long getListIDByName(String listName) throws ISawABirdException{
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		String query = DBConsts.LIST_NAME + "=\"" + listName + "\""; 
 		Cursor result = db.query(DBConsts.TABLE_LIST, new String[] { DBConsts.ID} , query , null,null, null, null); 
 		/* List name is unique */ 
@@ -498,10 +505,10 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 			throw new ISawABirdException("No list found in the database"); 
 		}
 	}
-	
+
 	public boolean updateParseObjectID(String tableName, long id, String parseObjectId){
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		try{
 			ContentValues values = new ContentValues(); 
 			values.put(DBConsts.PARSE_OBJECT_ID, parseObjectId); 
@@ -516,14 +523,14 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 		return false;
 	}
 
-	
+
 	public boolean resetUploadRequiredFlag(String tableName, long id){ 
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		try{
 			ContentValues values = new ContentValues(); 
 			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 0);
-			
+
 			db.update(tableName, values, DBConsts.ID + "=" + id, null);
 			return true; 
 		}catch(Exception ex){
@@ -532,9 +539,9 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 		}
 		return false;
 	}
-	
+
 	public boolean setParseFlag(String tableName, long id, String flag, int flagValue) {
-		
+
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		try{
@@ -551,7 +558,7 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 
 	public void addFeedback(String feedback){
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		ContentValues values = new ContentValues();
 		values.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername()); 
 		values.put(DBConsts.FEEDBACK_TEXT, feedback);
@@ -559,10 +566,10 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 		db.insertOrThrow(DBConsts.TABLE_FEEDBACK, null, values);
 		dumpTable(DBConsts.TABLE_FEEDBACK);
 	}
-	
+
 	public boolean deleteLocally(String tableName, long id){ 
 		if(!db.isOpen()) db = getWritableDatabase();
-		
+
 		try{
 			db.delete(tableName, DBConsts.ID + "=" + id, null);
 			return true; 
@@ -572,7 +579,7 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 		}
 		return false;
 	}
-	
+
 	/*public ArrayList<BirdList> getBirdListToSync(boolean toCreate, String username) {
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -603,11 +610,11 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 		}
 		return birdList;
 	}*/
-	
+
 	public void dumpTable(String tableName){
 		if(!db.isOpen()) db = getWritableDatabase();
 		Cursor res = db.query(tableName, null, null, null, null, null, null);
-		
+
 		String dumpString = ""; 
 		for (int i = 0 ; i < res.getColumnCount(); i++){
 			dumpString += res.getColumnName(i) + " | " ;  
@@ -636,7 +643,7 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 			Log.i(Consts.TAG, dumpString); 
 		}
 	}
-	
+
 	public void clearTable(String  tableName){
 		if(!db.isOpen()) db = getWritableDatabase();
 

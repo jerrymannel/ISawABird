@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
-import com.isawabird.ISawABirdException;
 import com.isawabird.Sighting;
 import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
@@ -41,8 +40,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final int MAX_REQUESTS_PER_MONTH = 1000000;
 	private static final int NUM_ACTIVE_USERS = 5000;
 	private static final float QUOTA_PER_MONTH = MAX_REQUESTS_PER_MONTH / NUM_ACTIVE_USERS; // 200
-	private static final String KEY_REQUESTS_THIS_MONTH = "RequestsThisMonth";
-	private static final String KEY_LAST_SYNC_DATE = "LastSyncDate";
 
 	public ParseSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -61,7 +58,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		lastSyncDate.setTimeInMillis(Utils.getLastSyncDate());
 
 		if (lastSyncDate.get(Calendar.MONTH) != Calendar.getInstance().get(Calendar.MONTH) || lastSyncDate.get(Calendar.YEAR) != Calendar.getInstance().get(Calendar.YEAR)) {
-			Log.i(Consts.TAG, "Syncing for the first time this month ");
 			/*
 			 * We are syncing for the first time this month. Reset the request
 			 * count and return true
@@ -75,7 +71,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE);
 
 		float availableRequests = (date * quotaPerDay) - requestsSpentThisMonth;
-		Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
+		////Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
 		return (availableRequests > 0);
 	}
 
@@ -87,7 +83,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
 			for (BirdList birdList : birdListToSync) {
-				Log.i(Consts.TAG, "Adding to postEntries " + birdList.getId());
+				////Log.i(Consts.TAG, "Adding to postEntries " + birdList.getId());
 				if (birdList.isMarkedForDelete()) {
 					// DELETE
 					if (birdList.getParseObjectID() == null) {
@@ -156,21 +152,10 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.SIGHTING_DATE, getDateInParseFormat(sighting.getDate()));
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 					body.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());
-					// TODO: Add list name instead of list id
-					//body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListId());
-					try{
-						BirdList list = dh.getBirdListById(sighting.getListId());
-						if(list != null){
-							body.put(DBConsts.SIGHTING_LIST_ID, list.getParseObjectID());
-						}else{
-							/* Zombie sighting 
-							 * Ideally ,we shouldn't get into this situation. 
-							 */
-							body.put(DBConsts.SIGHTING_LIST_ID, ""); 
-						}
-					}catch(ISawABirdException ex){
-						// TODO Handle exception 
-						ex.printStackTrace(); 
+					if(sighting.getListParseObjectId() != null && !sighting.getListParseObjectId().isEmpty()) {
+						body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListParseObjectId());
+					} else {
+						Log.wtf(Consts.TAG, "Shouldn't be here. listParseID: " + sighting.getListParseObjectId());
 					}
 
 					if (sighting.getParseObjectID() == null) {
@@ -189,6 +174,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			for (Long id : staleEntries) {
 				dh.deleteLocally(DBConsts.TABLE_SIGHTING, id);
 			}
+			//TODO: delete sightings that are marked for delete whose parent listParseObjectId is null
 		} catch (JSONException ex) {
 			Log.e(Consts.TAG, ex.getMessage());
 			ex.printStackTrace();
@@ -200,11 +186,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			// get bird list to sync create/update/delete
 			JSONArray feedbackToSync = dh.getFeedbackToSync();
-			Log.i(Consts.TAG, feedbackToSync.toString());
-			Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
+			//Log.i(Consts.TAG, feedbackToSync.toString());
+			//Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
 			JSONObject body = null;
 			for (int i = 0 ; i < feedbackToSync.length() ; i ++) {
-				Log.i(Consts.TAG, "Adding a feedback to sync ");
+				//Log.i(Consts.TAG, "Adding a feedback to sync ");
 				// if not delete, then it is marked for upload
 				body = new JSONObject();
 				body.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername());
@@ -304,20 +290,20 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				return null;
 			HttpClient client = new DefaultHttpClient();
 			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
-			Log.i(Consts.TAG, "Sending request...");
+			//Log.i(Consts.TAG, "Sending request...");
 			postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
 			postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.REST_CLIENT_KEY);
 			postReq.addHeader("Content-Type", "application/json");
-			Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
+			//Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
 			StringEntity entity = new StringEntity(batchRequest.toString());
 			postReq.setEntity(entity);
 
 			HttpResponse resp = client.execute(postReq);
 			HttpEntity respEntity = resp.getEntity();
 			String response = EntityUtils.toString(respEntity);
-			Log.i(Consts.TAG, "Response is " + response);
+			//Log.i(Consts.TAG, "Response is " + response);
 			Utils.incrementNumberRequestsThisMonth();
-			Log.i(Consts.TAG, "Number of requests so far this month " +Utils.getNumberOfRequestsThisMonth());
+			//Log.i(Consts.TAG, "Number of requests so far this month " +Utils.getNumberOfRequestsThisMonth());
 			return new JSONArray(response);
 		} catch (Exception e) {
 			Log.e(Consts.TAG, e.getMessage());
@@ -338,7 +324,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	public void addCreateRequest(String objectName, JSONObject body) {
-		Log.i(Consts.TAG, " >> addCreateRequest  for " + body.toString());
+		//Log.i(Consts.TAG, " >> addCreateRequest  for " + body.toString());
 		JSONObject createRequest = new JSONObject();
 		try {
 			createRequest.put("method", "POST");

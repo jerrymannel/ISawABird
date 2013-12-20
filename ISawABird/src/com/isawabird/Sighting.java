@@ -20,7 +20,11 @@ public class Sighting {
 	private String parseObjectID = null; 
 	private boolean isMarkedForDelete = false;
 	private boolean isMarkedForUpload = true;
-
+	private boolean isHeardOnly = false;
+	
+	// extra
+	private String listParseObjectId = null;
+	
 	public Sighting(String species ){
 		this(new Species(species));
 	}
@@ -128,5 +132,21 @@ public class Sighting {
 
 	public void setMarkedForDelete(boolean isMarkedForDelete) {
 		this.isMarkedForDelete = isMarkedForDelete;
+	}
+
+	public String getListParseObjectId() {
+		return this.listParseObjectId;
+	}
+
+	public void setListParseObjectId(String listParseObjectId) {
+		this.listParseObjectId = listParseObjectId;
+	}
+
+	public boolean isHeardOnly() {
+		return isHeardOnly;
+	}
+
+	public void setHeardOnly(boolean isHeardOnly) {
+		this.isHeardOnly = isHeardOnly;
 	}
 }

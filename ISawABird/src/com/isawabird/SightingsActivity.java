@@ -2,7 +2,6 @@ package com.isawabird;
 
 import java.util.ArrayList;
 
-import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
