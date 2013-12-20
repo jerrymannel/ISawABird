@@ -20,6 +20,7 @@ public class Sighting {
 	private String parseObjectID = null; 
 	private boolean isMarkedForDelete = false;
 	private boolean isMarkedForUpload = true;
+	private boolean isHeardOnly = false;
 	
 	// extra
 	private String listParseObjectId = null;
@@ -139,5 +140,13 @@ public class Sighting {
 
 	public void setListParseObjectId(String listParseObjectId) {
 		this.listParseObjectId = listParseObjectId;
+	}
+
+	public boolean isHeardOnly() {
+		return isHeardOnly;
+	}
+
+	public void setHeardOnly(boolean isHeardOnly) {
+		this.isHeardOnly = isHeardOnly;
 	}
 }

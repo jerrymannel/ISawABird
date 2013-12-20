@@ -58,7 +58,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		lastSyncDate.setTimeInMillis(Utils.getLastSyncDate());
 
 		if (lastSyncDate.get(Calendar.MONTH) != Calendar.getInstance().get(Calendar.MONTH) || lastSyncDate.get(Calendar.YEAR) != Calendar.getInstance().get(Calendar.YEAR)) {
-			Log.i(Consts.TAG, "Syncing for the first time this month ");
 			/*
 			 * We are syncing for the first time this month. Reset the request
 			 * count and return true
@@ -72,7 +71,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE);
 
 		float availableRequests = (date * quotaPerDay) - requestsSpentThisMonth;
-		Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
+		////Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
 		return (availableRequests > 0);
 	}
 
@@ -84,7 +83,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
 			for (BirdList birdList : birdListToSync) {
-				Log.i(Consts.TAG, "Adding to postEntries " + birdList.getId());
+				////Log.i(Consts.TAG, "Adding to postEntries " + birdList.getId());
 				if (birdList.isMarkedForDelete()) {
 					// DELETE
 					if (birdList.getParseObjectID() == null) {
@@ -187,11 +186,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			// get bird list to sync create/update/delete
 			JSONArray feedbackToSync = dh.getFeedbackToSync();
-			Log.i(Consts.TAG, feedbackToSync.toString());
-			Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
+			//Log.i(Consts.TAG, feedbackToSync.toString());
+			//Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
 			JSONObject body = null;
 			for (int i = 0 ; i < feedbackToSync.length() ; i ++) {
-				Log.i(Consts.TAG, "Adding a feedback to sync ");
+				//Log.i(Consts.TAG, "Adding a feedback to sync ");
 				// if not delete, then it is marked for upload
 				body = new JSONObject();
 				body.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername());
@@ -291,20 +290,20 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				return null;
 			HttpClient client = new DefaultHttpClient();
 			HttpPost postReq = new HttpPost(ParseConsts.BATCH_URL);
-			Log.i(Consts.TAG, "Sending request...");
+			//Log.i(Consts.TAG, "Sending request...");
 			postReq.addHeader("X-Parse-Application-Id", ParseConsts.APP_ID);
 			postReq.addHeader("X-Parse-REST-API-Key", ParseConsts.REST_CLIENT_KEY);
 			postReq.addHeader("Content-Type", "application/json");
-			Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
+			//Log.i(Consts.TAG, "Request to be sent : " + batchRequest.toString());
 			StringEntity entity = new StringEntity(batchRequest.toString());
 			postReq.setEntity(entity);
 
 			HttpResponse resp = client.execute(postReq);
 			HttpEntity respEntity = resp.getEntity();
 			String response = EntityUtils.toString(respEntity);
-			Log.i(Consts.TAG, "Response is " + response);
+			//Log.i(Consts.TAG, "Response is " + response);
 			Utils.incrementNumberRequestsThisMonth();
-			Log.i(Consts.TAG, "Number of requests so far this month " +Utils.getNumberOfRequestsThisMonth());
+			//Log.i(Consts.TAG, "Number of requests so far this month " +Utils.getNumberOfRequestsThisMonth());
 			return new JSONArray(response);
 		} catch (Exception e) {
 			Log.e(Consts.TAG, e.getMessage());
@@ -325,7 +324,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	}
 
 	public void addCreateRequest(String objectName, JSONObject body) {
-		Log.i(Consts.TAG, " >> addCreateRequest  for " + body.toString());
+		//Log.i(Consts.TAG, " >> addCreateRequest  for " + body.toString());
 		JSONObject createRequest = new JSONObject();
 		try {
 			createRequest.put("method", "POST");

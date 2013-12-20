@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
@@ -217,6 +218,7 @@ public class MainActivity extends Activity {
 				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
 				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
 			}			
+			DBHandler.getInstance(getApplicationContext()).dumpTable(DBConsts.TABLE_SIGHTING);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
