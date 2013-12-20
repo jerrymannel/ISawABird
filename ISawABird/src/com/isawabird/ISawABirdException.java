@@ -1,6 +1,8 @@
 package com.isawabird;
 
 public class ISawABirdException extends Exception {
+	
+	private static final long serialVersionUID = 8934339536253013177L;
 
 	private int errorCode = 0;  
 	

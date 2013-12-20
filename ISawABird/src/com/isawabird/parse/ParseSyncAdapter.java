@@ -26,7 +26,6 @@ import android.util.Log;
 
 import com.isawabird.BirdList;
 import com.isawabird.Consts;
-import com.isawabird.ISawABirdException;
 import com.isawabird.Sighting;
 import com.isawabird.Utils;
 import com.isawabird.db.DBConsts;
@@ -41,8 +40,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private static final int MAX_REQUESTS_PER_MONTH = 1000000;
 	private static final int NUM_ACTIVE_USERS = 5000;
 	private static final float QUOTA_PER_MONTH = MAX_REQUESTS_PER_MONTH / NUM_ACTIVE_USERS; // 200
-	private static final String KEY_REQUESTS_THIS_MONTH = "RequestsThisMonth";
-	private static final String KEY_LAST_SYNC_DATE = "LastSyncDate";
 
 	public ParseSyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -156,21 +153,10 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.SIGHTING_DATE, getDateInParseFormat(sighting.getDate()));
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 					body.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());
-					// TODO: Add list name instead of list id
-					//body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListId());
-					try{
-						BirdList list = dh.getBirdListById(sighting.getListId());
-						if(list != null){
-							body.put(DBConsts.SIGHTING_LIST_ID, list.getParseObjectID());
-						}else{
-							/* Zombie sighting 
-							 * Ideally ,we shouldn't get into this situation. 
-							 */
-							body.put(DBConsts.SIGHTING_LIST_ID, ""); 
-						}
-					}catch(ISawABirdException ex){
-						// TODO Handle exception 
-						ex.printStackTrace(); 
+					if(sighting.getListParseObjectId() != null && !sighting.getListParseObjectId().isEmpty()) {
+						body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListParseObjectId());
+					} else {
+						Log.wtf(Consts.TAG, "Shouldn't be here. listParseID: " + sighting.getListParseObjectId());
 					}
 
 					if (sighting.getParseObjectID() == null) {
@@ -189,6 +175,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 			for (Long id : staleEntries) {
 				dh.deleteLocally(DBConsts.TABLE_SIGHTING, id);
 			}
+			//TODO: delete sightings that are marked for delete whose parent listParseObjectId is null
 		} catch (JSONException ex) {
 			Log.e(Consts.TAG, ex.getMessage());
 			ex.printStackTrace();

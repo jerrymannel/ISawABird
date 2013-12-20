@@ -20,7 +20,10 @@ public class Sighting {
 	private String parseObjectID = null; 
 	private boolean isMarkedForDelete = false;
 	private boolean isMarkedForUpload = true;
-
+	
+	// extra
+	private String listParseObjectId = null;
+	
 	public Sighting(String species ){
 		this(new Species(species));
 	}
@@ -128,5 +131,13 @@ public class Sighting {
 
 	public void setMarkedForDelete(boolean isMarkedForDelete) {
 		this.isMarkedForDelete = isMarkedForDelete;
+	}
+
+	public String getListParseObjectId() {
+		return this.listParseObjectId;
+	}
+
+	public void setListParseObjectId(String listParseObjectId) {
+		this.listParseObjectId = listParseObjectId;
 	}
 }

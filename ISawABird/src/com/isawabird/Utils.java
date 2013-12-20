@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
-import com.isawabird.Species.TYPE;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +15,8 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.isawabird.Species.TYPE;
 
 public class Utils {
 

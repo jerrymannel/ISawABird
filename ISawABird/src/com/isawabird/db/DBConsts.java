@@ -60,6 +60,8 @@ public class DBConsts {
 	public static final String SIGHTING_LATITUDE = "latitude";
 	public static final String SIGHTING_LONGITUDE = "longitude";
 	public static final String SIGHTING_DATE = "sdate";
+	// extra
+	public static final String SIGHTING_LIST_PARSE_OBJECT_ID = "listParseObjectId";
 
 	public static final String CREATE_SIGHTING = "CREATE TABLE " + TABLE_SIGHTING +
 			"(" +
@@ -149,15 +151,16 @@ public class DBConsts {
 	
 	
 	public static final String QUERY_SIGHTINGS_SYNC = 
-			"SELECT " + ID + ", " + SIGHTING_DATE + ", " + SIGHTING_SPECIES +
+			"SELECT s." + ID + ", " + SIGHTING_DATE + ", " + SIGHTING_SPECIES +
 			", " + SIGHTING_LIST_ID + ", " + SIGHTING_LATITUDE +  
 			", " + SIGHTING_LONGITUDE + ", " + SIGHTING_NOTES + 
-			", " + PARSE_IS_DELETE_MARKED +
-			", " + PARSE_OBJECT_ID + 
-			", " + PARSE_IS_UPLOAD_REQUIRED + 
-			" FROM " + TABLE_SIGHTING + 
-			" WHERE " + PARSE_IS_UPLOAD_REQUIRED + "=1" +
-			" OR " + PARSE_IS_DELETE_MARKED + "=1";
+			", s." + PARSE_IS_DELETE_MARKED + ", s." + PARSE_OBJECT_ID + 
+			", s." + PARSE_IS_UPLOAD_REQUIRED + ", l." + PARSE_OBJECT_ID + " as " + SIGHTING_LIST_PARSE_OBJECT_ID +
+			" FROM " + TABLE_SIGHTING + " as s INNER JOIN " + TABLE_LIST + " as l" +
+			" ON (s." + SIGHTING_LIST_ID + "=l." + ID + ")" +
+			" WHERE (" + SIGHTING_LIST_PARSE_OBJECT_ID + " IS NOT NULL) AND (s." + PARSE_IS_UPLOAD_REQUIRED + "=1" +
+			" OR s." + PARSE_IS_DELETE_MARKED + "=1)";
+	
 	// i think it is not a good idea to call static method in consts
 	public static final String QUERY_COUNT_CURRENT_LIST = 
 			"SELECT " + SIGHTING_SPECIES + " FROM " + TABLE_SIGHTING + " WHERE " + 

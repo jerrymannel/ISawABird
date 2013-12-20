@@ -216,7 +216,7 @@ public class MainActivity extends Activity {
 				Log.i(Consts.TAG, "current List ID: " + Utils.getCurrentListID());
 				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
 				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
-			}
+			}			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

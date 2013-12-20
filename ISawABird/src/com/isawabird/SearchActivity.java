@@ -2,8 +2,6 @@ package com.isawabird;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
-import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -223,46 +220,6 @@ public class SearchActivity extends Activity {
 			// get the item (we can do it since we know item index)
 			Object[] indexItem = sideIndexList.get(itemPosition);
 			listView.setSelectionFromTop((Integer) indexItem[1], 0);
-		}
-	}
-
-	@SuppressLint("DefaultLocale")
-	private void PoplulateSideview() {
-
-		String latter_temp, latter = "";
-		int index = 0;
-		sideIndex.removeAllViews();
-		sideIndexList.clear();
-
-		for (int i = 0; i < species.size(); i++) {
-			Object[] temp = new Object[2];
-			latter_temp = (species.get(i).getFullName()).substring(0, 1).toUpperCase();
-			if (!latter_temp.equals(latter)) {
-				// latter with its array index
-				latter = latter_temp;
-				temp[0] = latter;
-				temp[1] = i + index;
-				index++;
-				sideIndexList.add(temp);
-
-				TextView latter_txt = new TextView(this);
-				latter_txt.setText(latter);
-
-				latter_txt.setSingleLine(true);
-				latter_txt.setHorizontallyScrolling(false);
-				latter_txt.setTypeface(null, Typeface.BOLD);
-				latter_txt.setTextSize(12);
-				latter_txt.setTextColor(getResources().getColor(R.color.color_50_transparent_black));
-				// latter_txt.setTextSize(TypedValue.COMPLEX_UNIT_DIP,getResources().getDimension(R.dimen.index_list_font));
-				LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1);
-				params.gravity = Gravity.CENTER_HORIZONTAL;
-
-				latter_txt.setLayoutParams(params);
-				latter_txt.setPadding(10, 0, 10, 0);
-				latter_txt.setTypeface(openSansLight);
-
-				sideIndex.addView(latter_txt);
-			}
 		}
 	}
 

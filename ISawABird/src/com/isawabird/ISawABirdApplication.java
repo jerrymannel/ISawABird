@@ -1,9 +1,9 @@
 package com.isawabird;
 
+import android.app.Application;
+
 import com.isawabird.parse.ParseConsts;
 import com.parse.Parse;
-
-import android.app.Application;
 
 public class ISawABirdApplication extends Application {
 

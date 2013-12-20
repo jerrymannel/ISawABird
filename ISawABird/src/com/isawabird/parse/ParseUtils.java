@@ -2,13 +2,11 @@ package com.isawabird.parse;
 
 import java.util.UUID;
 
-import android.location.Criteria;
 import android.util.Log;
 
 import com.isawabird.Consts;
 import com.isawabird.ISawABirdException;
 import com.isawabird.Utils;
-import com.parse.LocationCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;

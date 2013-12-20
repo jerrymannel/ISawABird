@@ -415,6 +415,7 @@ public ArrayList<Sighting> getSightingsToSync(String username) {
 			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
 			temp.setMarkedForDelete(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED)) == 1);
 			temp.setMarkedForUpload(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_UPLOAD_REQUIRED)) == 1);
+			temp.setListParseObjectId(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_LIST_PARSE_OBJECT_ID)));
 			sightings.add(temp);
 		}
 		
