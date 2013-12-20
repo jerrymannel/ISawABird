@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -19,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.isawabird.MyLocation.LocationResult;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseConsts;
 import com.isawabird.parse.ParseUtils;
@@ -28,6 +31,7 @@ import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.PushService;
@@ -113,9 +117,26 @@ public class MainActivity extends Activity {
 				// move heavy work to asynctask
 				new InitChecklistAsyncTask(getApplicationContext()).execute();
 
-				/* Get FGPS location */
-				GPSLocation g = new GPSLocation();
-				g.getLocation(getApplicationContext());
+				/* Initialize with last known location */ 
+				LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+				Location lastKnown = null;
+				if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+					lastKnown = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+					ParseUtils.location = new ParseGeoPoint(lastKnown.getLatitude(), lastKnown.getLongitude());
+				}else if(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
+					lastKnown = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+					ParseUtils.location = new ParseGeoPoint(lastKnown.getLatitude(), lastKnown.getLongitude());
+				}
+				
+				MyLocation myLocation = new MyLocation();
+				LocationResult locationResult = new LocationResult(){
+				    @Override
+				    public void gotLocation(Location location){
+				        Log.i(Consts.TAG, "Lat , long are " + location.getLatitude() + " " + location.getLongitude());
+				        ParseUtils.location = new ParseGeoPoint(location.getLatitude(), location.getLongitude()); 
+				    }
+				};
+				myLocation.getLocation(this, locationResult);
 
 				/* Try to sync if needed */
 				SyncUtils.createSyncAccount(getApplicationContext());
