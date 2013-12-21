@@ -30,7 +30,7 @@ Ashy Minivet,Pericrocotus divaricatus,ashyminivetpericrocotusdivaricatus
 Ashy Prinia,Prinia socialis,ashypriniapriniasocialis
 Ashy Woodpigeon,Columba pulchricollis,ashywoodpigeoncolumbapulchricollis
 Ashy Woodswallow,Artamus fuscus,ashywoodswallowartamusfuscus
-Ashy-crowned Finch-lark,Eremopterix griseus,ashycrownedfinchlarkeremopterixgriseus
+Ashy-crowned Sparrow-lark,Eremopterix griseus,ashycrownedsparrowlarkeremopterixgriseus
 Ashy-headed Green-pigeon,Treron phayrei,ashyheadedgreenpigeontreronphayrei
 Asian Barred Owlet,Glaucidium cuculoides,asianbarredowletglaucidiumcuculoides
 Asian Brown Flycatcher,Muscicapa dauurica,asianbrownflycatchermuscicapadauurica
@@ -79,13 +79,14 @@ Black Drongo,Dicrurus macrocercus,blackdrongodicrurusmacrocercus
 Black Eagle,Ictinaetus malayensis,blackeagleictinaetusmalayensis
 Black Francolin,Francolinus francolinus,blackfrancolinfrancolinusfrancolinus
 Black Ibis,Pseudibis papillosa,blackibispseudibispapillosa
-Black Kite,Milvus migrans,blackkitemilvusmigrans
+Red-naped Ibis,Pseudibis papillosa,rednapedibispseudibispapillosa
+Black Kite,Milvus migrans govinda,blackkitemilvusmigransgovinda
 Black Noddy,Anous minutus ?,blacknoddyanousminutus?
 Black Redstart,Phoenicurus ochruros,blackredstartphoenicurusochruros
 Black Stork,Ciconia nigra,blackstorkciconianigra
 Black and Orange Flycatcher,Ficedula nigrorufa,blackandorangeflycatcherficedulanigrorufa
 Black and Yellow Grosbeak,Mycerobas icterioides,blackandyellowgrosbeakmycerobasicterioides
-Black-backed Dwarf Kingfisher,Ceyx erithaca,blackbackeddwarfkingfisherceyxerithaca
+Oriental Dwarf Kingfisher,Ceyx erithaca,orientaldwarfkingfisherceyxerithaca
 Black-backed Forktail,Enicurus immaculatus,blackbackedforktailenicurusimmaculatus
 Black-bellied Sandgrouse,Pterocles orientalis,blackbelliedsandgrousepteroclesorientalis
 Black-bellied Storm-petrel,Fregetta tropica,blackbelliedstormpetrelfregettatropica
@@ -150,11 +151,11 @@ Blue-eared Kingfisher,Alcedo meninting,blueearedkingfisheralcedomeninting
 Blue-faced Malkoha,Phaenicophaeus viridirostris,bluefacedmalkohaphaenicophaeusviridirostris
 Blue-fronted Blue Robin,Cinclidium frontale,bluefrontedbluerobincinclidiumfrontale
 Blue-fronted Redstart,Phoenicurus frontalis,bluefrontedredstartphoenicurusfrontalis
-Blue-headed Rock-thrush,Monticola cinclorhynchus,blueheadedrockthrushmonticolacinclorhynchus
+Blue-capped Rock-thrush,Monticola cinclorhynchus,bluecappedrockthrushmonticolacinclorhynchus
 Blue-naped Pitta,Pitta nipalensis,bluenapedpittapittanipalensis
 Blue-tailed Bee-eater,Merops philippinus,bluetailedbeeeatermeropsphilippinus
 Blue-throated Barbet,Megalaima asiatica,bluethroatedbarbetmegalaimaasiatica
-Blue-throated Flycatcher,Cyornis rubeculoides,bluethroatedflycatchercyornisrubeculoides
+Blue-throated Blue Flycatcher,Cyornis rubeculoides,bluethroatedblueflycatchercyornisrubeculoides
 Blue-winged Laughingthrush,Trochalopteron squamatum,bluewingedlaughingthrushtrochalopteronsquamatum
 Blue-winged Leafbird,Chloropsis cochinchinensis,bluewingedleafbirdchloropsiscochinchinensis
 Blue-winged Minla,Minla cyanouroptera,bluewingedminlaminlacyanouroptera
@@ -167,17 +168,17 @@ Blyth's Reed-warbler,Acrocephalus dumetorum,blythsreedwarbleracrocephalusdumetor
 Blyth's Rosefinch,Carpodacus grandis,blythsrosefinchcarpodacusgrandis
 Blyth's Tragopan,Tragopan blythii,blythstragopantragopanblythii
 Bohemian Waxwing,Bombycilla garrulus ?,bohemianwaxwingbombycillagarrulus?
-Bonelli's Eagle,Hieraaetus fasciatus,bonelliseaglehieraaetusfasciatus
+Bonelli's Eagle,Aquila fasciata,bonelliseagleaquilafasciata
 Booted Eagle,Hieraaetus pennatus,bootedeaglehieraaetuspennatus
-Booted Warbler,Hippolais caligata,bootedwarblerhippolaiscaligata
+Booted Warbler,Iduna caligata,bootedwarbleridunacaligata
 Boreal Owl,Aegolius funereus ?,borealowlaegoliusfunereus?
 Brahminy Kite,Haliastur indus,brahminykitehaliasturindus
-Brahminy Starling,Temenuchus pagodarum,brahminystarlingtemenuchuspagodarum
+Brahminy Starling,Sturnia pagodarum,brahminystarlingsturniapagodarum
 Brambling,Fringilla montifringilla ?,bramblingfringillamontifringilla?
 Brandt's Mountain-finch,Leucosticte brandti,brandtsmountainfinchleucostictebrandti
-Bridled Tern,Sterna anaethetus,bridledternsternaanaethetus
+Bridled Tern,Onychoprion anaethetus,bridledternonychoprionanaethetus
 Bright-green Warbler,Phylloscopus nitidus,brightgreenwarblerphylloscopusnitidus
-Bright-headed Cisticola,Cisticola exilis,brightheadedcisticolacisticolaexilis
+Golden-headed Cisticola,Cisticola exilis,goldenheadedcisticolacisticolaexilis
 Bristled Grassbird,Chaetornis striata,bristledgrassbirdchaetornisstriata
 Broad-billed Sandpiper,Limicola falcinellus,broadbilledsandpiperlimicolafalcinellus
 Broad-billed Warbler,Tickellia hodgsoni,broadbilledwarblertickelliahodgsoni
@@ -188,7 +189,7 @@ Brown Accentor,Prunella fulvescens,brownaccentorprunellafulvescens
 Brown Booby,Sula leucogaster,brownboobysulaleucogaster
 Brown Bullfinch,Pyrrhula nipalensis,brownbullfinchpyrrhulanipalensis
 Brown Bush-warbler,Bradypterus luteoventris,brownbushwarblerbradypterusluteoventris
-Brown Crake,Porzana akool,browncrakeporzanaakool
+Brown Crake,Amaurornis akool,browncrakeamaurornisakool
 Brown Dipper,Cinclus pallasii,browndippercincluspallasii
 Brown Fish-owl,Ketupa zeylonensis,brownfishowlketupazeylonensis
 Brown Hawk-owl,Ninox scutulata,brownhawkowlninoxscutulata
@@ -205,7 +206,7 @@ Brown-fronted Pied Woodpecker,Dendrocopos auriceps,brownfrontedpiedwoodpeckerden
 Brown-headed Barbet,Megalaima zeylanica,brownheadedbarbetmegalaimazeylanica
 Brown-headed Gull,Larus brunnicephalus,brownheadedgulllarusbrunnicephalus
 Brown-throated Fulvetta,Alcippe ludlowi,brownthroatedfulvettaalcippeludlowi
-Brown-throated Needletail,Hirundapus giganteus,brownthroatedneedletailhirundapusgiganteus
+Brown-backed Needletail,Hirundapus giganteus,brownbackedneedletailhirundapusgiganteus
 Brown-throated Treecreeper,Certhia discolor,brownthroatedtreecreepercerthiadiscolor
 Brown-winged Kingfisher,Pelargopsis amauroptera,brownwingedkingfisherpelargopsisamauroptera
 Buff-bellied Pipit,Anthus rubescens,buffbelliedpipitanthusrubescens
@@ -225,12 +226,13 @@ Cetti's Bush-warbler,Cettia cetti,cettisbushwarblercettiacetti
 Ceylon Frogmouth,Batrachostomus moniliger,ceylonfrogmouthbatrachostomusmoniliger
 Changeable Hawk-eagle,Spizaetus limnaeetus,changeablehawkeaglespizaetuslimnaeetus
 Cheer Pheasant,Catreus wallichii,cheerpheasantcatreuswallichii
-Chestnut Bittern,Ixobrychus cinnamomeus,chestnutbitternixobrychuscinnamomeus
+Cinnamon Bittern,Ixobrychus cinnamomeus,cinnamonbitternixobrychuscinnamomeus
 Chestnut Bunting,Emberiza rutila,chestnutbuntingemberizarutila
 Chestnut Munia,Lonchura atricapilla,chestnutmunialonchuraatricapilla
 Chestnut Thrush,Turdus rubrocanus,chestnutthrushturdusrubrocanus
 Chestnut-backed Laughingthrush,Dryonastes nuchalis,chestnutbackedlaughingthrushdryonastesnuchalis
 Chestnut-bellied Nuthatch,Sitta castanea,chestnutbelliednuthatchsittacastanea
+Indian Nuthatch,Sitta castanea,indiannuthatchsittacastanea
 Chestnut-bellied Nuthatch,Sitta cinnamoventris,chestnutbelliednuthatchsittacinnamoventris
 Chestnut-bellied Rock-thrush,Monticola rufiventris,chestnutbelliedrockthrushmonticolarufiventris
 Chestnut-bellied Sandgrouse,Pterocles exustus,chestnutbelliedsandgrousepteroclesexustus
@@ -264,6 +266,7 @@ Collared Pratincole,Glareola pratincola,collaredpratincoleglareolapratincola
 Collared Scops-Owl,Otus lettia,collaredscopsowlotuslettia
 Collared Treepie,Dendrocitta frontalis,collaredtreepiedendrocittafrontalis
 Comb Duck,Sarkidiornis melanotos,combducksarkidiornismelanotos
+Knob-billed Duck,Sarkidiornis melanotos,knobbilledducksarkidiornismelanotos
 Common Babbler,Turdoides caudata,commonbabblerturdoidescaudata
 Common Barn Owl,Tyto alba,commonbarnowltytoalba
 Common Black-headed Gull,Larus ridibundus,commonblackheadedgulllarusridibundus
@@ -300,6 +303,7 @@ Common Starling,Sturnus vulgaris,commonstarlingsturnusvulgaris
 Common Swift,Apus apus,commonswiftapusapus
 Common Tailorbird,Orthotomus sutorius,commontailorbirdorthotomussutorius
 Common Teal,Anas crecca,commontealanascrecca
+Eurasian Teal,Anas crecca,eurasiantealanascrecca
 Common Tern,Sterna hirundo,commonternsternahirundo
 Common Whitethroat,Sylvia communis,commonwhitethroatsylviacommunis
 Common Woodpigeon,Columba palumbus,commonwoodpigeoncolumbapalumbus
@@ -309,6 +313,7 @@ Coral-billed Scimitar-babbler,Pomatorhinus ferruginosus,coralbilledscimitarbabbl
 Corn Bunting,Emberiza calandra,cornbuntingemberizacalandra
 Corn Crake,Crex crex,corncrakecrexcrex
 Cotton Teal,Nettapus coromandelianus,cottontealnettapuscoromandelianus
+Cotton Pygmy Goose,Nettapus coromandelianus,cottonpygmygoosenettapuscoromandelianus
 Crab-plover,Dromas ardeola,crabploverdromasardeola
 Cream-coloured Courser,Cursorius cursor,creamcolouredcoursercursoriuscursor
 Crested Bunting,Melophus lathami,crestedbuntingmelophuslathami
@@ -407,6 +412,7 @@ Flame-throated Bulbul,Pynconotus gularis,flamethroatedbulbulpynconotusgularis
 Flavescent Bulbul,Pynconotus flavescens,flavescentbulbulpynconotusflavescens
 Flesh-footed Shearwater,Puffinus carneipes,fleshfootedshearwaterpuffinuscarneipes
 Forest Eagle-owl,Bubo nipalensis,foresteagleowlbubonipalensis
+Spot-bellied Eagle-owl,Bubo nipalensis,spotbelliedeagleowlbubonipalensis
 Forest Owlet,Hetroglaux blewitti,forestowlethetroglauxblewitti
 Forest Wagtail,Dendronanthus indicus,forestwagtaildendronanthusindicus
 Forked-tailed Drongo Cuckoo,Surniculus (lugubris) dicruroides,forkedtaileddrongocuckoosurniculus(lugubris)dicruroides
@@ -448,6 +454,7 @@ Great Slaty Woodpecker,Mulleripicus pulverulentus,greatslatywoodpeckermulleripic
 Great Snipe,Gallinago media,greatsnipegallinagomedia
 Great Spotted Woodpecker,Dendrocopos major,greatspottedwoodpeckerdendrocoposmajor
 Great Thick-knee,Esacus recurvirostris,greatthickkneeesacusrecurvirostris
+Great stone-curlew,Esacus recurvirostris,greatstonecurlewesacusrecurvirostris
 Great Tit,Parus major,greattitparusmajor
 Great White Pelican,Pelecanus onocrotalus,greatwhitepelicanpelecanusonocrotalus
 Greater Adjutant,Leptoptilos dubius,greateradjutantleptoptilosdubius
@@ -479,7 +486,7 @@ Greenish Warbler,Phylloscopus trochiloides,greenishwarblerphylloscopustrochiloid
 Grey Bushchat,Saxicola ferreus,greybushchatsaxicolaferreus
 Grey Francolin,Francolinus pondicerianus,greyfrancolinfrancolinuspondicerianus
 Grey Heron,Ardea cinerea,greyheronardeacinerea
-Grey Hornbill,Ocyceros birostris,greyhornbillocycerosbirostris
+Indian Grey Hornbill,Ocyceros birostris,indiangreyhornbillocycerosbirostris
 Grey Hypocolius,Hypocolius ampelinus,greyhypocoliushypocoliusampelinus
 Grey Junglefowl,Gallus sonneratii,greyjunglefowlgallussonneratii
 Grey Nightjar,Caprimulgus jotaka,greynightjarcaprimulgusjotaka
@@ -567,7 +574,7 @@ Hume's Short-toed Lark,Calandrella acutirostris,humesshorttoedlarkcalandrellaacu
 Hume's Wheatear,Oenanthe albonigra,humeswheatearoenanthealbonigra
 Hume's Whitethroat,Sylvia althaea,humeswhitethroatsylviaalthaea
 Ibisbill,Ibidorhyncha struthersii,ibisbillibidorhynchastruthersii
-Indian Black Robin,Saxicoloides fulicatus,indianblackrobinsaxicoloidesfulicatus
+Indian Robin,Saxicoloides fulicatus,indianrobinsaxicoloidesfulicatus
 Indian Blackbird,Turdus simillimus,indianblackbirdturdussimillimus
 Indian Blue Robin,Luscinia brunnea,indianbluerobinlusciniabrunnea
 Indian Broad-tailed Grass-warbler,Schoenicola platyurus,indianbroadtailedgrasswarblerschoenicolaplatyurus
@@ -581,18 +588,19 @@ Indian Jungle Nightjar,Caprimulgus indicus,indianjunglenightjarcaprimulgusindicu
 Indian Little Nightjar,Caprimulgus asiaticus,indianlittlenightjarcaprimulgusasiaticus
 Indian Peafowl,Pavo cristatus,indianpeafowlpavocristatus
 Indian Pitta,Pitta brachyura,indianpittapittabrachyura
-Indian Pygmy Woodpecker,Dendrocopos nanus,indianpygmywoodpeckerdendrocoposnanus
+Brown-capped Pygmy Woodpecker,Dendrocopos nanus,browncappedpygmywoodpeckerdendrocoposnanus
 Indian Reed-warbler,Acrocephalus (stentoreus) brunnescens,indianreedwarbleracrocephalus(stentoreus)brunnescens
 Indian Roller,Coracias benghalensis,indianrollercoraciasbenghalensis
 Indian Scops-Owl,Otus bakkamoena,indianscopsowlotusbakkamoena
 Indian Shag,Phalacrocorax fuscicollis,indianshagphalacrocoraxfuscicollis
+Indian Cormorant,Phalacrocorax fuscicollis,indiancormorantphalacrocoraxfuscicollis
 Indian Silverbill,Euodice malabarica,indiansilverbilleuodicemalabarica
 Indian Skimmer,Rynchops albicollis,indianskimmerrynchopsalbicollis
 Indian Swiftlet,Aerodramus unicolor,indianswiftletaerodramusunicolor
 Indian Vulture,Gyps indicus,indianvulturegypsindicus
 Indian White-hooded Babbler,Gampsorhynchus rufulus,indianwhitehoodedbabblergampsorhynchusrufulus
 Indian White-rumped Spinetail,Zoonavena sylvatica,indianwhiterumpedspinetailzoonavenasylvatica
-Indian Yellow Tit,Parus aplonotus,indianyellowtitparusaplonotus
+Indian Black-lored Tit,Parus aplonotus,indianblackloredtitparusaplonotus
 Intermediate Egret,Egretta intermedia,intermediateegretegrettaintermedia
 Isabelline Shrike,Lanius isabellinus,isabellineshrikelaniusisabellinus
 Isabelline Wheatear,Oenanthe isabellina,isabellinewheatearoenantheisabellina
@@ -644,11 +652,11 @@ Lesser Fish-eagle,Ichthyophaga humilis,lesserfisheagleichthyophagahumilis
 Lesser Flamingo,Phoenicopterus minor,lesserflamingophoenicopterusminor
 Lesser Florican,Sypheotides indicus,lesserfloricansypheotidesindicus
 Lesser Frigatebird,Fregata ariel,lesserfrigatebirdfregataariel
-Lesser Hill Myna,Gracula indica,lesserhillmynagraculaindica
+Soouthern Hill Myna,Gracula indica,southernhillmynagraculaindica
 Lesser Kestrel,Falco naumanni,lesserkestrelfalconaumanni
 Lesser Necklaced Laughingthrush,Garrulax monileger,lessernecklacedlaughingthrushgarrulaxmonileger
 Lesser Noddy,Anous tenuirostris ?,lessernoddyanoustenuirostris?
-Lesser Pied Kingfisher,Ceryle rudis,lesserpiedkingfishercerylerudis
+Pied Kingfisher,Ceryle rudis,piedkingfishercerylerudis
 Lesser Racket-tailed Drongo,Dicrurus remifer,lesserrackettaileddrongodicrurusremifer
 Lesser Rufous-headed Parrotbill,Paradoxornis atrosuperciliaris,lesserrufousheadedparrotbillparadoxornisatrosuperciliaris
 Lesser Sand Plover,Charadrius mongolus,lessersandplovercharadriusmongolus
@@ -697,6 +705,7 @@ Malabar Barbet,Megalaima malabarica,malabarbarbetmegalaimamalabarica
 Malabar Grey Hornbill,Ocyceros griseus,malabargreyhornbillocycerosgriseus
 Malabar Lark,Galerida malabarica,malabarlarkgaleridamalabarica
 Malabar Parakeet,Psittacula columboides,malabarparakeetpsittaculacolumboides
+Blue-winged Parakeet,Psittacula columboides,bluewingedparakeetpsittaculacolumboides
 Malabar Pied Hornbill,Anthracoceros coronatus,malabarpiedhornbillanthracoceroscoronatus
 Malabar Trogon,Harpactes fasciatus,malabartrogonharpactesfasciatus
 Malabar Whistling-thrush,Myophonus horsfieldii,malabarwhistlingthrushmyophonushorsfieldii
@@ -823,7 +832,7 @@ Pheasant-tailed Jacana,Hydrophasianus chirurgus,pheasanttailedjacanahydrophasian
 Pied Avocet,Recurvirostra avosetta,piedavocetrecurvirostraavosetta
 Pied Bushchat,Saxicola caprata,piedbushchatsaxicolacaprata
 Pied Falconet,Microhierax melanoleucos,piedfalconetmicrohieraxmelanoleucos
-Pied Flycatcher-shrike,Hemipus picatus,piedflycatchershrikehemipuspicatus
+Bar-winged Flycatcher-shrike,Hemipus picatus,barwingedflycatchershrikehemipuspicatus
 Pied Ground-thrush,Zoothera wardii,piedgroundthrushzootherawardii
 Pied Harrier,Circus melanoleucos,piedharriercircusmelanoleucos
 Pied Imperial-pigeon,Ducula bicolor,piedimperialpigeonduculabicolor
@@ -844,7 +853,7 @@ Plaintive Cuckoo,Cacomantis merulinus,plaintivecuckoocacomantismerulinus
 Plum-headed Parakeet,Psittacula cyanocephala,plumheadedparakeetpsittaculacyanocephala
 Plumbeous Water-redstart,Chaimarrornis fuliginosa,plumbeouswaterredstartchaimarrornisfuliginosa
 Pomarine Jaeger,Stercorarius pomarinus,pomarinejaegerstercorariuspomarinus
-Pond-heron,Ardeola grayii,pondheronardeolagrayii
+Indian Pond-heron,Ardeola grayii,indianpondheronardeolagrayii
 Puff-throated Babbler,Pellorneum ruficeps,puffthroatedbabblerpellorneumruficeps
 Purple Cochoa,Cochoa purpurea,purplecochoacochoapurpurea
 Purple Heron,Ardea purpurea,purpleheronardeapurpurea
@@ -889,6 +898,7 @@ Red-tailed Minla,Minla ignotincta,redtailedminlaminlaignotincta
 Red-tailed Tropicbird,Phaethon rubricauda ?,redtailedtropicbirdphaethonrubricauda?
 Red-tailed Wheatear,Oenanthe chrysopygia,redtailedwheatearoenanthechrysopygia
 Red-throated Flycatcher,Ficedula albicilla,redthroatedflycatcherficedulaalbicilla
+Taiga Flycatcher,Ficedula albicilla,taigaflycatcherficedulaalbicilla
 Red-throated Pipit,Anthus cervinus,redthroatedpipitanthuscervinus
 Red-throated Thrush,Turdus (ruficollis) ruficollis,redthroatedthrushturdus(ruficollis)ruficollis
 Red-vented Bulbul,Pynconotus cafer,redventedbulbulpynconotuscafer
@@ -980,7 +990,7 @@ Sclater's Monal,Lophophorus sclateri,sclatersmonallophophorussclateri
 Shikra,Accipiter badius,shikraaccipiterbadius
 Short-billed Minivet,Pericrocotus brevirostris,shortbilledminivetpericrocotusbrevirostris
 Short-eared Owl,Asio flammeus,shortearedowlasioflammeus
-Short-toed Eagle,Circaetus gallicus,shorttoedeaglecircaetusgallicus
+Short-toed Snake Eagle,Circaetus gallicus,shorttoedsnakeeaglecircaetusgallicus
 Siberian Blue Robin,Luscinia cyane,siberianbluerobinlusciniacyane
 Siberian Chiffchaff,Phylloscopus (collybita) tristis,siberianchiffchaffphylloscopus(collybita)tristis
 Siberian Crane,Grus leucogeranus ?,siberiancranegrusleucogeranus?
@@ -1006,11 +1016,14 @@ Slender-billed Oriole,Oriolus tenuirostris,slenderbilledorioleoriolustenuirostri
 Slender-billed Scimitar-babbler,Xiphirhynchus superciliaris,slenderbilledscimitarbabblerxiphirhynchussuperciliaris
 Slender-billed Vulture,Gyps tenuirostris,slenderbilledvulturegypstenuirostris
 Small Buttonquail,Turnix sylvaticus,smallbuttonquailturnixsylvaticus
+Common Buttonquail,Turnix sylvaticus,commonbuttonquailturnixsylvaticus
 Small Cuckoo,Cuculus poliocephalus,smallcuckoocuculuspoliocephalus
+Lesser Cuckoo,Cuculus poliocephalus,lessercuckoocuculuspoliocephalus
 Small Minivet,Pericrocotus cinnamomeus,smallminivetpericrocotuscinnamomeus
 Small Niltava,Niltava macgrigoriae,smallniltavaniltavamacgrigoriae
 Small Pratincole,Glareola lactea,smallpratincoleglareolalactea
 Small Sunbird,Leptocoma minima,smallsunbirdleptocomaminima
+Crimson-backed Sunbird,Leptocoma minima,crimsonbackedsunbirdleptocomaminima
 Small-billed Scaly Thrush,Zoothera dauma,smallbilledscalythrushzootheradauma
 Smew,Mergellus albellus,smewmergellusalbellus
 Smoky Leaf-warbler,Phylloscopus fuligiventer,smokyleafwarblerphylloscopusfuligiventer
@@ -1252,6 +1265,7 @@ Yellow-eyed Babbler,Chrysomma sinense,yelloweyedbabblerchrysommasinense
 Yellow-eyed Pigeon,Columba eversmanni,yelloweyedpigeoncolumbaeversmanni
 Yellow-footed Green-pigeon,Treron phoenicopterus,yellowfootedgreenpigeontreronphoenicopterus
 Yellow-fronted Pied Woodpecker,Dendrocopos mahrattensis,yellowfrontedpiedwoodpeckerdendrocoposmahrattensis
+Yellow-crowned Woodpecker,Dendrocopos mahrattensis,yellowcrownedwoodpeckerdendrocoposmahrattensis
 Yellow-legged Buttonquail,Turnix tanki,yellowleggedbuttonquailturnixtanki
 Yellow-rumped Flycatcher,Ficedula zanthopygia,yellowrumpedflycatcherficedulazanthopygia
 Yellow-rumped Honeyguide,Indicator xanthonotus,yellowrumpedhoneyguideindicatorxanthonotus
