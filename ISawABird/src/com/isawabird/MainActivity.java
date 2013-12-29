@@ -118,27 +118,6 @@ public class MainActivity extends Activity {
 				// move heavy work to asynctask
 				new InitChecklistAsyncTask(getApplicationContext()).execute();
 
-				/* Initialize with last known location */ 
-				LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-				Location lastKnown = null;
-				if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-					lastKnown = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-					ParseUtils.location = new ParseGeoPoint(lastKnown.getLatitude(), lastKnown.getLongitude());
-				}else if(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-					lastKnown = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-					ParseUtils.location = new ParseGeoPoint(lastKnown.getLatitude(), lastKnown.getLongitude());
-				}
-				
-				MyLocation myLocation = new MyLocation();
-				LocationResult locationResult = new LocationResult(){
-				    @Override
-				    public void gotLocation(Location location){
-				        Log.i(Consts.TAG, "Lat , long are " + location.getLatitude() + " " + location.getLongitude());
-				        ParseUtils.location = new ParseGeoPoint(location.getLatitude(), location.getLongitude()); 
-				    }
-				};
-				myLocation.getLocation(this, locationResult);
-
 				/* Try to sync if needed */
 				SyncUtils.createSyncAccount(getApplicationContext());
 				SyncUtils.triggerRefresh(false);
