@@ -40,6 +40,7 @@ public class DeveloperSettings extends PreferenceActivity implements SharedPrefe
 		feedback = (Preference) findPreference("feedback");
 		about = (Preference) findPreference("about");
 		version = (Preference) findPreference("version");
+		version.setTitle("Version " + getString(R.string.versionNumber));
 		
 		try {
 			afd = getAssets().openFd("birdCall.mp3");

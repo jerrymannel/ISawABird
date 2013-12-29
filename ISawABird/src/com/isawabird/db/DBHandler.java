@@ -142,7 +142,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 				result = db.insertOrThrow(DBConsts.TABLE_SIGHTING, null, values);
 				// TODO Remove later
-				dumpTable(DBConsts.TABLE_SIGHTING);
+//				dumpTable(DBConsts.TABLE_SIGHTING);
 
 			} catch(SQLiteException ex) {
 				throw new ISawABirdException(ex.getMessage());
@@ -244,7 +244,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		} catch(SQLiteException ex) {
 			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
 		}
-		dumpTable(DBConsts.TABLE_LIST);
+//		dumpTable(DBConsts.TABLE_LIST);
 
 		return result;
 	}
@@ -285,7 +285,7 @@ public class DBHandler extends SQLiteOpenHelper {
 	public BirdList getBirdListById(long listId) throws ISawABirdException {
 		if(!db.isOpen()) db = getWritableDatabase();
 
-		dumpTable(DBConsts.TABLE_LIST);
+//		dumpTable(DBConsts.TABLE_LIST);
 		Log.i("", "List ID is " + listId);
 		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_ID, new String [] { String.valueOf(listId) });
 		if (result.getCount() == 0){
@@ -564,7 +564,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		values.put(DBConsts.FEEDBACK_TEXT, feedback);
 		values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
 		db.insertOrThrow(DBConsts.TABLE_FEEDBACK, null, values);
-		dumpTable(DBConsts.TABLE_FEEDBACK);
+//		dumpTable(DBConsts.TABLE_FEEDBACK);
 	}
 
 	public boolean deleteLocally(String tableName, long id){ 

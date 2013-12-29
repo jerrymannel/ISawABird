@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.isawabird.Consts;
 
@@ -36,12 +37,15 @@ public class SyncUtils {
      * preserve battery life. If you know new data is available (perhaps via a GCM notification),
      * but the user is not actively waiting for that data, you should omit this flag; this will give
      * the OS additional freedom in scheduling your sync request.
+     * 
+     * overrideThrottle : manually override the throttle algorithm and do a refresh. 
      */
-    public static void triggerRefresh() {
+    public static void triggerRefresh(boolean overrideThrottle) {
         Bundle b = new Bundle();
         // Disable sync backoff and ignore sync preferences. In other words...perform sync NOW!
         b.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
         b.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        b.putBoolean(Consts.OVERRIDE_THROTTLE, overrideThrottle); 
         ContentResolver.requestSync(
                 GenericAccountService.getAccount(),      // Sync account
                 Consts.AUTHORITY, 						 // Content authority

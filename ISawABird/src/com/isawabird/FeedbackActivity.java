@@ -30,7 +30,7 @@ public class FeedbackActivity extends Activity {
 				dh.addFeedback(feedback_editText.getText().toString()); 
 				feedback_editText.setText("");
 				Toast.makeText(getApplicationContext(), "Thank you for your feedback", Toast.LENGTH_SHORT).show();
-				SyncUtils.triggerRefresh();
+				SyncUtils.triggerRefresh(false);
 				finish();
 			}
 		});

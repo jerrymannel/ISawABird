@@ -190,6 +190,12 @@ public class BirdListActivity extends Activity {
 			checkedBirdListPosition = info.position;
 
 			return true;
+			
+		case R.id.action_sync:
+			SyncUtils.triggerRefresh(true);
+			Toast.makeText(getApplicationContext(), "Sync requested", Toast.LENGTH_SHORT).show();
+			return true;
+			
 		default:
 			return super.onContextItemSelected(item);
 		}
@@ -415,7 +421,7 @@ public class BirdListActivity extends Activity {
 				}
 				mListAdapter.notifyDataSetChanged();
 				deleteBirdListPosition = -1;
-				SyncUtils.triggerRefresh();
+				SyncUtils.triggerRefresh(false);
 			}
 			if (mListAdapter.birdLists.size() == 0) {
 				DBHandler dh = DBHandler.getInstance(getApplicationContext());
@@ -428,7 +434,7 @@ public class BirdListActivity extends Activity {
 						Utils.setCurrentList(list.getListName(), list.getId());
 						mListAdapter.birdLists.add(0, list);
 						mListAdapter.notifyDataSetChanged();
-						SyncUtils.triggerRefresh();
+						SyncUtils.triggerRefresh(false);
 					}
 				} catch (ISawABirdException e) {
 					Log.e(Consts.TAG, e.getMessage());

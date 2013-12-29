@@ -14,5 +14,6 @@
         android:icon="@drawable/ic_menu_close_clear_cancel"
         android:showAsAction="ifRoom"
         android:title="@string/delete_list"/>
+    <item android:id="@+id/action_sync" android:title="Sync"></item>
 
 </menu>

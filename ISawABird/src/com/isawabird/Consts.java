@@ -34,4 +34,6 @@ public abstract class Consts {
 
 	public static final String SPECIES_NAME = "SpeciesName";
 
+	public static final String OVERRIDE_THROTTLE = "OverrideThrottle";
+
 }

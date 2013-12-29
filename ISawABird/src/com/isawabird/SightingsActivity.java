@@ -199,7 +199,7 @@ public class SightingsActivity extends Activity {
 				mSightingListAdapter.remove(position);
 				mSightingListAdapter.notifyDataSetChanged();
 				deleteSightingListPosition = -1;
-				SyncUtils.triggerRefresh();
+				SyncUtils.triggerRefresh(false);
 			}
 		}
 	}

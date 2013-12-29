@@ -4,4 +4,7 @@
           android:icon="@drawable/ic_menu_close_clear_cancel"
           android:title="@string/delete_sighting"
           android:showAsAction="ifRoom" />
+    <item android:id="@+id/action_heardOnly" android:title="@string/heardOnly"></item>
+    
+    
 </menu>

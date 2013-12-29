@@ -141,7 +141,7 @@ public class MainActivity extends Activity {
 
 				/* Try to sync if needed */
 				SyncUtils.createSyncAccount(getApplicationContext());
-				SyncUtils.triggerRefresh();
+				SyncUtils.triggerRefresh(false);
 
 				showHelpOverlay();
 
@@ -239,7 +239,7 @@ public class MainActivity extends Activity {
 				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
 				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
 			}			
-			DBHandler.getInstance(getApplicationContext()).dumpTable(DBConsts.TABLE_SIGHTING);
+//			DBHandler.getInstance(getApplicationContext()).dumpTable(DBConsts.TABLE_SIGHTING);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -377,7 +377,7 @@ public class MainActivity extends Activity {
 						new DeleteSightingAsyncTask().execute();
 					}
 				}, action);
-				SyncUtils.triggerRefresh();
+				SyncUtils.triggerRefresh(false);
 				new UpdateBirdCountAsyncTask().execute();
 			}
 		}
@@ -402,7 +402,7 @@ public class MainActivity extends Activity {
 		@Override
 		protected void onPostExecute(Boolean result) {
 			if (result) {
-				SyncUtils.triggerRefresh();
+				SyncUtils.triggerRefresh(false);
 				new UpdateBirdCountAsyncTask().execute();
 			}
 		}

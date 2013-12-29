@@ -71,7 +71,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		float quotaPerDay = QUOTA_PER_MONTH / Calendar.getInstance().getActualMaximum(Calendar.DATE);
 
 		float availableRequests = (date * quotaPerDay) - requestsSpentThisMonth;
-		////Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
+		Log.i(Consts.TAG, " We have " + availableRequests + " requests remaining this month");
 		return (availableRequests > 0);
 	}
 
@@ -227,7 +227,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			Utils.initializePrefs(getContext());
 			
-			if (Utils.isNetworkAvailable(getContext()) && areSyncCreditsAvailable()) {
+			if (Utils.isNetworkAvailable(getContext()) && 
+					(areSyncCreditsAvailable() || extras.getBoolean(Consts.OVERRIDE_THROTTLE))) {
 				Log.w(Consts.TAG, "SYNCING NOW");
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
 				syncBirdLists();
@@ -258,7 +259,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 									dh.deleteLocally(table, postEntries.get(i));
 								}
 								// TODO Remove later 
-								dh.dumpTable(table);
+//								dh.dumpTable(table);
 							} else {
 								// TODO : Handle failure
 							}
