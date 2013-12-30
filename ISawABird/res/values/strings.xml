@@ -69,6 +69,6 @@
     <string name="app_id">198861263634066</string>
     <string name="versionNumber">v 1.2</string>
     <string name="developedBy">Developed by</string>
-    <string name="heardOnly">Mark as heard only</string>
+    <string name="heardOnly">Heard only</string>
 
 </resources>

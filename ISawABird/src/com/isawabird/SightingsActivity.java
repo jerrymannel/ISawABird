@@ -22,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.isawabird.db.DBConsts;
 import com.isawabird.db.DBHandler;
 import com.isawabird.parse.ParseUtils;
 import com.isawabird.parse.extra.SyncUtils;
@@ -60,6 +61,13 @@ public class SightingsActivity extends Activity {
 
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.sighting_context_menu, menu);
+		
+		/* Check the heard only option if needed */ 
+		long sightingID = mSightingListAdapter.idList.get(((AdapterContextMenuInfo)menuInfo).position);
+		Log.i(Consts.TAG, "Sighiting id is  " + sightingID);
+		DBHandler dh = DBHandler.getInstance(getApplicationContext());
+		boolean heardOnly = dh.isSightingHeardOnly(sightingID); 
+		menu.findItem(R.id.action_heardOnly).setChecked(heardOnly);
 	}
 
 	DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
@@ -88,6 +96,14 @@ public class SightingsActivity extends Activity {
 			builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
 			.setNegativeButton("No", dialogClickListener).show();
 			return true;
+			
+		case R.id.action_heardOnly:
+			long sightingID = mSightingListAdapter.idList.get(info.position);
+			Log.i(Consts.TAG, "Sighting id is " + sightingID); 
+			DBHandler dh = DBHandler.getInstance(getApplicationContext());
+			dh.setHeardOnly(sightingID, !item.isChecked());			
+			dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			return true; 
 		default:
 			return super.onContextItemSelected(item);
 		}

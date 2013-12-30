@@ -567,6 +567,35 @@ public class DBHandler extends SQLiteOpenHelper {
 //		dumpTable(DBConsts.TABLE_FEEDBACK);
 	}
 
+	public boolean isSightingHeardOnly(long sightingID){
+		if(!db.isOpen()) db = getWritableDatabase();
+		try {
+			Cursor result = db.query(DBConsts.TABLE_SIGHTING, null, DBConsts.ID + "=" + sightingID, null, null, null, null); 
+			if (result.moveToNext()){
+				int heardOnly = result.getInt(result.getColumnIndex(DBConsts.SIGHTING_IS_HEARD_ONLY));
+				return (heardOnly != 0);
+			}
+		}catch(Exception ex){
+			// TODO Handle error
+			ex.printStackTrace(); 
+		}
+		
+		return false;
+	}
+
+	public void setHeardOnly(long sightingID, boolean heardOnly){
+		if(!db.isOpen()) db = getWritableDatabase();
+		try {
+			ContentValues values = new ContentValues();
+			values.put(DBConsts.SIGHTING_IS_HEARD_ONLY, heardOnly ? 1 : 0); 
+			db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.ID + "= ?"  , new String [] {String.valueOf(sightingID)});
+			
+		}catch(Exception ex){
+			// TODO Handle error
+			ex.printStackTrace(); 
+		}
+	}
+	
 	public boolean deleteLocally(String tableName, long id){ 
 		if(!db.isOpen()) db = getWritableDatabase();
 
