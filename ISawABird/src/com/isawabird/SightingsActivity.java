@@ -102,7 +102,7 @@ public class SightingsActivity extends Activity {
 			Log.i(Consts.TAG, "Sighting id is " + sightingID); 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			dh.setHeardOnly(sightingID, !item.isChecked());			
-			dh.dumpTable(DBConsts.TABLE_SIGHTING);
+			//dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			return true; 
 		default:
 			return super.onContextItemSelected(item);
