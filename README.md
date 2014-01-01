@@ -1,7 +1,8 @@
-
 Birdr
 -------
-(previously ISawABird)
+<i>(development name ISawABird)</i>
+
+<img src="https://lh4.ggpht.com/XPc1VKK1-Qv05rFzho-OeG4sNYrvoPm1egxhoUr2LtvoZ1vKJ8Y7Ufqc7AsJZ_dgSFvx=h900-rw"/>
 
 Use Birdr to record and maintain all your bird sightings from the field.
 A simple, yet very elegant app to unobtrusively note various species. A simple and powerful search function to make entries in a jiffy.
