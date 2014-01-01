@@ -23,9 +23,10 @@ public class ISawABirdApplication extends Application {
 		Location lastKnown = null;
 		if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 			lastKnown = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			ParseUtils.location = new ParseGeoPoint(lastKnown.getLatitude(), lastKnown.getLongitude());
 		}else if(lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
 			lastKnown = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		}
+		if (lastKnown != null){
 			ParseUtils.location = new ParseGeoPoint(lastKnown.getLatitude(), lastKnown.getLongitude());
 		}
 		
