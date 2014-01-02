@@ -20,6 +20,10 @@ We would like to hear from you. If there is a feature that you would like us to 
 
 You can report any issues here - https://trello.com/b/c1th0DVd/birdr
 
+v 1.3
+---------
+ - Defect Fixes
+
 v 1.2 
 ---------
  - Happy New Year!!! :)
