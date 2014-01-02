@@ -101,7 +101,8 @@ public class SightingsActivity extends Activity {
 			long sightingID = mSightingListAdapter.idList.get(info.position);
 			Log.i(Consts.TAG, "Sighting id is " + sightingID); 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
-			dh.setHeardOnly(sightingID, !item.isChecked());			
+			dh.setHeardOnly(sightingID, !item.isChecked());	
+			SyncUtils.triggerRefresh(false);
 			//dh.dumpTable(DBConsts.TABLE_SIGHTING);
 			return true; 
 		default:

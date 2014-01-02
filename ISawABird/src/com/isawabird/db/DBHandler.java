@@ -588,6 +588,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		try {
 			ContentValues values = new ContentValues();
 			values.put(DBConsts.SIGHTING_IS_HEARD_ONLY, heardOnly ? 1 : 0); 
+			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 1);
 			db.update(DBConsts.TABLE_SIGHTING, values, DBConsts.ID + "= ?"  , new String [] {String.valueOf(sightingID)});
 			
 		}catch(Exception ex){

@@ -21,10 +21,12 @@ import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseInstallation;
 import com.parse.ParseQuery;
 import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.PushService;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 public class LoginActivity extends Activity {
@@ -144,8 +146,11 @@ public class LoginActivity extends Activity {
 					if (user == null) {
 						Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
 					} else {
-						/* Bird Race specific code */
+						Log.i(Consts.TAG, "Logged in!");
+						saveInstallationID();
+						
 						String city = user.getString(Consts.BIRDRACE_CITY);
+						/* Bird Race specific code */
 						if (city != null) {
 							Log.i(Consts.TAG, "Bird Race user ");
 							/* Create a new list for BirdRace */
@@ -192,6 +197,7 @@ public class LoginActivity extends Activity {
 					Toast.makeText(getApplicationContext(), errMsg, Toast.LENGTH_SHORT).show();
 				} else {
 					Utils.setCurrentUsername(user.getUsername());
+					saveInstallationID();
 					showHome();
 				}
 			}
@@ -214,6 +220,7 @@ public class LoginActivity extends Activity {
 					Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show();
 				} else {
 					Utils.setCurrentUsername(user.getUsername());
+					saveInstallationID();
 					showHome();
 				}
 			}
@@ -308,5 +315,25 @@ public class LoginActivity extends Activity {
 		homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(homeIntent);
 		finish();
+	}
+	
+	private void saveInstallationID(){
+		ParseUser currentUser =ParseUser.getCurrentUser();  
+		if (currentUser.getString("InstallationID") != null){
+			return ;
+		}
+		currentUser .add("InstallationID", ParseInstallation.getCurrentInstallation().getInstallationId()); 
+		currentUser .saveInBackground(new SaveCallback() {
+			
+			@Override
+			public void done(ParseException ex) {
+				if (ex == null){
+					Log.i(Consts.TAG, "User saved !");
+				}else{
+					ex.printStackTrace();
+				}								
+			}
+		}) ;
+		
 	}
 }

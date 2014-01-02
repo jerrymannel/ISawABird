@@ -152,6 +152,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.SIGHTING_DATE, getDateInParseFormat(sighting.getDate()));
 					body.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 					body.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());
+					body.put(DBConsts.SIGHTING_IS_HEARD_ONLY, sighting.isHeardOnly()); 
 					if(sighting.getListParseObjectId() != null && !sighting.getListParseObjectId().isEmpty()) {
 						body.put(DBConsts.SIGHTING_LIST_ID, sighting.getListParseObjectId());
 					} else {

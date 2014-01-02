@@ -32,10 +32,12 @@ import com.isawabird.utilities.UndoBarController;
 import com.isawabird.utilities.UndoBarController.UndoListener;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.PushService;
+import com.parse.SaveCallback;
 
 public class MainActivity extends Activity {
 
@@ -77,8 +79,21 @@ public class MainActivity extends Activity {
 			Parse.initialize(this, ParseConsts.APP_ID, ParseConsts.CLIENT_KEY);
 
 			PushService.setDefaultPushCallback(this, MainActivity.class);
-			ParseInstallation.getCurrentInstallation().saveInBackground();
+			ParseInstallation thisInstall =  ParseInstallation.getCurrentInstallation(); 
+			try{
+			if (thisInstall.getString("Phone") == null){
+				thisInstall.add("Phone", android.os.Build.MANUFACTURER + " " + android.os.Build.MODEL);
+				thisInstall.add("OSVersion", android.os.Build.VERSION.RELEASE);
+				thisInstall.add("Country", getResources().getConfiguration().locale.getDisplayCountry());
+				thisInstall.saveEventually();
+			}
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			Log. i(Consts.TAG, "Saved this instance. Install ID is " + ParseInstallation.getCurrentInstallation().getInstallationId());
 			ParseAnalytics.trackAppOpened(getIntent());
+			
+			
 			if (Utils.isFirstTime()) {
 				login();
 				// exit this activity
