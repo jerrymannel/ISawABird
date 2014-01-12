@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -66,6 +68,10 @@ public class SearchActivity extends Activity {
 		sideIndex.setOnTouchListener(new Indextouch());
 
 		search.setTypeface(arvo);
+		search.requestFocus();
+			
+//		((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(search, InputMethodManager.SHOW_FORCED);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		species = Utils.getAllSpecies();
 		arrayAdapter = new StandardArrayAdapter(species);
