@@ -60,6 +60,7 @@
     <color name="color_app_bg">#FFFFFF</color>
     <color name="color_main_title">#EEE</color>
     <string-array name="checklists">
+        <item>Bangalore</item>
         <item >India</item>
         <item >Great Britain</item>
         <item >Indonesia</item>

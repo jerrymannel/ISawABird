@@ -157,6 +157,8 @@ public class LoginActivity extends Activity {
 							try {
 								DBHandler dh = DBHandler.getInstance(getApplicationContext());
 								BirdList birdRaceList = new BirdList(city + " BirdRace " + user.getInt(Consts.BIRDRACE_YEAR));
+								Log.i(Consts.TAG, "Current user is " + ParseUser.getCurrentUser().getUsername());
+								birdRaceList.setUsername(user.getUsername());
 								dh.addBirdList(birdRaceList, true);
 							} catch (ISawABirdException ex) {
 								/* DO nothing. The list already exists */
