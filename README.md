@@ -20,6 +20,13 @@ We would like to hear from you. If there is a feature that you would like us to 
 
 You can report any issues here - https://trello.com/b/c1th0DVd/birdr
 
+v 1.4
+---------
+ - Added Bangalore checklist
+ - Usability improvements
+ - Bugs 
+ - One of the developers claim that he has a Swiss Bank a/c...
+
 v 1.3
 ---------
  - Defect Fixes
