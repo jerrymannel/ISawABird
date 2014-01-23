@@ -91,9 +91,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						// yet
 						staleEntries.add(birdList.getId());
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */ 
 						// include DELETE
 						postEntries.add(birdList.getId());
 						addDeleteRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST);
+						}
 					}
 				} else {
 					// if not delete, then it is marked for upload
@@ -104,13 +106,17 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.LIST_DATE, getDateInParseFormat(birdList.getDate()));
 
 					if (birdList.getParseObjectID() == null) {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// CREATE
 						postEntries.add(birdList.getId());
 						addCreateRequest(DBConsts.TABLE_LIST, body);
+						}
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// UPDATE
 						postEntries.add(birdList.getId());
 						addUpdateRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, body);
+						}
 					}
 				}
 			}
@@ -140,9 +146,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						// yet
 						staleEntries.add(sighting.getId());
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// include DELETE
 						postEntries.add(sighting.getId());
 						addDeleteRequest(sighting.getParseObjectID(), DBConsts.TABLE_SIGHTING);
+						}
 					}
 				} else {
 					// if not delete, then it is marked for upload
@@ -160,13 +168,17 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					}
 
 					if (sighting.getParseObjectID() == null) {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// CREATE
 						postEntries.add(sighting.getId());
 						addCreateRequest(DBConsts.TABLE_SIGHTING, body);
+						}
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// UPDATE
 						postEntries.add(sighting.getId());
 						addUpdateRequest(sighting.getParseObjectID(), DBConsts.TABLE_SIGHTING, body);
+						}
 					}
 				}
 			}
@@ -194,8 +206,10 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				body.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername());
 				body.put(DBConsts.FEEDBACK_DATE, getDateInParseFormat(new Date()));
 				body.put(DBConsts.FEEDBACK_TEXT	, feedbackToSync.getJSONObject(i).getString("feedbackText")); // TODO Externalize
+				if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 				addCreateRequest(DBConsts.TABLE_FEEDBACK, body);
 				postEntries.add((long)feedbackToSync.getJSONObject(i).getInt("feedbackId")); // TODO Externalize
+				}
 			}
 		} catch (JSONException ex) {
 			Log.e(Consts.TAG, ex.getMessage());
