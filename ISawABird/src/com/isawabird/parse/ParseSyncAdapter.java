@@ -78,7 +78,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncBirdLists() {
 		try {
 			// get bird list to sync create/update/delete
-			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
+			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync();
 
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
@@ -128,7 +128,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncSightings() {
 		try {
 			// get bird list to sync create/update/delete
-			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync(ParseUtils.getCurrentUsername());
+			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync();
 
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
@@ -187,11 +187,8 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			// get bird list to sync create/update/delete
 			JSONArray feedbackToSync = dh.getFeedbackToSync();
-			//Log.i(Consts.TAG, feedbackToSync.toString());
-			//Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
 			JSONObject body = null;
 			for (int i = 0 ; i < feedbackToSync.length() ; i ++) {
-				//Log.i(Consts.TAG, "Adding a feedback to sync ");
 				// if not delete, then it is marked for upload
 				body = new JSONObject();
 				body.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername());
@@ -223,14 +220,12 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-		Log.w(Consts.TAG, "IN onPerformSync");
 
 		try {
 			Utils.initializePrefs(getContext());
 			
 			if (Utils.isNetworkAvailable(getContext()) && 
 					(areSyncCreditsAvailable() || extras.getBoolean(Consts.OVERRIDE_THROTTLE))) {
-				Log.w(Consts.TAG, "SYNCING NOW");
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
 				syncBirdLists();
 				syncSightings();
@@ -271,8 +266,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				postEntries = new ArrayList<Long>();
 			}
 		} catch (Exception e) {
-			//Log.e(Consts.TAG, e.getMessage());
-			e.printStackTrace();
 			String err;
 			if (e.getMessage()==null){
 				err = "Sync Failed";

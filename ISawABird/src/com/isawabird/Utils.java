@@ -36,7 +36,7 @@ public class Utils {
 				while ((csv = fis.readLine()) != null) {
 					allSpecies.add(new Species(csv, TYPE.IS_CSV));
 				}
-				Log.d(Consts.TAG, allSpecies.size() + " species added to checklist");
+				//Log.d(Consts.TAG, allSpecies.size() + " species added to checklist");
 				checklistLoaded = true;
 				Utils.setChecklistName(checklist);
 			} catch (IOException ioex) {

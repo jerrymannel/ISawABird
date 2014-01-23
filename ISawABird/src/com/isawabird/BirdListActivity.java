@@ -98,7 +98,6 @@ public class BirdListActivity extends Activity {
 
 				LIST_ACTION type = (LIST_ACTION) mNewListSaveButton.getTag(R.string.key_list_type);
 
-				Log.e(Consts.TAG, "saving + " + type);
 				BirdList list;
 				if (LIST_ACTION.RENAME_LIST.equals(type)) {
 					int position = (Integer) mNewListSaveButton.getTag(R.string.key_list_position);
@@ -274,9 +273,8 @@ public class BirdListActivity extends Activity {
 			try {
 				mCountForEachList.setText("" + dh.getBirdCountByListId(dh.getListIDByName(listName)));
 			} catch (ISawABirdException e) {
-				e.printStackTrace();
 				Log.i(Consts.TAG, "No list with " + listName + " found.");
-				Log.i(Consts.TAG, e.getMessage());
+				e.printStackTrace();
 			}
 
 			if (birdLists.get(position).getId() == Utils.getCurrentListID()) {

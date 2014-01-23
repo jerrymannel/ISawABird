@@ -18,30 +18,6 @@ public class ParseUtils {
 	private static ParseUser currentUser = null;  
 	public  static ParseGeoPoint location = new ParseGeoPoint(0, 0);
 
-	public static void login(String username, String password) throws ParseException, ISawABirdException{
-		try{
-			if (username != null){
-				currentUser = ParseUser.logIn(username, password);	
-			}else{
-
-				ParseAnonymousUtils.logIn(new LogInCallback() {
-
-					@Override
-					public void done(ParseUser user, ParseException ex) {
-						if (ex == null){
-							Log.d(Consts.TAG, user.getObjectId());
-						}else{
-							Log.e(Consts.TAG, ex.getMessage());
-						}
-					}
-				});
-			}
-
-		}catch(Exception ex){
-			//throw ex;
-		}
-	}
-
 	public static String getCurrentUsername(){
 		currentUser = ParseUser.getCurrentUser();
 		if(currentUser != null) {
@@ -51,6 +27,7 @@ public class ParseUtils {
 		if(username == null) {
 			username = Utils.setCurrentUsername(generateUsername());
 		}
+		
 		return username;
 	}
 	

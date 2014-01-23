@@ -10,7 +10,7 @@ public class BirdList {
 	private Date date; 
 	private String listName = null; 
 	private String notes = null; 
-	private String username = ParseUtils.getCurrentUsername();
+	private String username = null;
 	private String parseObjectID = null;
 	private boolean isMarkedForDelete = false;
 	private boolean isMarkedForUpload = true;
