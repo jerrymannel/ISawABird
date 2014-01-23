@@ -16,9 +16,15 @@ Features:
 
 Developed by a birder and his 3 friends, because he won't stop nagging us..
 
+** Thanks to the bird enthusiasts of Bangalore for using our app and also for the great feedback **
+
 We would like to hear from you. If there is a feature that you would like us to add to this app, please free to add that under this link : https://trello.com/b/c1th0DVd/birdr
 
 You can report any issues here - https://trello.com/b/c1th0DVd/birdr
+
+v 1.5
+---------
+ - Defect fixes.
 
 v 1.4
 ---------
