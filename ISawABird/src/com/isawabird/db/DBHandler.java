@@ -51,9 +51,9 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		this.db = database;
 
-		Log.i(Consts.TAG, "in onCreate db");
+		/*Log.i(Consts.TAG, "in onCreate db");
 		Log.i(Consts.TAG, DBConsts.CREATE_LIST);
-		Log.i(Consts.TAG, DBConsts.CREATE_SIGHTING);
+		Log.i(Consts.TAG, DBConsts.CREATE_SIGHTING);*/
 		try {
 			db.beginTransaction();
 			db.execSQL(DBConsts.CREATE_LIST);
@@ -126,12 +126,11 @@ public class DBHandler extends SQLiteOpenHelper {
 		long result = -1;
 		if(!isSightingExist(sighting.getSpecies().getFullName(), listId, username)) {
 			try {
-				Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().getFullName());
+				//Log.i(Consts.TAG, "Adding new species to table: " + sighting.getSpecies().getFullName());
 
 				ContentValues values = new ContentValues();
 				values.put(DBConsts.SIGHTING_SPECIES, sighting.getSpecies().getFullName());
 				values.put(DBConsts.SIGHTING_LIST_ID, listId);
-				Log.i(Consts.TAG, "Sighting date is " + (int)(sighting.getDate().getTime()/1000));
 				values.put(DBConsts.SIGHTING_DATE, (int)(sighting.getDate().getTime()/1000));
 				values.put(DBConsts.SIGHTING_LATITUDE, sighting.getLatitude());
 				values.put(DBConsts.SIGHTING_LONGITUDE, sighting.getLongitude());								
@@ -148,7 +147,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				throw new ISawABirdException(ex.getMessage());
 			}
 		} else{
-			Log.w(Consts.TAG, sighting.getSpecies() + " not added to list with listID: " + listId + ", usrename: " + Utils.getCurrentListName());
+			//Log.w(Consts.TAG, sighting.getSpecies() + " not added to list with listID: " + listId + ", username: " + Utils.getCurrentListName());
 			throw new ISawABirdException(ISawABirdException.ERR_SIGHTING_ALREADY_EXISTS); 
 		}
 		return result;
@@ -176,7 +175,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor result = db.rawQuery(
 				DBConsts.QUERY_IS_SIGHTINGS_EXIST, 
 				new String [] { Long.toString(listId), species });
-		Log.i(Consts.TAG, "isSightingExist: " + result.getCount());
+		//Log.i(Consts.TAG, "isSightingExist: " + result.getCount());
 		return (result.getCount() != 0);
 	}
 
@@ -196,7 +195,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 	/* Create a new list for this user */
 	public long  addBirdList(BirdList birdList, boolean setCurrentList) throws ISawABirdException{
-		Log.i(Consts.TAG, " >> addBirdList"); 
 		if(!db.isOpen()) db = getWritableDatabase();
 
 		BirdList oldBirdList = getBirdListByName(birdList.getListName());
@@ -242,7 +240,7 @@ public class DBHandler extends SQLiteOpenHelper {
 				Utils.setCurrentList(birdList.getListName(), result);
 			}
 		} catch(SQLiteException ex) {
-			Log.e(Consts.TAG, "Error occurred adding a new table " + ex.getMessage());
+			Log.e(Consts.TAG, "exception: " + ex.getMessage());
 		}
 //		dumpTable(DBConsts.TABLE_LIST);
 
@@ -272,7 +270,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		BirdList list = new BirdList(listName);
 		list.setId(result.getLong(result.getColumnIndex(DBConsts.ID)));
 		list.setDate( new Date(result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000));
-		Log.i(Consts.TAG, "Getting list date as " +   (result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000)); 
 		list.setNotes(result.getString(result.getColumnIndex(DBConsts.LIST_NOTES))); 
 		list.setUsername(result.getString(result.getColumnIndex(DBConsts.LIST_USER))); 
 		list.setMarkedForDelete((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED))) == 1);
@@ -285,8 +282,6 @@ public class DBHandler extends SQLiteOpenHelper {
 	public BirdList getBirdListById(long listId) throws ISawABirdException {
 		if(!db.isOpen()) db = getWritableDatabase();
 
-//		dumpTable(DBConsts.TABLE_LIST);
-		Log.i("", "List ID is " + listId);
 		Cursor result = db.rawQuery(DBConsts.QUERY_GET_LIST_BY_ID, new String [] { String.valueOf(listId) });
 		if (result.getCount() == 0){
 			return null; 
@@ -295,7 +290,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		BirdList list = new BirdList(result.getString(result.getColumnIndex(DBConsts.LIST_NAME)));
 		list.setId(result.getLong(result.getColumnIndex(DBConsts.ID)));
 		list.setDate( new Date(result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000));
-		//Log.i(Consts.TAG, "Getting list date as " +   (result.getLong(result.getColumnIndex(DBConsts.LIST_DATE)) * 1000)); 
 		list.setNotes(result.getString(result.getColumnIndex(DBConsts.LIST_NOTES))); 
 		list.setUsername(result.getString(result.getColumnIndex(DBConsts.LIST_USER))); 
 		list.setMarkedForDelete((result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED))) == 1);
@@ -311,7 +305,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		Cursor result = db.rawQuery(DBConsts.QUERY_TOTAL_SPECIES_COUNT, null);
 		result.moveToNext();
-		Log.i(Consts.TAG, "Returning count of " + result.getLong(0));
 		return result.getLong(0); 
 	}
 
@@ -330,7 +323,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
-			Log.v(Consts.TAG, "Found list " + result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			temp.setDate(new Date(result.getInt(result.getColumnIndexOrThrow(DBConsts.LIST_DATE) ) * 1000));
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NOTES)));
 			temp.setUsername(username);
@@ -342,7 +334,7 @@ public class DBHandler extends SQLiteOpenHelper {
 		return birdList;
 	}
 
-	public ArrayList<BirdList> getBirdListToSync(String username) {
+	public ArrayList<BirdList> getBirdListToSync() {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -355,9 +347,8 @@ public class DBHandler extends SQLiteOpenHelper {
 		while(result.moveToNext()) {
 			BirdList temp = new BirdList(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NAME)));
 			temp.setDate(new Date(result.getLong(result.getColumnIndexOrThrow(DBConsts.LIST_DATE) ) * 1000));
-			Log.i(Consts.TAG, "List :: Date read from DB is " + temp.getDate().toString());
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_NOTES)));
-			temp.setUsername(username);
+			temp.setUsername(result.getString(result.getColumnIndexOrThrow(DBConsts.LIST_USER)));
 			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
 			temp.setParseObjectID(result.getString(result.getColumnIndexOrThrow(DBConsts.PARSE_OBJECT_ID)));
 			temp.setMarkedForDelete(result.getInt(result.getColumnIndexOrThrow(DBConsts.PARSE_IS_DELETE_MARKED)) == 1);
@@ -396,7 +387,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
 
-	public ArrayList<Sighting> getSightingsToSync(String username) {
+	public ArrayList<Sighting> getSightingsToSync() {
 
 		if(!db.isOpen()) db = getWritableDatabase();
 
@@ -409,7 +400,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		while(result.moveToNext()) {
 			Sighting temp = new Sighting(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_SPECIES)));
 			temp.setDate(new Date(result.getLong(result.getColumnIndexOrThrow(DBConsts.SIGHTING_DATE))  * 1000 ));
-			Log.i(Consts.TAG, "Sighting::Date read from DB is " + temp.getDate().toString());
 
 			temp.setNotes(result.getString(result.getColumnIndexOrThrow(DBConsts.SIGHTING_NOTES)));
 			temp.setId(result.getInt(result.getColumnIndexOrThrow(DBConsts.ID)));
@@ -499,7 +489,6 @@ public class DBHandler extends SQLiteOpenHelper {
 		Cursor result = db.query(DBConsts.TABLE_LIST, new String[] { DBConsts.ID} , query , null,null, null, null); 
 		/* List name is unique */ 
 		if (result.moveToNext()){
-			Log.i(Consts.TAG, "ID of list " + listName + " is " + result.getLong(0)); 
 			return result.getLong(0); // hard code because we query for only one column
 		}else{
 			throw new ISawABirdException("No list found in the database"); 
@@ -513,7 +502,7 @@ public class DBHandler extends SQLiteOpenHelper {
 			ContentValues values = new ContentValues(); 
 			values.put(DBConsts.PARSE_OBJECT_ID, parseObjectId); 
 			values.put(DBConsts.PARSE_IS_UPLOAD_REQUIRED, 0);
-			Log.i(Consts.TAG, " Updating Parse object id for " + tableName + " id = " + id);
+			//Log.i(Consts.TAG, " Updating Parse object id for " + tableName + " id = " + id);
 			db.update(tableName, values, DBConsts.ID + "=" + id, null);
 			return true; 
 		}catch(Exception ex){

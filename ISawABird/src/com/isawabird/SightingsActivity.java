@@ -64,7 +64,6 @@ public class SightingsActivity extends Activity {
 		
 		/* Check the heard only option if needed */ 
 		long sightingID = mSightingListAdapter.idList.get(((AdapterContextMenuInfo)menuInfo).position);
-		Log.i(Consts.TAG, "Sighiting id is  " + sightingID);
 		DBHandler dh = DBHandler.getInstance(getApplicationContext());
 		boolean heardOnly = dh.isSightingHeardOnly(sightingID); 
 		menu.findItem(R.id.action_heardOnly).setChecked(heardOnly);
@@ -99,7 +98,6 @@ public class SightingsActivity extends Activity {
 			
 		case R.id.action_heardOnly:
 			long sightingID = mSightingListAdapter.idList.get(info.position);
-			Log.i(Consts.TAG, "Sighting id is " + sightingID); 
 			DBHandler dh = DBHandler.getInstance(getApplicationContext());
 			dh.setHeardOnly(sightingID, !item.isChecked());	
 			SyncUtils.triggerRefresh(false);
@@ -181,14 +179,11 @@ public class SightingsActivity extends Activity {
 				return;
 			}
 
-			Log.i(Consts.TAG, "Sightings count: " + result.size());
-
 			mSightingListAdapter.commonNameList = new ArrayList<String>();
 			mSightingListAdapter.scientificNameList = new ArrayList<String>();
 			mSightingListAdapter.idList = new ArrayList<Long>();
 
 			for (Sighting sighting : result) {
-				Log.i(Consts.TAG, "Sighting :: " + sighting.getSpecies().getFullName());
 				Species species = sighting.getSpecies();
 				mSightingListAdapter.commonNameList.add(species.commonName);
 				mSightingListAdapter.scientificNameList.add(species.scientificName);

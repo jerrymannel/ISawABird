@@ -183,7 +183,7 @@ public class SearchActivity extends Activity {
 						((LinearLayout) findViewById(R.id.list_index)).setVisibility(View.INVISIBLE);
 					}
 				});
-				Log.i(Consts.TAG, "Searching from subset of size " + ((speciesSubset == null) ? 0 : speciesSubset.size())) ;
+				//Log.i(Consts.TAG, "Searching from subset of size " + ((speciesSubset == null) ? 0 : speciesSubset.size())) ;
 				ArrayList<Species> searchResult = Utils.search(constraint.toString(), speciesSubset);
 
 				result.count = searchResult.size();

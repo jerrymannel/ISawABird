@@ -51,13 +51,7 @@ public class GenericAccountService extends Service {
 
     @Override
     public void onCreate() {
-        Log.i(Consts.TAG, "Service created");
         mAuthenticator = new Authenticator(this);
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.i(Consts.TAG, "Service destroyed");
     }
 
     @Override

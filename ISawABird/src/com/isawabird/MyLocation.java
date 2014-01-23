@@ -3,6 +3,7 @@ package com.isawabird;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.content.Context;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,10 +34,18 @@ public class MyLocation {
         if(!gps_enabled && !network_enabled)
             return false;
 
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setSpeedRequired(false);
+        
         if(gps_enabled)
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListenerGps);
+//        	lm.requestLocationUpdates(0, 0, criteria, locationListenerGps, null);
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 50, locationListenerGps);
         if(network_enabled)
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
+//        	lm.requestLocationUpdates(0, 0, criteria, locationListenerNetwork, null);
+        	lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 50, locationListenerNetwork);
         timer1=new Timer();
         timer1.schedule(new GetLastLocation(), 5 * Consts.ONE_MINUTE);
         return true;

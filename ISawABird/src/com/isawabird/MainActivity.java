@@ -257,7 +257,6 @@ public class MainActivity extends Activity {
 				Log.i(Consts.TAG, "current List Name: " + Utils.getCurrentListName());
 				Log.i(Consts.TAG, "current Username: " + ParseUtils.getCurrentUsername());
 			}			
-//			DBHandler.getInstance(getApplicationContext()).dumpTable(DBConsts.TABLE_SIGHTING);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -339,7 +338,6 @@ public class MainActivity extends Activity {
 		}
 
 		protected void onPostExecute(Long param) {
-			Log.e(Consts.TAG, "Count: " + birdCount + ", total: " + totalBirdCount);
 			mBirdCountText.setText(String.valueOf(birdCount));
 			mTotalBirdCountText.setText(String.valueOf(totalBirdCount));
 			if (!Utils.getCurrentListName().isEmpty()) {

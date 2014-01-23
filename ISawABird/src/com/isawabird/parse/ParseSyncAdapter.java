@@ -78,7 +78,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncBirdLists() {
 		try {
 			// get bird list to sync create/update/delete
-			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync(ParseUtils.getCurrentUsername());
+			ArrayList<BirdList> birdListToSync = dh.getBirdListToSync();
 
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
@@ -91,9 +91,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						// yet
 						staleEntries.add(birdList.getId());
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */ 
 						// include DELETE
 						postEntries.add(birdList.getId());
 						addDeleteRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST);
+						}
 					}
 				} else {
 					// if not delete, then it is marked for upload
@@ -104,13 +106,17 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					body.put(DBConsts.LIST_DATE, getDateInParseFormat(birdList.getDate()));
 
 					if (birdList.getParseObjectID() == null) {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// CREATE
 						postEntries.add(birdList.getId());
 						addCreateRequest(DBConsts.TABLE_LIST, body);
+						}
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// UPDATE
 						postEntries.add(birdList.getId());
 						addUpdateRequest(birdList.getParseObjectID(), DBConsts.TABLE_LIST, body);
+						}
 					}
 				}
 			}
@@ -128,7 +134,7 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 	private void syncSightings() {
 		try {
 			// get bird list to sync create/update/delete
-			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync(ParseUtils.getCurrentUsername());
+			ArrayList<Sighting> sightingsToSync = dh.getSightingsToSync();
 
 			ArrayList<Long> staleEntries = new ArrayList<Long>();
 			JSONObject body = null;
@@ -140,9 +146,11 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 						// yet
 						staleEntries.add(sighting.getId());
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// include DELETE
 						postEntries.add(sighting.getId());
 						addDeleteRequest(sighting.getParseObjectID(), DBConsts.TABLE_SIGHTING);
+						}
 					}
 				} else {
 					// if not delete, then it is marked for upload
@@ -160,13 +168,17 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 					}
 
 					if (sighting.getParseObjectID() == null) {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// CREATE
 						postEntries.add(sighting.getId());
 						addCreateRequest(DBConsts.TABLE_SIGHTING, body);
+						}
 					} else {
+						if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 						// UPDATE
 						postEntries.add(sighting.getId());
 						addUpdateRequest(sighting.getParseObjectID(), DBConsts.TABLE_SIGHTING, body);
+						}
 					}
 				}
 			}
@@ -187,18 +199,17 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 		try {
 			// get bird list to sync create/update/delete
 			JSONArray feedbackToSync = dh.getFeedbackToSync();
-			//Log.i(Consts.TAG, feedbackToSync.toString());
-			//Log.i(Consts.TAG, "Length is " + feedbackToSync.length());
 			JSONObject body = null;
 			for (int i = 0 ; i < feedbackToSync.length() ; i ++) {
-				//Log.i(Consts.TAG, "Adding a feedback to sync ");
 				// if not delete, then it is marked for upload
 				body = new JSONObject();
 				body.put(DBConsts.FEEDBACK_USER, ParseUtils.getCurrentUsername());
 				body.put(DBConsts.FEEDBACK_DATE, getDateInParseFormat(new Date()));
 				body.put(DBConsts.FEEDBACK_TEXT	, feedbackToSync.getJSONObject(i).getString("feedbackText")); // TODO Externalize
+				if (requestArray.length() < 49 ) { /* Parse accepts only 50 requests in a batch */
 				addCreateRequest(DBConsts.TABLE_FEEDBACK, body);
 				postEntries.add((long)feedbackToSync.getJSONObject(i).getInt("feedbackId")); // TODO Externalize
+				}
 			}
 		} catch (JSONException ex) {
 			Log.e(Consts.TAG, ex.getMessage());
@@ -223,14 +234,12 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 
 	@Override
 	public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
-		Log.w(Consts.TAG, "IN onPerformSync");
 
 		try {
 			Utils.initializePrefs(getContext());
 			
 			if (Utils.isNetworkAvailable(getContext()) && 
 					(areSyncCreditsAvailable() || extras.getBoolean(Consts.OVERRIDE_THROTTLE))) {
-				Log.w(Consts.TAG, "SYNCING NOW");
 				Parse.initialize(getContext(), ParseConsts.APP_ID, ParseConsts.REST_CLIENT_KEY);
 				syncBirdLists();
 				syncSightings();
@@ -271,8 +280,6 @@ public class ParseSyncAdapter extends AbstractThreadedSyncAdapter {
 				postEntries = new ArrayList<Long>();
 			}
 		} catch (Exception e) {
-			//Log.e(Consts.TAG, e.getMessage());
-			e.printStackTrace();
 			String err;
 			if (e.getMessage()==null){
 				err = "Sync Failed";

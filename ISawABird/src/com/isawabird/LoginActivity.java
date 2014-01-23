@@ -3,6 +3,7 @@ package com.isawabird;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ public class LoginActivity extends Activity {
 	Typeface sonsie;
 	Typeface tangerine;
 
+	ProgressDialog mDialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,6 +101,11 @@ public class LoginActivity extends Activity {
 				showHome();
 			}
 		});
+		if(mDialog == null) {
+			mDialog = new ProgressDialog(this);
+			mDialog.setMessage("Logging in...");
+			mDialog.setCancelable(false);
+		}
 	}
 
 	long lastPress;
@@ -139,16 +147,18 @@ public class LoginActivity extends Activity {
 	public void login(View view) {
 
 		try {
+			showActivityIndicator();
+
 			String user = mUsernameText.getText().toString();
 			String pass = mPassText.getText().toString();
 			ParseUser.logInInBackground(user, pass, new LogInCallback() {
 				public void done(ParseUser user, ParseException e) {
+					hideActivityIndicator();
 					if (user == null) {
 						Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
 					} else {
-						Log.i(Consts.TAG, "Logged in!");
 						saveInstallationID();
-						
+
 						String city = user.getString(Consts.BIRDRACE_CITY);
 						/* Bird Race specific code */
 						if (city != null) {
@@ -172,15 +182,29 @@ public class LoginActivity extends Activity {
 				}
 			});
 		} catch (Exception e) {
+			hideActivityIndicator();
 			Toast.makeText(getApplicationContext(), "Not able to login. Please try again later", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
 	}
+	private void showActivityIndicator() {
+		if(mDialog.isShowing()) return;
+		mDialog.show();
+	}
+
+	private void hideActivityIndicator() {
+		if(!mDialog.isShowing()) return;
+		mDialog.hide();
+	}
 
 	public void loginTwitter(View view) {
+
+		showActivityIndicator();
+
 		// network not available
 		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			hideActivityIndicator();
 			return;
 		}
 
@@ -189,6 +213,7 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void done(ParseUser user, ParseException ex) {
+				hideActivityIndicator();
 				if (user == null) {
 					String errMsg ; 
 					if (ex == null){
@@ -207,9 +232,12 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginFacebook(View view) {
+		showActivityIndicator();
+
 		// network not available
 		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			hideActivityIndicator();
 			return;
 		}
 
@@ -218,6 +246,7 @@ public class LoginActivity extends Activity {
 
 			@Override
 			public void done(ParseUser user, ParseException err) {
+				hideActivityIndicator();
 				if (user == null) {
 					Toast.makeText(getApplicationContext(), "Unable to login to facebook : " + err.getMessage(), Toast.LENGTH_SHORT).show();
 				} else {
@@ -238,18 +267,22 @@ public class LoginActivity extends Activity {
 	}
 
 	public void loginGoogle(View view) {
+		showActivityIndicator();
+
 		// network not available
 		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			hideActivityIndicator();
 			return;
 		}
 	}
 
 	public void signup(View view) {
-
+		showActivityIndicator();
 		// network not available
 		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
+			hideActivityIndicator();
 			return;
 		}
 
@@ -267,10 +300,11 @@ public class LoginActivity extends Activity {
 		// TODO: add busy indicator
 		query.findInBackground(new FindCallback<ParseUser>() {
 			public void done(List<ParseUser> objects, ParseException e) {
+				hideActivityIndicator();
 				if (e == null) {
 					if (objects != null && objects.size() > 0) {
 						Toast.makeText(getApplicationContext(), "User with email '" + email + "' already exists", Toast.LENGTH_SHORT)
-								.show();
+						.show();
 						return;
 					} else {
 						ParseUser user = new ParseUser();
@@ -308,9 +342,17 @@ public class LoginActivity extends Activity {
 			}
 		});
 	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(mDialog != null) {
+			mDialog.dismiss();
+		}
+	}
 
 	private void showHome() {
-		Log.i(Consts.TAG, "TO HOME");
+		
 		Utils.setFirstTime(false);
 		Intent homeIntent = new Intent(getApplicationContext(), MainActivity.class);
 		// FLAG_ACTIVITY_CLEAR_TOP is required if we are coming from settings by clicking on 'Login'
@@ -318,7 +360,7 @@ public class LoginActivity extends Activity {
 		startActivity(homeIntent);
 		finish();
 	}
-	
+
 	private void saveInstallationID(){
 		ParseUser currentUser =ParseUser.getCurrentUser();  
 		if (currentUser.getString("InstallationID") != null){
@@ -326,7 +368,7 @@ public class LoginActivity extends Activity {
 		}
 		currentUser .add("InstallationID", ParseInstallation.getCurrentInstallation().getInstallationId()); 
 		currentUser .saveInBackground(new SaveCallback() {
-			
+
 			@Override
 			public void done(ParseException ex) {
 				if (ex == null){
@@ -336,6 +378,6 @@ public class LoginActivity extends Activity {
 				}								
 			}
 		}) ;
-		
+
 	}
 }
