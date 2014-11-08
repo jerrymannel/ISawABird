@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -193,6 +195,29 @@ public class BirdListActivity extends Activity {
 		case R.id.action_sync:
 			SyncUtils.triggerRefresh(true);
 			Toast.makeText(getApplicationContext(), "Sync requested", Toast.LENGTH_SHORT).show();
+			return true;
+			
+		case R.id.action_share:
+			Intent shareIntent = new Intent();
+			shareIntent.setAction(Intent.ACTION_SEND); 
+			shareIntent.setType("text/plain"); 
+			
+			String listName  = mListAdapter.birdLists.get(info.position).getListName() ; 
+			ArrayList<Sighting> sightings = dh.getSightingsByListName(listName, ParseUtils.getCurrentUsername()); 
+			BirdList birdList = dh.getBirdListByName(listName); 
+			StringBuilder stringToShare = new StringBuilder(); 
+			stringToShare.append(birdList.getListName()).append("\n")
+			.append(DateFormat.format("dd MMM yy", birdList.getDate())).append("\n").append("\n");
+			
+			int count = 1; 
+			for (Sighting sighting : sightings) {
+				stringToShare.append(count++).append(". ").append(sighting.getSpecies().getFullName()).append("\n"); 
+			}
+			
+			Log.w(Consts.TAG, stringToShare.toString()); 
+			shareIntent.putExtra(Intent.EXTRA_TEXT, stringToShare.toString());
+			
+			startActivity(Intent.createChooser(shareIntent, "How do you want to share "));
 			return true;
 			
 		default:
