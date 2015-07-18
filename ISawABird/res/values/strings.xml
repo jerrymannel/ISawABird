@@ -39,6 +39,7 @@
     <string name="listinfo">Long press a list for more options.</string>
      <string name="add_list">Add list</string>
     <string name="delete_list">Delete list</string>
+    <string name="share_list">Share...</string>
     <string name="rename_list">Rename list</string>
     <string name="set_default">Set as default</string>
     <string name="delete_sighting">Delete Sighting</string>

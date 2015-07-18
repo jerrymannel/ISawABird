@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.AutoText;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -106,6 +107,41 @@ public class LoginActivity extends Activity {
 			mDialog.setMessage("Logging in...");
 			mDialog.setCancelable(false);
 		}
+
+		mUsernameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View view, boolean hasFocus) {
+				if(hasFocus && mUsernameText.getText().toString().equalsIgnoreCase(getString(R.string.email))){
+					mUsernameText.setText("");
+				}
+			}
+		});
+		mUsernameText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (mUsernameText.getText().toString().equalsIgnoreCase(getString(R.string.email))) {
+					mUsernameText.setText("");
+				}
+			}
+		});
+
+		mPassText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View view, boolean hasFocus) {
+				if (hasFocus && mPassText.getText().toString().equalsIgnoreCase(getString(R.string.password))) {
+					mPassText.setText("");
+				}
+			}
+		});
+
+		mPassText.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				if (mPassText.getText().toString().equalsIgnoreCase(getString(R.string.password))) {
+					mPassText.setText("");
+				}
+			}
+		});
 	}
 
 	long lastPress;
@@ -273,7 +309,6 @@ public class LoginActivity extends Activity {
 		if (!Utils.isNetworkAvailable(getApplicationContext())) {
 			Toast.makeText(getApplicationContext(), "Network not available", Toast.LENGTH_SHORT).show();
 			hideActivityIndicator();
-			return;
 		}
 	}
 

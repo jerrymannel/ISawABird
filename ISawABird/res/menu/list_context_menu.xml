@@ -16,4 +16,9 @@
         android:title="@string/delete_list"/>
     <item android:id="@+id/action_sync" android:title="Sync"></item>
 
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:showAsAction="ifRoom"
+        android:title="@string/share_list"/>
 </menu>

@@ -143,7 +143,8 @@
             android:inputType="textEmailAddress"
             android:paddingBottom="5dp"
             android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" >
+            android:textCursorDrawable="@null"
+            android:text="@string/email">
 
             <requestFocus />
         </EditText>
@@ -161,7 +162,8 @@
             android:hint="@string/password"
             android:inputType="textPassword"
             android:textColor="@color/color_black_333"
-            android:textCursorDrawable="@null" />
+            android:textCursorDrawable="@null"
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/text_confirm"
